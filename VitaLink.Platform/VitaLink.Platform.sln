@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VitaLink.Platform.API", "VitaLink.Platform.API\VitaLink.Platform.API.csproj", "{EBD3A4E9-50F1-417F-82B7-92339998DE34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBD3A4E9-50F1-417F-82B7-92339998DE34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBD3A4E9-50F1-417F-82B7-92339998DE34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBD3A4E9-50F1-417F-82B7-92339998DE34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBD3A4E9-50F1-417F-82B7-92339998DE34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+@VitaLink.Platform.API_HostAddress = http://localhost:5270
+
+GET {{VitaLink.Platform.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
