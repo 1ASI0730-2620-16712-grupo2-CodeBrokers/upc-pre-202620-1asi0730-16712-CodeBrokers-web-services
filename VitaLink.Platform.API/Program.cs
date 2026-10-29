@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
