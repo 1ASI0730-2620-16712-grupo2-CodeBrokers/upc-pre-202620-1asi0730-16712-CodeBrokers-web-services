@@ -4,6 +4,8 @@ using VitaLink.Platform.API.Shared.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
+using VitaLink.Platform.API.Notification.Domain.Services;
+using VitaLink.Platform.API.Notification.Infrastructure.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,19 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Notification Bounded Context
+builder.Services.Configure<EmailSenderOptions>(
+    builder.Configuration.GetSection(EmailSenderOptions.SectionName));
+builder.Services.AddHttpClient(ResendEmailSenderService.HttpClientName, client =>
+    client.BaseAddress = new Uri("https://api.resend.com/"));
+
+var emailOptions = builder.Configuration.GetSection(EmailSenderOptions.SectionName).Get<EmailSenderOptions>()
+                   ?? new EmailSenderOptions();
+if (emailOptions.HasApiKey)
+    builder.Services.AddScoped<IEmailSenderService, ResendEmailSenderService>();
+else
+    builder.Services.AddScoped<IEmailSenderService, LoggingEmailSenderService>();
 
 var app = builder.Build();
 
