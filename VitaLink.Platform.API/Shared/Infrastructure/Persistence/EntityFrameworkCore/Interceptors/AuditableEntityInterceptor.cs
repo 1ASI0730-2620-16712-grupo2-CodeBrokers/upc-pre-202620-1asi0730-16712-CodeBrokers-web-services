@@ -1,0 +1,50 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using VitaLink.Platform.API.Shared.Domain.Model;
+
+namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Interceptors;
+
+/// <summary>
+///     EF Core interceptor that automatically populates audit timestamps on any entity
+///     that implements <see cref="IAuditableEntity"/>.
+/// </summary>
+/// <remarks>
+///     <list type="bullet">
+///         <item><description><c>CreatedAt</c>: set once when the entity is first added.</description></item>
+///         <item><description><c>UpdatedAt</c>: refreshed on every add or update.</description></item>
+///     </list>
+///     It is registered in <c>AppDbContext</c>, so it applies to every bounded context
+///     that shares the same <see cref="DbContext"/>.
+/// </remarks>
+public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
+{
+    /// <inheritdoc />
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
+    {
+        ApplyAuditTimestamps(eventData.Context);
+        return base.SavingChanges(eventData, result);
+    }
+
+    /// <inheritdoc />
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = default)
+    {
+        ApplyAuditTimestamps(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
+
+    private static void ApplyAuditTimestamps(DbContext? context)
+    {
+        if (context is null) return;
+
+        var now = DateTimeOffset.UtcNow;
+
+        foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
+        {
+            if (entry.State is EntityState.Added or EntityState.Modified) entry.Entity.UpdatedAt = now;
+            if (entry.State == EntityState.Added) entry.Entity.CreatedAt ??= now;
+        }
+    }
+}
