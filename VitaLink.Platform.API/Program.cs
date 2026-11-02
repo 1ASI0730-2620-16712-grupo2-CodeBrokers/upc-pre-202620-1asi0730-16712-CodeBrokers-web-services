@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using VitaLink.Platform.API.Shared.Domain.Repositories;
+using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
+using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
@@ -24,6 +28,25 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod());
 });
 
+// Database: PostgreSQL connection string from user-secrets (Development) or environment variables
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+    throw new InvalidOperationException(
+        "Connection string 'DefaultConnection' is not set. Configure it with dotnet user-secrets (see README).");
+
+builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
+{
+    options.UseNpgsql(connectionString)
+        .UseLoggerFactory(serviceProvider.GetRequiredService<ILoggerFactory>())
+        .EnableDetailedErrors();
+
+    if (builder.Environment.IsDevelopment())
+        options.EnableSensitiveDataLogging();
+});
+
+// Shared Bounded Context Injection Configuration
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -41,6 +64,13 @@ else
     builder.Services.AddScoped<IEmailSenderService, LoggingEmailSenderService>();
 
 var app = builder.Build();
+
+// Apply pending migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
