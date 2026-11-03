@@ -42,6 +42,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<NotificationAg
 
         builder.OwnsOne(n => n.Content, content =>
         {
+            content.WithOwner().HasForeignKey("Id");
             content.Property(c => c.Subject)
                 .HasColumnName("subject")
                 .HasMaxLength(MessageContent.MaxSubjectLength)
