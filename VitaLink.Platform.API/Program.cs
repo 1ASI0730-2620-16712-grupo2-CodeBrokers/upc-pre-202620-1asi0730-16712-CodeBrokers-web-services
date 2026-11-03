@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
+using VitaLink.Platform.API.Alerting.Domain.Services;
+using VitaLink.Platform.API.Alerting.Domain.Repositories;
+using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -62,6 +66,10 @@ if (emailOptions.HasApiKey)
     builder.Services.AddScoped<IEmailSenderService, ResendEmailSenderService>();
 else
     builder.Services.AddScoped<IEmailSenderService, LoggingEmailSenderService>();
+
+// Alerting Bounded Context
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 
 var app = builder.Build();
 
