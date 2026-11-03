@@ -80,6 +80,79 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                     b.ToTable("alerts", "alerting");
                 });
 
+            modelBuilder.Entity("VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<short>("Attempts")
+                        .HasColumnType("smallint")
+                        .HasColumnName("attempts");
+
+                    b.Property<string>("Channel")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("channel");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("FailureReason")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasColumnName("failure_reason");
+
+                    b.Property<string>("ProviderMessageId")
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)")
+                        .HasColumnName("provider_message_id");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("recipient_id");
+
+                    b.Property<Guid?>("RelatedAlertId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("related_alert_id");
+
+                    b.Property<DateTimeOffset?>("SentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_at");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_notifications");
+
+                    b.HasIndex("RecipientId", "CreatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_n_recipient_created");
+
+                    b.HasIndex("Status", "Attempts")
+                        .HasDatabaseName("ix_n_retryable")
+                        .HasFilter("status = 'FAILED'");
+
+                    b.HasIndex("RelatedAlertId", "RecipientId", "Channel")
+                        .IsUnique()
+                        .HasDatabaseName("ux_n_alert_recipient_channel");
+
+                    b.ToTable("notifications", "notification", t =>
+                        {
+                            t.HasCheckConstraint("ck_n_attempts", "attempts BETWEEN 0 AND 5");
+
+                            t.HasCheckConstraint("ck_n_channel", "channel IN ('EMAIL','SMS')");
+
+                            t.HasCheckConstraint("ck_n_status", "status IN ('PENDING','SENT','FAILED')");
+                        });
+                });
+
             modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Aggregates.Alert", b =>
                 {
                     b.OwnsMany("VitaLink.Platform.API.Alerting.Domain.Model.Entities.AlertStatusChange", "StatusHistory", b1 =>
@@ -126,6 +199,39 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         });
 
                     b.Navigation("StatusHistory");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification", b =>
+                {
+                    b.OwnsOne("VitaLink.Platform.API.Notification.Domain.Model.ValueObjects.MessageContent", "Content", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Body")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("body");
+
+                            b1.Property<string>("Subject")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("subject");
+
+                            b1.HasKey("Id")
+                                .HasName("p_k_notifications");
+
+                            b1.ToTable("notifications", "notification");
+
+                            b1.WithOwner()
+                                .HasForeignKey("Id")
+                                .HasConstraintName("f_k_notifications_notifications_id");
+                        });
+
+                    b.Navigation("Content")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
