@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
@@ -14,6 +15,26 @@ namespace VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFramew
 public class AlertRepository(AppDbContext context)
     : BaseRepository<Alert, AlertId>(context), IAlertRepository
 {
+    /// <inheritdoc />
+    public async Task<AlertPage> FindPageAsync(GetAlertsQuery query, CancellationToken cancellationToken = default)
+    {
+        if (query.Page < 1 || query.PageSize is < 1 or > 100 ||
+            (long)(query.Page - 1) * query.PageSize > int.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(query), "Invalid pagination.");
+
+        var alerts = Context.Set<Alert>().AsNoTracking().AsQueryable();
+        if (query.Status.HasValue)
+            alerts = alerts.Where(a => a.Status == query.Status.Value);
+        if (query.OlderAdultId.HasValue)
+            alerts = alerts.Where(a => a.OlderAdultId == query.OlderAdultId.Value);
+
+        var total = await alerts.CountAsync(cancellationToken);
+        var items = await alerts.OrderByDescending(a => a.RaisedAt).ThenBy(a => a.Id)
+            .Skip((query.Page - 1) * query.PageSize).Take(query.PageSize)
+            .ToListAsync(cancellationToken);
+        return new AlertPage(items, total, query.Page, query.PageSize);
+    }
+
     /// <inheritdoc />
     public async Task<int> CountPendingByCareProviderAsync(
         Guid careProviderId, CancellationToken cancellationToken = default)

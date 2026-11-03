@@ -1,5 +1,6 @@
 ﻿using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 
 namespace VitaLink.Platform.API.Alerting.Domain.Repositories;
@@ -9,6 +10,11 @@ namespace VitaLink.Platform.API.Alerting.Domain.Repositories;
 /// </summary>
 public interface IAlertRepository : IBaseRepository<Alert, AlertId>
 {
+  /// <summary>
+  ///     Returns alerts filtered by status and patient, ordered by newest alert and identifier.
+  /// </summary>
+  Task<AlertPage> FindPageAsync(GetAlertsQuery query, CancellationToken cancellationToken = default);
+
   /// <summary>
   ///     Counts the pending alerts assigned to a care provider.
   /// </summary>

@@ -145,6 +145,21 @@ dotnet ef migrations add <MigrationName> --project VitaLink.Platform.API --outpu
 - Include **one migration per pull request**.
 - Before creating it, merge the latest `develop` into your branch. If someone merged a migration before you, remove yours (`dotnet ef migrations remove --project VitaLink.Platform.API`) and create it again.
 
+## Alert queries
+
+- `GET /api/v1/alerts?status=PENDING&olderAdultId=<uuid>&page=1&pageSize=20`
+- `GET /api/v1/alerts/pending?olderAdultId=<uuid>&page=1&pageSize=20`
+- `GET /api/v1/alerts/<uuid>`
+
+List filters are optional and combine with AND. Status accepts `PENDING`, `IN_REVIEW`,
+`ATTENDED` and `CLOSED` (case insensitive). `olderAdultId` identifies the patient.
+Pagination defaults to page 1 and 20 items, with a maximum page size of 100.
+Results are ordered by `raisedAt` descending, then by ID for deterministic pagination.
+Lists return `items`, `totalItems`, `page`, `pageSize` and `totalPages`; an empty or
+out-of-range page returns HTTP 200 with an empty `items` array.
+Invalid identifiers, status values or pagination return HTTP 400. A valid alert ID
+that does not exist returns HTTP 404. Closed alerts remain queryable.
+
 ## Conventions
 
 - **Routes:** every controller is exposed under the `/api/v1` prefix, and the `[controller]` token is converted to kebab-case (`HealthRecordsController` → `/api/v1/health-records`).

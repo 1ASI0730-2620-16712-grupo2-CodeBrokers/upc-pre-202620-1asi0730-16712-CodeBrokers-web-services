@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
+using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
@@ -67,6 +69,7 @@ else
 
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 
 var app = builder.Build();
 
