@@ -145,6 +145,15 @@ dotnet ef migrations add <MigrationName> --project VitaLink.Platform.API --outpu
 - Include **one migration per pull request**.
 - Before creating it, merge the latest `develop` into your branch. If someone merged a migration before you, remove yours (`dotnet ef migrations remove --project VitaLink.Platform.API`) and create it again.
 
+## Jira progress — Alerting
+
+| Task | Implementation status | Scope |
+| --- | --- | --- |
+| T-8 — Alert aggregate and persistence | Implemented | Alert lifecycle and transition history, EF Core mappings, and the PostgreSQL `AddAlerts` migration. A unique index enforces one alert per health record. |
+| T-10 — Alert queries | Implemented | Paginated alert and pending lists with status and patient filters, plus alert details by ID. |
+| T-9 / US-14 — Automatic alert generation | Pending | Add `POST /api/v1/alerts` to evaluate thresholds and create a pending alert transactionally. Integration requires health-record lookup, active monitoring rules (T-18), and the RC-01 access policy. |
+| T-30 / US-12 — Observation when attending an alert | Pending | Store an optional observation of up to 1,000 characters with the authenticated clinician and server timestamp, reject duplicates, and retain the draft in the web app after a save error. Depends on the attendance API (T-11) and web app integration. |
+
 ## Alert queries
 
 - `GET /api/v1/alerts?status=PENDING&olderAdultId=<uuid>&page=1&pageSize=20`
