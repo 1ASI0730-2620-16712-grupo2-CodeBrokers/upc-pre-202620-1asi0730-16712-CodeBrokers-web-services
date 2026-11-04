@@ -4,3 +4,15 @@ GET {{VitaLink.Platform.API_HostAddress}}/api/v1/health
 Accept: application/json
 
 ###
+
+GET {{VitaLink.Platform.API_HostAddress}}/api/v1/health
+Accept: application/json
+Accept-Language: es-419
+
+###
+
+GET {{VitaLink.Platform.API_HostAddress}}/api/v1/health
+Accept: application/json
+Accept-Language: es-PE
+
+###

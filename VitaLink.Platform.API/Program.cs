@@ -28,6 +28,9 @@ builder.Services.AddControllers(options =>
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+// Localization: messages come from Resources/SharedResource.*.resx
+builder.Services.AddLocalization();
+
 // CORS: allowed origins are defined per environment in appsettings.{Environment}.json
 const string allowedOriginsPolicy = "AllowedOriginsPolicy";
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
@@ -90,6 +93,17 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+
+// Localization runs first so error responses also use the request culture (Accept-Language).
+// en-US is the default; es-419 covers Latin American Spanish and es any other Spanish variant.
+string[] supportedCultures = ["en-US", "es-419", "es"];
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
+app.UseRequestLocalization(localizationOptions);
+
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
