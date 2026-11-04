@@ -10,6 +10,7 @@ using VitaLink.Platform.API.Shared.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
+using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
 
@@ -22,6 +23,10 @@ builder.Services.AddControllers(options =>
     options.Conventions.Add(new KebabCaseRouteNamingConvention());
     options.UseGeneralRoutePrefix("api/v1");
 });
+
+// Error handling: unexpected exceptions are returned as RFC 7807 ProblemDetails
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 // CORS: allowed origins are defined per environment in appsettings.{Environment}.json
 const string allowedOriginsPolicy = "AllowedOriginsPolicy";
@@ -85,6 +90,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
