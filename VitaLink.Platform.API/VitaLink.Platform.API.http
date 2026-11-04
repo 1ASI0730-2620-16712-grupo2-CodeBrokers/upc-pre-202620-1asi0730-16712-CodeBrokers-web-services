@@ -16,3 +16,10 @@ Accept: application/json
 Accept-Language: es-PE
 
 ###
+
+# Invalid identifier: 400 ValidationProblemDetails with a localized title
+GET {{VitaLink.Platform.API_HostAddress}}/api/v1/alerts/not-a-guid
+Accept: application/json
+Accept-Language: es-419
+
+###

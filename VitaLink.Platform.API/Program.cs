@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
 using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Domain.Services;
@@ -6,6 +7,7 @@ using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.Resources;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -22,10 +24,20 @@ builder.Services.AddControllers(options =>
 {
     options.Conventions.Add(new KebabCaseRouteNamingConvention());
     options.UseGeneralRoutePrefix("api/v1");
-});
+})
+    // Data annotation messages (e.g. [Required(ErrorMessage = "Key")]) are looked up in SharedResource
+    .AddDataAnnotationsLocalization(options =>
+        options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(SharedResource)));
 
 // Error handling: unexpected exceptions are returned as RFC 7807 ProblemDetails
-builder.Services.AddProblemDetails();
+builder.Services.AddProblemDetails(options =>
+    options.CustomizeProblemDetails = context =>
+    {
+        // Validation errors (automatic 400 and ValidationProblem()) get a localized title
+        if (context.ProblemDetails is not HttpValidationProblemDetails) return;
+        var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
+        context.ProblemDetails.Title = localizer["InvalidModelStateTitle"].Value;
+    });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 // Localization: messages come from Resources/SharedResource.*.resx
