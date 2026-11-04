@@ -152,3 +152,52 @@ dotnet ef migrations add <MigrationName> --project VitaLink.Platform.API --outpu
 - **Secrets:** never commit passwords, keys or connection strings. Use user secrets locally and environment variables in deployed environments.
 - **Branches:** GitFlow with `main`, `develop` and `feature/<description>` branches. Pull requests target `develop`.
 - **Commits:** [Conventional Commits](https://www.conventionalcommits.org/) in English, using the bounded context as scope, e.g. `feat(alerting): add alert aggregate`.
+
+
+## Continuous Deployment (CD)
+
+VitaLink uses GitHub Actions, Docker Hub, and Microsoft Azure App Service to automate backend deployment.
+
+### Deployment infrastructure
+
+- **Cloud provider:** Microsoft Azure
+- **Web App:** `vitalink-api-dev`
+- **Container registry:** Docker Hub
+- **Docker image:** `leorg15/vitalink-api:dev`
+- **Database:** Azure Database for PostgreSQL
+- **Container port:** `8080`
+- **Deployment branch:** `feature/continuous-deployment`
+
+### Deployment workflow
+
+The workflow is defined in `.github/workflows/cd.yml`.
+
+When changes are pushed to the `feature/continuous-deployment` branch:
+
+1. GitHub Actions checks out the repository.
+2. GitHub Actions authenticates with Docker Hub.
+3. A new Docker image is built.
+4. The image is pushed to Docker Hub with the `dev` tag and the commit SHA.
+5. Docker Hub sends a webhook notification to Azure App Service.
+6. Azure pulls the updated image and restarts the application.
+
+### Deployment verification
+
+The deployment can be verified through the health endpoint:
+
+https://vitalink-api-dev-h4gdanfjc5ezbqep.canadacentral-01.azurewebsites.net/api/v1/health
+
+A successful response returns:
+
+```json
+{
+  "status": "Healthy",
+  "database": "Up"
+}
+```
+
+The response also includes a timestamp.
+
+### Security
+
+Docker Hub credentials are stored in GitHub Actions Secrets. Database credentials are configured through Azure App Service environment variables and are not included in the repository.
