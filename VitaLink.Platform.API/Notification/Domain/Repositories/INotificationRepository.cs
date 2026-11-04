@@ -26,4 +26,18 @@ public interface INotificationRepository : IBaseRepository<NotificationAggregate
     /// <param name="maxAttempts">Attempt limit.</param>
     /// <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
     Task<IReadOnlyList<NotificationAggregate>> FindRetryableAsync(int maxAttempts, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    ///     Finds the notification of an alert addressed to a recipient through a channel.
+    /// </summary>
+    /// <remarks>
+    ///     Backed by the unique idempotency index on (related_alert_id, recipient_id, channel).
+    /// </remarks>
+    /// <param name="alertId">Alert identifier (Alerting bounded context).</param>
+    /// <param name="recipientId">Recipient user identifier.</param>
+    /// <param name="channel">Delivery channel.</param>
+    /// <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
+    /// <returns>The notification, or <c>null</c> if none was created yet.</returns>
+    Task<NotificationAggregate?> FindByAlertAndRecipientAsync(
+        Guid alertId, Guid recipientId, NotificationChannel channel, CancellationToken cancellationToken = default);
 }
