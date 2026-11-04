@@ -1,4 +1,5 @@
 using VitaLink.Platform.API.Notification.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.Shared.Domain.Repositories;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;
 
 namespace VitaLink.Platform.API.Notification.Domain.Repositories;
@@ -7,31 +8,11 @@ namespace VitaLink.Platform.API.Notification.Domain.Repositories;
 ///     Repository contract for the Notification aggregate.
 /// </summary>
 /// <remarks>
-///     It does not persist changes by itself; changes are committed through the Unit of Work.
+///     Common operations (add, find by id, update, remove and list) come from
+///     <see cref="IBaseRepository{TEntity, TId}"/>. Changes are committed through the Unit of Work.
 /// </remarks>
-public interface INotificationRepository
+public interface INotificationRepository : IBaseRepository<NotificationAggregate, NotificationId>
 {
-    /// <summary>
-    ///     Adds a new notification to the repository.
-    /// </summary>
-    /// <param name="notification">Notification to add.</param>
-    /// <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
-    Task AddAsync(NotificationAggregate notification, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    ///     Marks an existing notification as modified.
-    /// </summary>
-    /// <param name="notification">Notification to update.</param>
-    void Update(NotificationAggregate notification);
-
-    /// <summary>
-    ///     Finds a notification by its identifier.
-    /// </summary>
-    /// <param name="id">Notification identifier.</param>
-    /// <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
-    /// <returns>The notification if found; otherwise, null.</returns>
-    Task<NotificationAggregate?> FindByIdAsync(NotificationId id, CancellationToken cancellationToken = default);
-
     /// <summary>
     ///     Lists the notifications addressed to a recipient, most recent first.
     /// </summary>
