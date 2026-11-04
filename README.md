@@ -145,6 +145,63 @@ dotnet ef migrations add <MigrationName> --project VitaLink.Platform.API --outpu
 - Include **one migration per pull request**.
 - Before creating it, merge the latest `develop` into your branch. If someone merged a migration before you, remove yours (`dotnet ef migrations remove --project VitaLink.Platform.API`) and create it again.
 
+## Error handling and localization
+
+### Returning errors
+
+| Situation | How it is handled | HTTP response |
+|---|---|---|
+| Expected business failure (duplicate, invalid transition, not found) | The command service returns `Result<TValue, TError>` (`Shared/Application/Patterns`) and the controller translates the error | `4xx` with `ProblemDetails` |
+| Invalid request (model binding or data annotations) | Automatic in `[ApiController]` controllers, or `ValidationProblem(ModelState)` | `400` with `ValidationProblemDetails` |
+| Unexpected exception | `GlobalExceptionHandler` (`Shared/Interfaces/ASP/Middleware`) logs it | `500` with `ProblemDetails`, without exception details |
+
+- Do not throw exceptions for expected business failures, and do not wrap controllers in a generic `try/catch`: unexpected exceptions already reach the global handler.
+- Error responses follow RFC 7807 (`ProblemDetails`). Use `Problem(...)` or `ValidationProblem(...)` in controllers instead of returning plain strings.
+
+Example of a controller translating a `Result`:
+
+```csharp
+return result switch
+{
+    Result<Alert, CreateAlertError>.Success success =>
+        CreatedAtAction(nameof(GetAlert), new { id = success.Value.Id.Value },
+            AlertResourceFromEntityAssembler.ToResourceFromEntity(success.Value)),
+
+    Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.DuplicateAlert } =>
+        Problem(statusCode: StatusCodes.Status409Conflict, title: localizer["AlertingAlertDuplicated"].Value),
+
+    _ => Problem(statusCode: StatusCodes.Status500InternalServerError,
+        title: localizer["UnexpectedServerError"].Value,
+        detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+};
+```
+
+### Localization
+
+The API answers in the language of the `Accept-Language` request header:
+
+| `Accept-Language` | Culture used |
+|---|---|
+| none or unsupported | `en-US` (default) |
+| `es-419` | `es-419` |
+| any other Spanish variant (`es-PE`, `es`) | `es` |
+
+The culture applied is returned in the `Content-Language` response header.
+
+Messages live in `Resources/SharedResource.resx` (English) and `Resources/SharedResource.es.resx` (Spanish). To add a message:
+
+1. Add the same key to **both** files. Prefix it with your bounded context, e.g. `AlertingAlertDuplicated` or `ElderCareOlderAdultNotFound`.
+2. Inject `IStringLocalizer<SharedResource>` in the controller and read it with `localizer["Key"].Value`.
+3. For data annotations, use the key as the error message: `[Required(ErrorMessage = "ElderCareFullNameRequired")]`.
+
+Shared keys already available: `UnexpectedServerError`, `UnexpectedErrorProcessingRequest`, `InvalidModelStateTitle`, `ResourceNotFound` and `ConcurrencyConflict`.
+
+To check a translation from the terminal:
+
+```bash
+curl -i -H "Accept-Language: es-419" http://localhost:5270/api/v1/alerts/not-a-guid
+```
+
 ## Jira progress — Alerting
 
 | Task | Implementation status | Scope |
