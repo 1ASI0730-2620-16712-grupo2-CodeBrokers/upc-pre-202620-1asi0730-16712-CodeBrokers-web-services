@@ -16,6 +16,9 @@ public class AlertConfiguration : IEntityTypeConfiguration<Alert>
     public void Configure(EntityTypeBuilder<Alert> builder)
     {
         builder.ToTable("alerts", "alerting");
+        // PostgreSQL xmin optimistic concurrency token
+        builder.Property(a => a.Version)
+            .IsRowVersion();
 
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Id)
