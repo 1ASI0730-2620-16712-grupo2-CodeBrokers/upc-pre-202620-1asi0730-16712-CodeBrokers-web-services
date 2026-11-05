@@ -16,7 +16,7 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 ///     Exposes alert status change operations.
 /// </summary>
 [ApiController]
-[Route("alerts")]
+[Route("alerts/{alertId:guid}/status")]
 [Produces(MediaTypeNames.Application.Json)]
 public class AlertStatusController(
     IAlertStatusCommandService commandService,
@@ -26,19 +26,19 @@ public class AlertStatusController(
     /// <summary>
     ///     Updates an alert status with optimistic concurrency control.
     /// </summary>
-    [HttpPatch("{id}/status")]
+    [HttpPatch]
     [ProducesResponseType(typeof(AlertStatusResource), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> UpdateAlertStatus(
-        Guid id,
+        Guid alertId,
         [FromBody] UpdateAlertStatusResource resource,
         CancellationToken cancellationToken)
     {
-        if (id == Guid.Empty)
+        if (alertId == Guid.Empty)
             ModelState.AddModelError(
-                nameof(id),
+                nameof(alertId),
                 "The alert identifier cannot be empty.");
         if (resource is null)
         {
@@ -68,7 +68,7 @@ public class AlertStatusController(
             return ValidationProblem(ModelState);
 
         var command = UpdateAlertStatusCommandFromResourceAssembler
-            .ToCommandFromResource(id, resource);
+            .ToCommandFromResource(alertId, resource);
 
         var result = await commandService.Handle(
             command,
@@ -102,7 +102,7 @@ public class AlertStatusController(
     /// <summary>
     ///     Retrieves the status change history of an alert.
     /// </summary>
-    [HttpGet("{id:guid}/status/history")]
+    [HttpGet("history")]
     [ProducesResponseType(
         typeof(IEnumerable<AlertStatusChangeResource>),
         StatusCodes.Status200OK)]
@@ -113,20 +113,20 @@ public class AlertStatusController(
         typeof(ProblemDetails),
         StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAlertStatusHistory(
-        Guid id,
+        Guid alertId,
         CancellationToken cancellationToken)
     {
-        if (id == Guid.Empty)
+        if (alertId == Guid.Empty)
         {
             ModelState.AddModelError(
-                nameof(id),
+                nameof(alertId),
                 "The alert identifier cannot be empty.");
 
             return ValidationProblem(ModelState);
         }
 
         var alert = await queryService.Handle(
-            new AlertId(id),
+            new AlertId(alertId),
             cancellationToken);
 
         if (alert is null)
