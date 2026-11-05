@@ -40,6 +40,11 @@ public class OlderAdultConfiguration : IEntityTypeConfiguration<OlderAdult>
                 .HasColumnName("last_name")
                 .HasMaxLength(100)
                 .IsRequired();
+            name.Property<OlderAdultId>("OlderAdultId")
+                .HasColumnName("id")
+                .HasConversion(
+                    id => id.Value,
+                    value => new OlderAdultId(value));
         });
 
         builder.Navigation(o => o.FullName)
@@ -63,6 +68,11 @@ public class OlderAdultConfiguration : IEntityTypeConfiguration<OlderAdult>
             address.Property(a => a.City)
                 .HasColumnName("address_city")
                 .HasMaxLength(80);
+            address.Property<OlderAdultId>("OlderAdultId")
+                .HasColumnName("id")
+                .HasConversion(
+                    id => id.Value,
+                    value => new OlderAdultId(value));
         });
 
         builder.OwnsOne(o => o.EmergencyContact, contact =>
@@ -74,6 +84,11 @@ public class OlderAdultConfiguration : IEntityTypeConfiguration<OlderAdult>
             contact.Property(c => c.PhoneNumber)
                 .HasColumnName("emergency_contact_phone")
                 .HasMaxLength(20);
+            contact.Property<OlderAdultId>("OlderAdultId")
+                .HasColumnName("id")
+                .HasConversion(
+                    id => id.Value,
+                    value => new OlderAdultId(value));
         });
 
         builder.Property(o => o.AssignedProviderId)

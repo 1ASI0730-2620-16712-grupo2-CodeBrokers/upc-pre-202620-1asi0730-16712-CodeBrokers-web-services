@@ -32,6 +32,13 @@ public class CareProviderConfiguration : IEntityTypeConfiguration<CareProvider>
 
         builder.OwnsOne(p => p.FullName, name =>
         {
+            // The owned value object shares the aggregate's primary key.
+            name.Property<CareProviderId>("CareProviderId")
+                .HasColumnName("id")
+                .HasConversion(
+                    id => id.Value,
+                    value => new CareProviderId(value));
+
             name.Property(n => n.FirstName)
                 .HasColumnName("first_name")
                 .HasMaxLength(100)
