@@ -1,6 +1,8 @@
-using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using VitaLink.Platform.API.Alerting.Application.Errors;
+using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
+using VitaLink.Platform.API.Shared.Application.Patterns;
 using VitaLink.Platform.API.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
@@ -11,13 +13,43 @@ using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 
 /// <summary>
-///     Exposes paginated alert searches and alert details.
+///     Exposes alert creation, paginated searches and alert details.
 /// </summary>
 [ApiController]
 [Route("[controller]")]
-[Produces(MediaTypeNames.Application.Json)]
-public class AlertsController(IAlertQueryService queryService, IStringLocalizer<SharedResource> localizer) : ControllerBase
+public class AlertsController(IAlertQueryService queryService, IAlertCommandService commandService,
+    IStringLocalizer<SharedResource> localizer) : ControllerBase
 {
+    /// <summary>
+    ///     Creates a pending alert from explicit references, rejecting duplicate health records.
+    /// </summary>
+    [HttpPost]
+    [ProducesResponseType(typeof(AlertResource), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> CreateAlert([FromBody] CreateAlertResource resource,
+        CancellationToken cancellationToken)
+    {
+        var command = CreateAlertCommandFromResourceAssembler.ToCommandFromResource(resource);
+        var result = await commandService.Handle(command, cancellationToken);
+
+        return result switch
+        {
+            Result<Alert, CreateAlertError>.Success success =>
+                CreatedAtAction(nameof(GetAlert), new { id = success.Value.Id.Value },
+                    AlertResourceFromEntityAssembler.ToResourceFromEntity(success.Value)),
+            Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.AlertAlreadyRaised } =>
+                Problem(statusCode: StatusCodes.Status409Conflict,
+                    title: localizer["AlertingAlertAlreadyRaised"].Value),
+            Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.InvalidReference } =>
+                Problem(statusCode: StatusCodes.Status400BadRequest,
+                    title: localizer["AlertingInvalidReference"].Value),
+            _ => Problem(statusCode: StatusCodes.Status500InternalServerError,
+                title: localizer["UnexpectedServerError"].Value,
+                detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+        };
+    }
+
     /// <summary>
     ///     Lists alerts, optionally filtered by status and patient.
     /// </summary>

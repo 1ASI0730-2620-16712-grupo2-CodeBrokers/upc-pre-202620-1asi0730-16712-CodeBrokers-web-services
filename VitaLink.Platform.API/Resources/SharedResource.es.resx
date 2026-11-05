@@ -35,4 +35,7 @@
     <data name="AlertingInvalidReference" xml:space="preserve">
         <value>Los identificadores del adulto mayor, del registro de salud y de la regla de monitoreo son obligatorios.</value>
     </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
 </root>

@@ -35,4 +35,7 @@
     <data name="AlertingInvalidReference" xml:space="preserve">
         <value>The older adult, health record and monitoring rule identifiers are required.</value>
     </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>Severity must be HIGH, MEDIUM or LOW.</value>
+    </data>
 </root>
