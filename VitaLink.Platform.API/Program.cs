@@ -99,12 +99,12 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 
-var app = builder.Build();
-
 // Elder Care Bounded Context
 builder.Services.AddScoped<ICareProviderRepository, CareProviderRepository>();
 builder.Services.AddScoped<IOlderAdultRepository, OlderAdultRepository>();
 builder.Services.AddScoped<IOlderAdultCommandService, OlderAdultCommandService>();
+
+var app = builder.Build();
 
 // Apply pending migrations on startup
 using (var scope = app.Services.CreateScope())
