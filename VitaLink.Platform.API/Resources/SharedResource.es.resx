@@ -1,0 +1,29 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="UnexpectedServerError" xml:space="preserve">
+        <value>Ocurrió un error inesperado.</value>
+    </data>
+    <data name="UnexpectedErrorProcessingRequest" xml:space="preserve">
+        <value>No se pudo procesar la solicitud. Inténtelo nuevamente más tarde.</value>
+    </data>
+    <data name="InvalidModelStateTitle" xml:space="preserve">
+        <value>La solicitud contiene valores no válidos.</value>
+    </data>
+    <data name="ResourceNotFound" xml:space="preserve">
+        <value>No se encontró el recurso solicitado.</value>
+    </data>
+    <data name="ConcurrencyConflict" xml:space="preserve">
+        <value>Otra solicitud modificó el recurso. Vuelva a cargarlo e inténtelo de nuevo.</value>
+    </data>
+</root>
