@@ -111,7 +111,9 @@ public class AlertsController(
             ModelState.AddModelError(nameof(resource.Version), "Version must be greater than zero.");
 
         if (string.IsNullOrWhiteSpace(resource.Status))
-            ModelState.AddModelError(nameof(resource.Status), "Status is required.");
+            ModelState.AddModelError(
+                nameof(resource.Status),
+                localizer["AlertingStatusRequired"].Value);
 
         if (!ModelState.IsValid)
             return ValidationProblem(ModelState);
@@ -134,7 +136,7 @@ public class AlertsController(
                 UpdateAlertStatusError.InvalidTransition =>
                     Problem(
                         statusCode: StatusCodes.Status409Conflict,
-                        title: localizer["InvalidAlertTransition"].Value),
+                        title: localizer["AlertingInvalidStatusTransition"].Value),
 
                 UpdateAlertStatusError.ConcurrencyConflict =>
                     Problem(

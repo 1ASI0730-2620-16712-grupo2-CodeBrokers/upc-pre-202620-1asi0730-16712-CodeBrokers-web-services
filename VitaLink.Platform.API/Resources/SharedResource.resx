@@ -26,4 +26,10 @@
     <data name="ConcurrencyConflict" xml:space="preserve">
         <value>The resource was modified by another request. Reload it and try again.</value>
     </data>
+    <data name="AlertingInvalidStatusTransition" xml:space="preserve">
+    <value>The requested alert status transition is not allowed.</value>
+    </data>
+        <data name="AlertingStatusRequired" xml:space="preserve">
+        <value>Alert status is required.</value>
+    </data>
 </root>

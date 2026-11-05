@@ -26,4 +26,10 @@
     <data name="ConcurrencyConflict" xml:space="preserve">
         <value>Otra solicitud modificó el recurso. Vuelva a cargarlo e inténtelo de nuevo.</value>
     </data>
+    <data name="AlertingInvalidStatusTransition" xml:space="preserve">
+    <value>La transición de estado solicitada para la alerta no está permitida.</value>
+    </data>
+        <data name="AlertingStatusRequired" xml:space="preserve">
+        <value>El estado de la alerta es obligatorio.</value>
+    </data>
 </root>
