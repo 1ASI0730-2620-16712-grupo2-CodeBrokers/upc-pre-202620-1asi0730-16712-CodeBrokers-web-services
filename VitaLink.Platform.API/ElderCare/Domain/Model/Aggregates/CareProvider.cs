@@ -10,6 +10,7 @@ public class CareProvider
     public Specialty Specialty { get; private set; }
     public string? Institution { get; private set; }
     public bool IsActive { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     // Constructor utilizado por Entity Framework Core
     private CareProvider()
@@ -38,6 +39,7 @@ public class CareProvider
         FullName = fullName;
         Specialty = specialty;
         IsActive = true;
+        CreatedAt = DateTimeOffset.UtcNow;
     }
 
     public void UpdateSpecialty(Specialty specialty)
