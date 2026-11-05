@@ -66,7 +66,7 @@ public class OlderAdultCommandService(
         if (!olderAdult.IsUnlinked())
         {
             return new Result<OlderAdult, LinkCareProviderError>.Failure(
-                LinkCareProviderError.UnexpectedError);
+                LinkCareProviderError.AlreadyAssigned);
         }
 
         olderAdult.LinkCareProvider(careProvider.Id.Value);

@@ -8,5 +8,6 @@ public enum LinkCareProviderError
     OlderAdultNotFound,
     CareProviderNotFound,
     CareProviderInactive,
+    AlreadyAssigned,
     UnexpectedError
 }
