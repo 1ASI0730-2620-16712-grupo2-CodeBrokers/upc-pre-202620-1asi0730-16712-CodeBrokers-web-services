@@ -17,6 +17,8 @@ using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
 using VitaLink.ElderCare.Domain.Repositories;
 using VitaLink.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.ElderCare.Application.Services;
+using VitaLink.ElderCare.Application.Internal.CommandServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,6 +104,7 @@ var app = builder.Build();
 // Elder Care Bounded Context
 builder.Services.AddScoped<ICareProviderRepository, CareProviderRepository>();
 builder.Services.AddScoped<IOlderAdultRepository, OlderAdultRepository>();
+builder.Services.AddScoped<IOlderAdultCommandService, OlderAdultCommandService>();
 
 // Apply pending migrations on startup
 using (var scope = app.Services.CreateScope())
