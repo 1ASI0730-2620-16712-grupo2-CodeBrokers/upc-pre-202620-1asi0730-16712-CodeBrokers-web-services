@@ -15,7 +15,12 @@ public class HealthRecordConfiguration : IEntityTypeConfiguration<HealthRecord>
 {
     public void Configure(EntityTypeBuilder<HealthRecord> builder)
     {
-        builder.ToTable("health_records", "monitoring");
+        builder.ToTable("health_records", "monitoring", table =>
+        {
+            table.HasCheckConstraint("ck_hr_source", "source IN ('OLDER_ADULT','FAMILY_CAREGIVER','CARE_PROVIDER')");
+            table.HasCheckConstraint("ck_hr_value_or_note", "measurement_value IS NOT NULL OR note IS NOT NULL");
+            table.HasCheckConstraint("ck_hr_value_non_negative", "measurement_value IS NULL OR measurement_value >= 0");
+        });
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Id).HasConversion(id => id.Value, value => new HealthRecordId(value));
 

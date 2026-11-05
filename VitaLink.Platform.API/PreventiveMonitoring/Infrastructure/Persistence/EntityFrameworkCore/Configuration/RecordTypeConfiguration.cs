@@ -11,7 +11,11 @@ public class RecordTypeConfiguration : IEntityTypeConfiguration<RecordType>
 {
     public void Configure(EntityTypeBuilder<RecordType> builder)
     {
-        builder.ToTable("record_types", "monitoring");
+        builder.ToTable("record_types", "monitoring", table =>
+        {
+            table.HasCheckConstraint("ck_record_types_range", "min_valid_value IS NULL OR max_valid_value IS NULL OR min_valid_value < max_valid_value");
+            table.HasCheckConstraint("ck_record_types_unit", "requires_value = FALSE OR unit IS NOT NULL");
+        });
         builder.HasKey(t => t.Code);
         
         builder.Property(t => t.Code).HasMaxLength(30);
