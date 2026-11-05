@@ -13,5 +13,5 @@ public static class AlertResourceFromEntityAssembler
         alert.Id.Value, alert.OlderAdultId, alert.HealthRecordId, alert.MonitoringRuleId,
         alert.AssignedProviderId, alert.Severity.ToString().ToUpperInvariant(),
         alert.Status == AlertStatus.InReview ? "IN_REVIEW" : alert.Status.ToString().ToUpperInvariant(),
-        alert.RaisedAt, alert.LastStatusChangeAt);
+        alert.RaisedAt, alert.LastStatusChangeAt,alert.Version);
 }
