@@ -29,6 +29,8 @@ using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.Enti
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.CommandServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.ACL;
+using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.ACL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -129,6 +131,7 @@ builder.Services.AddScoped<IMonitoringRuleRepository, MonitoringRuleRepository>(
 builder.Services.AddScoped<RiskEvaluationService>();
 builder.Services.AddScoped<IMonitoringRuleCommandService, MonitoringRuleCommandService>();
 builder.Services.AddScoped<IMonitoringRuleQueryService, MonitoringRuleQueryService>();
+builder.Services.AddScoped<IMonitoringContextFacade, MonitoringContextFacade>();
 
 var app = builder.Build();
 
