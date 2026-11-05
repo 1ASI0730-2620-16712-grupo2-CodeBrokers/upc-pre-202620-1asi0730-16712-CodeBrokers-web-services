@@ -20,6 +20,7 @@ using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
+using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -105,6 +106,7 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
+builder.Services.AddScoped<IAlertStatusCommandService, AlertStatusCommandService>();
 
 var app = builder.Build();
 
