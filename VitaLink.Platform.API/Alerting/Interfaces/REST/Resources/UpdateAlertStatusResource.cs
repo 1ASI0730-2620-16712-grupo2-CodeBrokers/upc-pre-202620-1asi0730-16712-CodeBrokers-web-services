@@ -6,11 +6,11 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 ///     Request body for updating an alert status.
 /// </summary>
 public sealed record UpdateAlertStatusResource(
-    [property: Required]
+    [Required]
     string Status,
 
-    [property: Required]
+    [Required]
     Guid ChangedBy,
 
-    [property: Required]
+    [Required]
     uint Version);
