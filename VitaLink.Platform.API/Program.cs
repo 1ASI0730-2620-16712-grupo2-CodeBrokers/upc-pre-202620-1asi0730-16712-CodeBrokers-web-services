@@ -15,6 +15,8 @@ using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
+using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
+using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,7 +96,8 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
-
+// Preventive Monitoring Bounded Context
+builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
 var app = builder.Build();
 
 // Apply pending migrations on startup
