@@ -19,4 +19,10 @@ public class MonitoringContextFacade(IHealthRecordRepository healthRecordReposit
             : new HealthRecordSummary(record.Id.Value, record.OlderAdultId, record.RecordTypeCode,
                 record.Measurement?.Value);
     }
+
+    /// <inheritdoc />
+    public Task<RiskEvaluationSummary?> EvaluateHealthRecordAsync(Guid healthRecordId,
+        CancellationToken cancellationToken = default) =>
+        // Temporary local placeholder until RiskEvaluationService.EvaluateAsync is integrated.
+        throw new NotImplementedException();
 }
