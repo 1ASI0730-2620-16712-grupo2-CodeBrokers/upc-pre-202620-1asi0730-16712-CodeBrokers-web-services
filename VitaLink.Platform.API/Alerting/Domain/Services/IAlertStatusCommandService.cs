@@ -3,7 +3,7 @@ using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Shared.Application.Patterns;
 
-namespace VitaLink.Platform.API.Alerting.Application.Services;
+namespace VitaLink.Platform.API.Alerting.Domain.Services;
 
 /// <summary>
 ///     Defines operations for changing alert statuses.
