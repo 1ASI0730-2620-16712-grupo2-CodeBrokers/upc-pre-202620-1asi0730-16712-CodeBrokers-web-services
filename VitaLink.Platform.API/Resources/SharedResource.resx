@@ -56,4 +56,7 @@
     <data name="NotificationNotFound" xml:space="preserve">
         <value>The notification was not found.</value>
     </data>
+    <data name="AlertingHealthRecordNotFound" xml:space="preserve">
+        <value>The health record was not found.</value>
+    </data>
 </root>

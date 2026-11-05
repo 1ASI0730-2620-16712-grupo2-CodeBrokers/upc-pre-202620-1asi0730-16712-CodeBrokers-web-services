@@ -56,4 +56,7 @@
     <data name="NotificationNotFound" xml:space="preserve">
         <value>No se encontró la notificación.</value>
     </data>
+    <data name="AlertingHealthRecordNotFound" xml:space="preserve">
+        <value>No se encontró el registro de salud.</value>
+    </data>
 </root>

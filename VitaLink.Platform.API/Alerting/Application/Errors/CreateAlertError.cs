@@ -11,7 +11,12 @@ public enum CreateAlertError
     AlertAlreadyRaised,
 
     /// <summary>
-    ///     An older adult, health record or monitoring rule identifier is empty.
+    ///     A required identifier is empty or the health record belongs to another older adult.
     /// </summary>
-    InvalidReference
+    InvalidReference,
+
+    /// <summary>
+    ///     The requested health record does not exist.
+    /// </summary>
+    HealthRecordNotFound
 }

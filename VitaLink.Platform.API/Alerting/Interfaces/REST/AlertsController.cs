@@ -26,6 +26,7 @@ public class AlertsController(IAlertQueryService queryService, IAlertCommandServ
     [HttpPost]
     [ProducesResponseType(typeof(AlertResource), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateAlert([FromBody] CreateAlertResource resource,
         CancellationToken cancellationToken)
@@ -44,6 +45,9 @@ public class AlertsController(IAlertQueryService queryService, IAlertCommandServ
             Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.InvalidReference } =>
                 Problem(statusCode: StatusCodes.Status400BadRequest,
                     title: localizer["AlertingInvalidReference"].Value),
+            Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.HealthRecordNotFound } =>
+                Problem(statusCode: StatusCodes.Status404NotFound,
+                    title: localizer["AlertingHealthRecordNotFound"].Value),
             _ => Problem(statusCode: StatusCodes.Status500InternalServerError,
                 title: localizer["UnexpectedServerError"].Value,
                 detail: localizer["UnexpectedErrorProcessingRequest"].Value)
