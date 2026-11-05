@@ -45,6 +45,7 @@ builder.Services.AddProblemDetails(options =>
         var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
         context.ProblemDetails.Title = localizer["InvalidModelStateTitle"].Value;
     });
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 // Localization: messages come from Resources/SharedResource.*.resx
@@ -53,6 +54,7 @@ builder.Services.AddLocalization();
 // CORS: allowed origins are defined per environment in appsettings.{Environment}.json
 const string allowedOriginsPolicy = "AllowedOriginsPolicy";
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(allowedOriginsPolicy, policy =>
@@ -63,6 +65,7 @@ builder.Services.AddCors(options =>
 
 // Database: PostgreSQL connection string from user-secrets (Development) or environment variables
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 if (string.IsNullOrWhiteSpace(connectionString))
     throw new InvalidOperationException(
         "Connection string 'DefaultConnection' is not set. Configure it with dotnet user-secrets (see README).");
@@ -92,11 +95,13 @@ builder.Services.AddScoped<DemoUserSeeder>();
 // Notification Bounded Context
 builder.Services.Configure<EmailSenderOptions>(
     builder.Configuration.GetSection(EmailSenderOptions.SectionName));
+
 builder.Services.AddHttpClient(ResendEmailSenderService.HttpClientName, client =>
     client.BaseAddress = new Uri("https://api.resend.com/"));
 
 var emailOptions = builder.Configuration.GetSection(EmailSenderOptions.SectionName).Get<EmailSenderOptions>()
                    ?? new EmailSenderOptions();
+
 if (emailOptions.HasApiKey)
     builder.Services.AddScoped<IEmailSenderService, ResendEmailSenderService>();
 else
@@ -107,8 +112,11 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
+
 // Preventive Monitoring Bounded Context
 builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
+builder.Services.AddScoped<IMonitoringRuleRepository, MonitoringRuleRepository>();
+
 var app = builder.Build();
 
 // Apply pending migrations and create the demo users (when enabled) on startup
@@ -125,10 +133,12 @@ using (var scope = app.Services.CreateScope())
 // Localization runs first so error responses also use the request culture (Accept-Language).
 // en-US is the default; es-419 covers Latin American Spanish and es any other Spanish variant.
 string[] supportedCultures = ["en-US", "es-419", "es"];
+
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
+
 localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
 app.UseRequestLocalization(localizationOptions);
 
