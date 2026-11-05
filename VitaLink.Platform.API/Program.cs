@@ -4,6 +4,8 @@ using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.IAM.Domain.Services;
+using VitaLink.Platform.API.IAM.Infrastructure.Hashing.BCrypt;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
@@ -55,6 +57,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// IAM Bounded Context
+builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 
 // Notification Bounded Context
 builder.Services.Configure<EmailSenderOptions>(
