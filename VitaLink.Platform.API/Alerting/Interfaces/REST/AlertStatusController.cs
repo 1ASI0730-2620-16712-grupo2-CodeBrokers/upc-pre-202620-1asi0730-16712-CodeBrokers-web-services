@@ -7,6 +7,8 @@ using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 using VitaLink.Platform.API.Resources;
+using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.Alerting.Interfaces.REST.Assemblers;
 
 namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 
@@ -18,6 +20,7 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 [Produces(MediaTypeNames.Application.Json)]
 public class AlertStatusController(
     IAlertStatusCommandService commandService,
+    IAlertQueryService queryService,
     IStringLocalizer<SharedResource> localizer) : ControllerBase
 {
     /// <summary>
@@ -37,7 +40,6 @@ public class AlertStatusController(
             ModelState.AddModelError(
                 nameof(id),
                 "The alert identifier cannot be empty.");
-
         if (resource is null)
         {
             ModelState.AddModelError(
@@ -96,5 +98,49 @@ public class AlertStatusController(
                     statusCode: StatusCodes.Status500InternalServerError,
                     title: localizer["UnexpectedServerError"].Value)
             });
+    }
+    /// <summary>
+    ///     Retrieves the status change history of an alert.
+    /// </summary>
+    [HttpGet("{id:guid}/status/history")]
+    [ProducesResponseType(
+        typeof(IEnumerable<AlertStatusChangeResource>),
+        StatusCodes.Status200OK)]
+    [ProducesResponseType(
+        typeof(ValidationProblemDetails),
+        StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(
+        typeof(ProblemDetails),
+        StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetAlertStatusHistory(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        if (id == Guid.Empty)
+        {
+            ModelState.AddModelError(
+                nameof(id),
+                "The alert identifier cannot be empty.");
+
+            return ValidationProblem(ModelState);
+        }
+
+        var alert = await queryService.Handle(
+            new AlertId(id),
+            cancellationToken);
+
+        if (alert is null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: localizer["ResourceNotFound"].Value);
+        }
+
+        var history = alert.StatusHistory
+            .OrderBy(change => change.ChangedAt)
+            .Select(AlertStatusChangeResourceFromEntityAssembler.ToResourceFromEntity)
+            .ToList();
+
+        return Ok(history);
     }
 }
