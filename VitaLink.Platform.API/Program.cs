@@ -21,6 +21,9 @@ using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
+using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;
+using VitaLink.Platform.API.Notification.Application.Services;
+using VitaLink.Platform.API.Notification.Application.Internal.QueryServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
@@ -112,6 +115,8 @@ else
     builder.Services.AddScoped<IEmailSenderService, LoggingEmailSenderService>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
+builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
 
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
