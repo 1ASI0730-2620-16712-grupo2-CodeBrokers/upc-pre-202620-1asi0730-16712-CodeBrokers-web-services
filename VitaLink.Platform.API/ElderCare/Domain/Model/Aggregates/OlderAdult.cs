@@ -13,6 +13,7 @@ public class OlderAdult
     public EmergencyContact? EmergencyContact { get; private set; }
     public Guid? AssignedProviderId { get; private set; }
     public bool IsMonitoringActive { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     // Constructor para Entity Framework Core
     private OlderAdult()
@@ -43,6 +44,7 @@ public class OlderAdult
         EmergencyContact = null;
         AssignedProviderId = null;
         IsMonitoringActive = false;
+        CreatedAt = DateTimeOffset.UtcNow;
     }
     
     public void LinkCareProvider(Guid providerId)
