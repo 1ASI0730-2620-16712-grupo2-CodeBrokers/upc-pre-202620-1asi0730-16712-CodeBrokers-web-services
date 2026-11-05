@@ -11,7 +11,7 @@ public class OlderAdult
     public DateOnly BirthDate { get; private set; }
     public Address? Address { get; private set; }
     public EmergencyContact? EmergencyContact { get; private set; }
-    public CareProviderId? AssignedProviderId { get; private set; }
+    public Guid? AssignedProviderId { get; private set; }
     public bool IsMonitoringActive { get; private set; }
 
     // Constructor para Entity Framework Core
@@ -44,20 +44,23 @@ public class OlderAdult
         AssignedProviderId = null;
         IsMonitoringActive = false;
     }
-
-    public void LinkCareProvider(CareProviderId providerId)
+    
+    public void LinkCareProvider(Guid providerId)
     {
-        ArgumentNullException.ThrowIfNull(providerId);
-
-        if (providerId.Value == Guid.Empty)
+        if (providerId == Guid.Empty)
             throw new ArgumentException(
                 "Care provider ID cannot be empty.",
                 nameof(providerId));
+
+        // Idempotency: linking the same provider changes nothing.
+        if (AssignedProviderId == providerId)
+            return;
 
         EnsureNoActiveProvider();
 
         AssignedProviderId = providerId;
     }
+
 
     public void UnlinkCareProvider()
     {
