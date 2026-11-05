@@ -80,6 +80,63 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                     b.ToTable("alerts", "alerting");
                 });
 
+            modelBuilder.Entity("VitaLink.Platform.API.IAM.Domain.Model.Aggregates.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("email");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_verified");
+
+                    b.Property<DateTimeOffset?>("LastAccessAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_access_at");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("role");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_users");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("uq_users_email");
+
+                    b.ToTable("users", "iam", t =>
+                        {
+                            t.HasCheckConstraint("ck_users_email_format", "email ~* '^[^@[:space:]]+@[^@[:space:]]+\\.[^@[:space:]]+$'");
+
+                            t.HasCheckConstraint("ck_users_last_access", "last_access_at IS NULL OR last_access_at >= created_at");
+
+                            t.HasCheckConstraint("ck_users_role", "role IN ('OLDER_ADULT','FAMILY_CAREGIVER','CARE_PROVIDER')");
+                        });
+                });
+
             modelBuilder.Entity("VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification", b =>
                 {
                     b.Property<Guid>("Id")
