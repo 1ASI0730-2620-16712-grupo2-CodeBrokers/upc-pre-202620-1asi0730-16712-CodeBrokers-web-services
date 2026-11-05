@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
@@ -20,7 +21,12 @@ public class HealthRecordRepository : BaseRepository<HealthRecord, HealthRecordI
     {
     }
 
-    public async Task<IEnumerable<HealthRecord>> FindByOlderAdultAsync(Guid olderAdultId, DateTimeOffset? from, DateTimeOffset? to, string? recordTypeCode)
+    public async Task<IEnumerable<HealthRecord>> FindByOlderAdultAsync(
+        Guid olderAdultId,
+        DateTimeOffset? from,
+        DateTimeOffset? to,
+        string? recordTypeCode,
+        CancellationToken cancellationToken = default)
     {
         var query = Context.Set<HealthRecord>().Where(r => r.OlderAdultId == olderAdultId);
 
@@ -33,15 +39,19 @@ public class HealthRecordRepository : BaseRepository<HealthRecord, HealthRecordI
         if (!string.IsNullOrWhiteSpace(recordTypeCode))
             query = query.Where(r => r.RecordTypeCode == recordTypeCode);
 
-        return await query.OrderByDescending(r => r.RecordedAt).ToListAsync();
+        return await query.OrderByDescending(r => r.RecordedAt)
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<HealthRecord>> FindLatestByOlderAdultAsync(Guid olderAdultId, int take)
+    public async Task<IEnumerable<HealthRecord>> FindLatestByOlderAdultAsync(
+        Guid olderAdultId,
+        int take,
+        CancellationToken cancellationToken = default)
     {
         return await Context.Set<HealthRecord>()
             .Where(r => r.OlderAdultId == olderAdultId)
             .OrderByDescending(r => r.RecordedAt)
             .Take(take)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 }
