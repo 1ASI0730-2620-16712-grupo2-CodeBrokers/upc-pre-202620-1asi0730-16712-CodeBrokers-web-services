@@ -221,6 +221,7 @@ that does not exist returns HTTP 404. Closed alerts remain queryable.
 
 `POST /api/v1/alerts` creates a `PENDING` alert using the following JSON body.
 All three identifiers must be nonempty UUIDs. Severity must be `HIGH`, `MEDIUM` or `LOW`.
+Use the ID of an existing health record and the ID of the older adult it belongs to.
 
 ```json
 {
@@ -234,7 +235,8 @@ All three identifiers must be nonempty UUIDs. Severity must be `HIGH`, `MEDIUM` 
 | Response | Behavior |
 | --- | --- |
 | `201 Created` | Returns an `AlertResource` and a `Location` header pointing to `GET /api/v1/alerts/{id}`. |
-| `400 Bad Request` | Rejects missing, malformed or empty identifiers and invalid severity values. |
+| `400 Bad Request` | Rejects missing, malformed or empty identifiers, invalid severity values, or a record belonging to a different older adult. |
+| `404 Not Found` | The specified health record does not exist. |
 | `409 Conflict` | Rejects an alert for a health record that already has one, including concurrent creation attempts. |
 
 Errors use `ProblemDetails` or `ValidationProblemDetails`. Creation error messages and
@@ -242,11 +244,11 @@ the alert-not-found title support English and Spanish through `Accept-Language`.
 The unique health-record index and atomic `SaveChangesAsync` operation ensure that
 concurrent requests persist at most one alert for the same health record.
 
-This is the provisional creation contract for T-9 part 1. Referenced records and rules
-are not yet checked for existence, and thresholds are not yet evaluated. The next part
-integrates `HealthRecord`, `MonitoringRule` and `RiskEvaluationService` to implement the
-US-14 contract based on `healthRecordId`, including HTTP 200 with `alert: null` for a
-value within limits and HTTP 200 with the existing alert on a retry.
+This is the provisional creation contract for T-9 part 2a. The API checks that the health
+record exists and belongs to the specified older adult before checking for duplicates.
+Part 2b will evaluate the record against active monitoring rules and derive the severity.
+That completes the US-14 contract based on `healthRecordId`, including HTTP 200 with
+`alert: null` for a value within limits and HTTP 200 with the existing alert on a retry.
 
 ## Conventions
 
