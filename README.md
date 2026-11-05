@@ -202,15 +202,6 @@ To check a translation from the terminal:
 curl -i -H "Accept-Language: es-419" http://localhost:5270/api/v1/alerts/not-a-guid
 ```
 
-## Jira progress — Alerting
-
-| Task | Implementation status | Scope |
-| --- | --- | --- |
-| T-8 — Alert aggregate and persistence | Implemented | Alert lifecycle and transition history, EF Core mappings, and the PostgreSQL `AddAlerts` migration. A unique index enforces one alert per health record. |
-| T-10 — Alert queries | Implemented | Paginated alert and pending lists with status and patient filters, plus alert details by ID. |
-| T-9 / US-14 — Automatic alert generation | Pending | Add `POST /api/v1/alerts` to evaluate thresholds and create a pending alert transactionally. Integration requires health-record lookup, active monitoring rules (T-18), and the RC-01 access policy. |
-| T-30 / US-12 — Observation when attending an alert | Pending | Store an optional observation of up to 1,000 characters with the authenticated clinician and server timestamp, reject duplicates, and retain the draft in the web app after a save error. Depends on the attendance API (T-11) and web app integration. |
-
 ## Alert queries
 
 - `GET /api/v1/alerts?status=PENDING&olderAdultId=<uuid>&page=1&pageSize=20`
@@ -225,6 +216,37 @@ Lists return `items`, `totalItems`, `page`, `pageSize` and `totalPages`; an empt
 out-of-range page returns HTTP 200 with an empty `items` array.
 Invalid identifiers, status values or pagination return HTTP 400. A valid alert ID
 that does not exist returns HTTP 404. Closed alerts remain queryable.
+
+### Create an alert from explicit references
+
+`POST /api/v1/alerts` creates a `PENDING` alert using the following JSON body.
+All three identifiers must be nonempty UUIDs. Severity must be `HIGH`, `MEDIUM` or `LOW`.
+
+```json
+{
+  "olderAdultId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "healthRecordId": "9b2c1e7a-1111-4c2d-8e3f-123456789abc",
+  "monitoringRuleId": "5d6e7f80-2222-4a1b-9c8d-abcdef012345",
+  "severity": "HIGH"
+}
+```
+
+| Response | Behavior |
+| --- | --- |
+| `201 Created` | Returns an `AlertResource` and a `Location` header pointing to `GET /api/v1/alerts/{id}`. |
+| `400 Bad Request` | Rejects missing, malformed or empty identifiers and invalid severity values. |
+| `409 Conflict` | Rejects an alert for a health record that already has one, including concurrent creation attempts. |
+
+Errors use `ProblemDetails` or `ValidationProblemDetails`. Creation error messages and
+the alert-not-found title support English and Spanish through `Accept-Language`.
+The unique health-record index and atomic `SaveChangesAsync` operation ensure that
+concurrent requests persist at most one alert for the same health record.
+
+This is the provisional creation contract for T-9 part 1. Referenced records and rules
+are not yet checked for existence, and thresholds are not yet evaluated. The next part
+integrates `HealthRecord`, `MonitoringRule` and `RiskEvaluationService` to implement the
+US-14 contract based on `healthRecordId`, including HTTP 200 with `alert: null` for a
+value within limits and HTTP 200 with the existing alert on a retry.
 
 ## Conventions
 
