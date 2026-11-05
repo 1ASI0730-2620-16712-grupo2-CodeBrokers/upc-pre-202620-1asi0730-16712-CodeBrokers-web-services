@@ -26,6 +26,18 @@
     <data name="ConcurrencyConflict" xml:space="preserve">
         <value>Otra solicitud modificó el recurso. Vuelva a cargarlo e inténtelo de nuevo.</value>
     </data>
+    <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
+        <value>Ya se generó una alerta para este registro de salud.</value>
+    </data>
+    <data name="AlertingAlertNotFound" xml:space="preserve">
+        <value>No se encontró la alerta.</value>
+    </data>
+    <data name="AlertingInvalidReference" xml:space="preserve">
+        <value>Los identificadores del adulto mayor, del registro de salud y de la regla de monitoreo son obligatorios.</value>
+    </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
     <data name="NotificationAlertEmailSubject" xml:space="preserve">
         <value>Alerta de VitaLink: {0}</value>
     </data>

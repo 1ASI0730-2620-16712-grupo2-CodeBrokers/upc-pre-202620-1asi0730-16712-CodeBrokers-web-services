@@ -26,6 +26,18 @@
     <data name="ConcurrencyConflict" xml:space="preserve">
         <value>The resource was modified by another request. Reload it and try again.</value>
     </data>
+    <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
+        <value>An alert was already raised for this health record.</value>
+    </data>
+    <data name="AlertingAlertNotFound" xml:space="preserve">
+        <value>The alert was not found.</value>
+    </data>
+    <data name="AlertingInvalidReference" xml:space="preserve">
+        <value>The older adult, health record and monitoring rule identifiers are required.</value>
+    </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>Severity must be HIGH, MEDIUM or LOW.</value>
+    </data>
     <data name="NotificationAlertEmailSubject" xml:space="preserve">
         <value>VitaLink alert: {0}</value>
     </data>

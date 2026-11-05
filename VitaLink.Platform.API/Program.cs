@@ -2,9 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
 using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
+using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.IAM.Domain.Repositories;
+using VitaLink.Platform.API.IAM.Domain.Services;
+using VitaLink.Platform.API.IAM.Infrastructure.Hashing.BCrypt;
+using VitaLink.Platform.API.IAM.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.IAM.Infrastructure.Seeding;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Resources;
@@ -79,6 +85,12 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// IAM Bounded Context
+builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.Configure<DemoUserOptions>(builder.Configuration.GetSection(DemoUserOptions.SectionName));
+builder.Services.AddScoped<DemoUserSeeder>();
+
 // Notification Bounded Context
 builder.Services.Configure<EmailSenderOptions>(
     builder.Configuration.GetSection(EmailSenderOptions.SectionName));
@@ -99,14 +111,17 @@ builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>(
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
+builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
 
 var app = builder.Build();
 
-// Apply pending migrations on startup
+// Apply pending migrations and create the demo users (when enabled) on startup
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     context.Database.Migrate();
+
+    await scope.ServiceProvider.GetRequiredService<DemoUserSeeder>().SeedAsync();
 }
 
 // Configure the HTTP request pipeline.
