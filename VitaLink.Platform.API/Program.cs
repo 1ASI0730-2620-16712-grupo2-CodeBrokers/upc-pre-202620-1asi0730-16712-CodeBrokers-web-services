@@ -23,6 +23,8 @@ using VitaLink.Platform.API.Notification.Infrastructure.Email;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.CommandServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,6 +120,8 @@ builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
 builder.Services.AddScoped<IMonitoringRuleRepository, MonitoringRuleRepository>();
 builder.Services.AddScoped<RiskEvaluationService>();
+builder.Services.AddScoped<IMonitoringRuleCommandService, MonitoringRuleCommandService>();
+builder.Services.AddScoped<IMonitoringRuleQueryService, MonitoringRuleQueryService>();
 
 var app = builder.Build();
 
