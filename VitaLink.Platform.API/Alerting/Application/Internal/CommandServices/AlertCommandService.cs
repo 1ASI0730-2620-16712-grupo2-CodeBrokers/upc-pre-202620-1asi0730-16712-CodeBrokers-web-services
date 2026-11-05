@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using VitaLink.Platform.API.Alerting.Application.Errors;
 using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
+using VitaLink.Platform.API.Alerting.Application.Results;
 using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
@@ -12,7 +13,7 @@ using VitaLink.Platform.API.Shared.Domain.Repositories;
 namespace VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 
 /// <summary>
-///     Creates an alert from explicit references, enforcing one alert per health record.
+///     Creates and evaluates alerts, enforcing one alert per health record.
 /// </summary>
 public class AlertCommandService(IAlertRepository alertRepository, IUnitOfWork unitOfWork,
     ExternalMonitoringService monitoringService) : IAlertCommandService
@@ -39,11 +40,56 @@ public class AlertCommandService(IAlertRepository alertRepository, IUnitOfWork u
             return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.AlertAlreadyRaised);
 
         var alert = new Alert(command);
+        return await TrySaveAsync(alert, cancellationToken)
+            ? new Result<Alert, CreateAlertError>.Success(alert)
+            : new Result<Alert, CreateAlertError>.Failure(CreateAlertError.AlertAlreadyRaised);
+    }
+
+    /// <inheritdoc />
+    public async Task<Result<AlertEvaluationResult, CreateAlertError>> EvaluateAsync(Guid healthRecordId,
+        CancellationToken cancellationToken = default)
+    {
+        if (healthRecordId == Guid.Empty)
+            return new Result<AlertEvaluationResult, CreateAlertError>.Failure(CreateAlertError.InvalidReference);
+
+        var healthRecord = await monitoringService.FindHealthRecordAsync(healthRecordId, cancellationToken);
+        if (healthRecord is null)
+            return new Result<AlertEvaluationResult, CreateAlertError>.Failure(CreateAlertError.HealthRecordNotFound);
+
+        var existingAlert = await alertRepository.FindByHealthRecordAsync(healthRecordId, cancellationToken);
+        if (existingAlert is not null)
+            return new Result<AlertEvaluationResult, CreateAlertError>.Success(
+                new AlertEvaluationResult(healthRecordId, existingAlert, Created: false));
+
+        if (healthRecord.MeasurementValue is null)
+            return new Result<AlertEvaluationResult, CreateAlertError>.Failure(CreateAlertError.UnsupportedHealthRecord);
+
+        var risk = await monitoringService.EvaluateHealthRecordAsync(healthRecordId, cancellationToken);
+        // Before exposing this flow, distinguish a missing active rule from an in-range value.
+        if (risk is null)
+            return new Result<AlertEvaluationResult, CreateAlertError>.Success(
+                new AlertEvaluationResult(healthRecordId, Alert: null, Created: false));
+
+        var alert = new Alert(new CreateAlertCommand(risk.OlderAdultId, healthRecordId, risk.MonitoringRuleId,
+            risk.Severity));
+        if (await TrySaveAsync(alert, cancellationToken))
+            return new Result<AlertEvaluationResult, CreateAlertError>.Success(
+                new AlertEvaluationResult(healthRecordId, alert, Created: true));
+
+        var concurrentAlert = await alertRepository.FindByHealthRecordAsync(healthRecordId, cancellationToken)
+            ?? throw new InvalidOperationException("The concurrent alert could not be retrieved.");
+        return new Result<AlertEvaluationResult, CreateAlertError>.Success(
+            new AlertEvaluationResult(healthRecordId, concurrentAlert, Created: false));
+    }
+
+    private async Task<bool> TrySaveAsync(Alert alert, CancellationToken cancellationToken)
+    {
         await alertRepository.AddAsync(alert, cancellationToken);
 
         try
         {
             await unitOfWork.CompleteAsync(cancellationToken);
+            return true;
         }
         catch (DbUpdateException exception) when (exception.InnerException is PostgresException
                {
@@ -51,10 +97,13 @@ public class AlertCommandService(IAlertRepository alertRepository, IUnitOfWork u
                    ConstraintName: "i_x_alerts_health_record_id"
                })
         {
-            // A concurrent request may have inserted an alert after the lookup.
-            return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.AlertAlreadyRaised);
-        }
+            foreach (var entry in exception.Entries)
+            {
+                if (ReferenceEquals(entry.Entity, alert))
+                    entry.State = EntityState.Detached;
+            }
 
-        return new Result<Alert, CreateAlertError>.Success(alert);
+            return false;
+        }
     }
 }

@@ -18,5 +18,10 @@ public enum CreateAlertError
     /// <summary>
     ///     The requested health record does not exist.
     /// </summary>
-    HealthRecordNotFound
+    HealthRecordNotFound,
+
+    /// <summary>
+    ///     The health record does not contain a measurement that can be evaluated against thresholds.
+    /// </summary>
+    UnsupportedHealthRecord
 }
