@@ -21,6 +21,7 @@ public class HealthRecordConfiguration : IEntityTypeConfiguration<HealthRecord>
             table.HasCheckConstraint("ck_hr_value_or_note", "measurement_value IS NOT NULL OR note IS NOT NULL");
             table.HasCheckConstraint("ck_hr_value_non_negative", "measurement_value IS NULL OR measurement_value >= 0");
         });
+
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Id).HasConversion(id => id.Value, value => new HealthRecordId(value));
 
@@ -28,11 +29,15 @@ public class HealthRecordConfiguration : IEntityTypeConfiguration<HealthRecord>
         builder.HasOne<RecordType>().WithMany().HasForeignKey(r => r.RecordTypeCode).OnDelete(DeleteBehavior.Restrict);
 
         builder.OwnsOne(r => r.Measurement, m =>
-            m.Property(x => x.Value).HasColumnName("measurement_value").HasPrecision(10, 2));
+        {
+            m.WithOwner();
+            m.Property<HealthRecordId>("HealthRecordId").HasColumnName("id");
+            m.Property(x => x.Value).HasColumnName("measurement_value").HasPrecision(10, 2);
+        });
 
         builder.Property(r => r.Source)
             .HasConversion(v => v.ToString().ToSnakeCase().ToUpperInvariant(),
-                v => Enum.Parse<RecordSource>(v.Replace("_", string.Empty), true))
+                           v => Enum.Parse<RecordSource>(v.Replace("_", string.Empty), true))
             .HasMaxLength(20);
 
         // US-11 and US-17: chronological history by patient and by type
