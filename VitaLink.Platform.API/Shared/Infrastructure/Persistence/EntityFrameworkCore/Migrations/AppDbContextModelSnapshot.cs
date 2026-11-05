@@ -266,6 +266,59 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         });
                 });
 
+            modelBuilder.Entity("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates.MonitoringRule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid>("OlderAdultId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("older_adult_id");
+
+                    b.Property<string>("RecordTypeCode")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("record_type_code");
+
+                    b.Property<string>("SeverityLevel")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("severity_level");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_monitoring_rules");
+
+                    b.HasIndex("RecordTypeCode")
+                        .HasDatabaseName("i_x_monitoring_rules_record_type_code");
+
+                    b.HasIndex("OlderAdultId", "RecordTypeCode")
+                        .HasDatabaseName("i_x_monitoring_rules_older_adult_id_record_type_code");
+
+                    b.ToTable("monitoring_rules", "monitoring", t =>
+                        {
+                            t.HasCheckConstraint("ck_rules_min_max", "min_threshold IS NULL OR max_threshold IS NULL OR min_threshold <= max_threshold");
+
+                            t.HasCheckConstraint("ck_rules_threshold", "min_threshold IS NOT NULL OR max_threshold IS NOT NULL");
+                        });
+                });
+
             modelBuilder.Entity("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Entities.RecordType", b =>
                 {
                     b.Property<string>("Code")
@@ -498,6 +551,45 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         });
 
                     b.Navigation("Measurement");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates.MonitoringRule", b =>
+                {
+                    b.HasOne("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Entities.RecordType", null)
+                        .WithMany()
+                        .HasForeignKey("RecordTypeCode")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("f_k_monitoring_rules_record_types_record_type_code");
+
+                    b.OwnsOne("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.ValueObjects.Threshold", "Threshold", b1 =>
+                        {
+                            b1.Property<Guid>("MonitoringRuleId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<decimal?>("Max")
+                                .HasPrecision(10, 2)
+                                .HasColumnType("numeric(10,2)")
+                                .HasColumnName("max_threshold");
+
+                            b1.Property<decimal?>("Min")
+                                .HasPrecision(10, 2)
+                                .HasColumnType("numeric(10,2)")
+                                .HasColumnName("min_threshold");
+
+                            b1.HasKey("MonitoringRuleId")
+                                .HasName("p_k_monitoring_rules");
+
+                            b1.ToTable("monitoring_rules", "monitoring");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MonitoringRuleId")
+                                .HasConstraintName("f_k_monitoring_rules_monitoring_rules_id");
+                        });
+
+                    b.Navigation("Threshold")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
