@@ -1,5 +1,7 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using VitaLink.Platform.API.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Alerting.Domain.Services;
@@ -14,7 +16,7 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 [ApiController]
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class AlertsController(IAlertQueryService queryService) : ControllerBase
+public class AlertsController(IAlertQueryService queryService, IStringLocalizer<SharedResource> localizer) : ControllerBase
 {
     /// <summary>
     ///     Lists alerts, optionally filtered by status and patient.
@@ -70,7 +72,7 @@ public class AlertsController(IAlertQueryService queryService) : ControllerBase
         }
         var alert = await queryService.Handle(new AlertId(id), cancellationToken);
         return alert is null
-            ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Alert not found.")
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: localizer["AlertingAlertNotFound"].Value)
             : Ok(AlertResourceFromEntityAssembler.ToResourceFromEntity(alert));
     }
 
