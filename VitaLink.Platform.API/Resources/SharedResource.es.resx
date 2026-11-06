@@ -26,4 +26,34 @@
     <data name="ConcurrencyConflict" xml:space="preserve">
         <value>Otra solicitud modificó el recurso. Vuelva a cargarlo e inténtelo de nuevo.</value>
     </data>
+    <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
+        <value>Ya se generó una alerta para este registro de salud.</value>
+    </data>
+    <data name="AlertingAlertNotFound" xml:space="preserve">
+        <value>No se encontró la alerta.</value>
+    </data>
+    <data name="AlertingInvalidReference" xml:space="preserve">
+        <value>Los identificadores del adulto mayor, del registro de salud y de la regla de monitoreo son obligatorios.</value>
+    </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
+    <data name="NotificationAlertEmailSubject" xml:space="preserve">
+        <value>Alerta de VitaLink: {0}</value>
+    </data>
+    <data name="NotificationAlertEmailBody" xml:space="preserve">
+        <value>Se generó una alerta de gravedad {0} para {1}. Ingrese a VitaLink para revisarla.</value>
+    </data>
+    <data name="NotificationAlreadySent" xml:space="preserve">
+        <value>Ya se envió una notificación de esta alerta a este destinatario.</value>
+    </data>
+    <data name="NotificationMaxAttemptsReached" xml:space="preserve">
+        <value>La notificación alcanzó el número máximo de intentos de envío.</value>
+    </data>
+    <data name="NotificationDeliveryFailed" xml:space="preserve">
+        <value>No se pudo entregar la notificación. Se volverá a intentar.</value>
+    </data>
+    <data name="NotificationNotFound" xml:space="preserve">
+        <value>No se encontró la notificación.</value>
+    </data>
 </root>

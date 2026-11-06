@@ -36,4 +36,15 @@ public class NotificationRepository(AppDbContext context)
             .Where(n => n.Status == DeliveryStatus.Failed && n.Attempts < maxAttempts)
             .ToListAsync(cancellationToken);
     }
+    
+    /// <inheritdoc />
+    public async Task<NotificationAggregate?> FindByAlertAndRecipientAsync(
+        Guid alertId, Guid recipientId, NotificationChannel channel, CancellationToken cancellationToken = default)
+    {
+        return await Context.Set<NotificationAggregate>()
+            .FirstOrDefaultAsync(
+                n => n.RelatedAlertId == alertId && n.RecipientId == recipientId && n.Channel == channel,
+                cancellationToken);
+    }
+    
 }
