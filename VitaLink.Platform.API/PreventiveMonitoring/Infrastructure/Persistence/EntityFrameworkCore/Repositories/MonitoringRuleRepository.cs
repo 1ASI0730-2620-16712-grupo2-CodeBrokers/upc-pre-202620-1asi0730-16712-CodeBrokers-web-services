@@ -33,4 +33,11 @@ public class MonitoringRuleRepository : BaseRepository<MonitoringRule, Monitorin
         return await Context.Set<MonitoringRule>()
             .FirstOrDefaultAsync(r => r.OlderAdultId == olderAdultId && r.RecordTypeCode == recordTypeCode, cancellationToken);
     }
+
+    public async Task<IReadOnlyList<MonitoringRule>> FindActiveByOlderAdultAndTypeAsync(Guid olderAdultId, string recordTypeCode, CancellationToken cancellationToken = default)
+    {
+        return await Context.Set<MonitoringRule>()
+            .Where(r => r.OlderAdultId == olderAdultId && r.RecordTypeCode == recordTypeCode && r.IsActive)
+            .ToListAsync(cancellationToken);
+    }
 }
