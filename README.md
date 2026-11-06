@@ -247,13 +247,13 @@ VitaLink uses GitHub Actions, Docker Hub, and Microsoft Azure App Service to aut
 - **Docker image:** `leorg15/vitalink-api:dev`
 - **Database:** Azure Database for PostgreSQL
 - **Container port:** `8080`
-- **Deployment branch:** `feature/continuous-deployment`
+- **Deployment branch:** `develop`
 
 ### Deployment workflow
 
 The workflow is defined in `.github/workflows/cd.yml`.
 
-When changes are pushed to the `feature/continuous-deployment` branch:
+When changes are merged into the `develop` branch:
 
 1. GitHub Actions checks out the repository.
 2. GitHub Actions authenticates with Docker Hub.
