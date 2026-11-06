@@ -10,5 +10,4 @@ public record CreateMonitoringRuleResource(
     string RecordTypeCode,
     decimal? MinThreshold,
     decimal? MaxThreshold,
-    string SeverityLevel,
-    string Description);
+    string Severity);

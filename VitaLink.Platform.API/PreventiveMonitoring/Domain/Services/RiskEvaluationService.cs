@@ -1,5 +1,6 @@
 using System;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
+using VitaLink.Platform.API.Shared.Domain.Model.ValueObjects;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
 
@@ -8,7 +9,7 @@ namespace VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
 /// </summary>
 public class RiskEvaluationService
 {
-    public bool EvaluateRisk(HealthRecord record, MonitoringRule rule, out string? severityLevel)
+    public bool EvaluateRisk(HealthRecord record, MonitoringRule rule, out SeverityLevel? severityLevel)
     {
         severityLevel = null;
 
@@ -20,7 +21,7 @@ public class RiskEvaluationService
 
         if (record.Measurement?.Value is decimal value && rule.Threshold.IsViolatedBy(value))
         {
-            severityLevel = rule.SeverityLevel;
+            severityLevel = rule.Severity;
             return true;
         }
 

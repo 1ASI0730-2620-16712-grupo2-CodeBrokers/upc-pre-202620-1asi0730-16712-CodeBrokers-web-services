@@ -1,5 +1,6 @@
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Commands;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Resources;
+using VitaLink.Platform.API.Shared.Domain.Model.ValueObjects;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Transform;
 
@@ -15,7 +16,6 @@ public static class CreateMonitoringRuleCommandFromResourceAssembler
             resource.RecordTypeCode,
             resource.MinThreshold,
             resource.MaxThreshold,
-            resource.SeverityLevel,
-            resource.Description);
+            Enum.Parse<SeverityLevel>(resource.Severity, ignoreCase: true));
     }
 }
