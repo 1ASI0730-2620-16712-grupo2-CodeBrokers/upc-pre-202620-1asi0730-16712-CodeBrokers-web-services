@@ -74,4 +74,19 @@
     <data name="MonitoringRuleDuplicateActive" xml:space="preserve">
         <value>Ya existe una regla activa para este adulto mayor, tipo de registro y severidad.</value>
     </data>
+    <data name="AlertingObservationTooLong" xml:space="preserve">
+        <value>La observación no puede superar los {0} caracteres.</value>
+    </data>
+    <data name="AlertingObservationAlreadyExists" xml:space="preserve">
+        <value>Esta alerta ya tiene una observación.</value>
+    </data>
+    <data name="AlertingObservationRequiresAttended" xml:space="preserve">
+        <value>Solo se puede agregar una observación a una alerta atendida.</value>
+    </data>
+    <data name="AlertingObservationNotFound" xml:space="preserve">
+        <value>Esta alerta no tiene observación.</value>
+    </data>
+    <data name="AlertingObservationInvalidReference" xml:space="preserve">
+        <value>El identificador de la alerta o del autor no puede estar vacío.</value>
+    </data>
 </root>
