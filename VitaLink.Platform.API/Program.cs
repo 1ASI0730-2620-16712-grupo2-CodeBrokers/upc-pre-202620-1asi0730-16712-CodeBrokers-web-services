@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
 using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
+using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -29,6 +30,8 @@ using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.Enti
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.CommandServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.ACL;
+using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.ACL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,6 +125,7 @@ builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>(
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<ExternalMonitoringService>();
 
 // Preventive Monitoring Bounded Context
 builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
@@ -129,6 +133,7 @@ builder.Services.AddScoped<IMonitoringRuleRepository, MonitoringRuleRepository>(
 builder.Services.AddScoped<RiskEvaluationService>();
 builder.Services.AddScoped<IMonitoringRuleCommandService, MonitoringRuleCommandService>();
 builder.Services.AddScoped<IMonitoringRuleQueryService, MonitoringRuleQueryService>();
+builder.Services.AddScoped<IMonitoringContextFacade, MonitoringContextFacade>();
 
 var app = builder.Build();
 

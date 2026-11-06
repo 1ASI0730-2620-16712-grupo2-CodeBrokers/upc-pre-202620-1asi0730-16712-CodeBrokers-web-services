@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using VitaLink.Platform.API.Alerting.Application.Errors;
+using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
@@ -13,7 +14,8 @@ namespace VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 /// <summary>
 ///     Creates an alert from explicit references, enforcing one alert per health record.
 /// </summary>
-public class AlertCommandService(IAlertRepository alertRepository, IUnitOfWork unitOfWork) : IAlertCommandService
+public class AlertCommandService(IAlertRepository alertRepository, IUnitOfWork unitOfWork,
+    ExternalMonitoringService monitoringService) : IAlertCommandService
 {
     /// <inheritdoc />
     public async Task<Result<Alert, CreateAlertError>> Handle(CreateAlertCommand command,
@@ -23,6 +25,13 @@ public class AlertCommandService(IAlertRepository alertRepository, IUnitOfWork u
 
         if (command.OlderAdultId == Guid.Empty || command.HealthRecordId == Guid.Empty ||
             command.MonitoringRuleId == Guid.Empty)
+            return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.InvalidReference);
+
+        var healthRecord = await monitoringService.FindHealthRecordAsync(command.HealthRecordId, cancellationToken);
+        if (healthRecord is null)
+            return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.HealthRecordNotFound);
+
+        if (healthRecord.OlderAdultId != command.OlderAdultId)
             return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.InvalidReference);
 
         var existingAlert = await alertRepository.FindByHealthRecordAsync(command.HealthRecordId, cancellationToken);
