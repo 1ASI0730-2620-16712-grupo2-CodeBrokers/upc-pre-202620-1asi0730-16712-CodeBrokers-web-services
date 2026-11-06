@@ -12,7 +12,7 @@ using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCor
 namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261105171516_AddHealthRecords")]
+    [Migration("20261106023610_AddHealthRecords")]
     partial class AddHealthRecords
     {
         /// <inheritdoc />
@@ -216,11 +216,13 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
             modelBuilder.Entity("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates.HealthRecord", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("Note")
-                        .HasColumnType("text")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("note");
 
                     b.Property<Guid>("OlderAdultId")
@@ -229,8 +231,8 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
 
                     b.Property<string>("RecordTypeCode")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("record_type_code");
 
                     b.Property<DateTimeOffset>("RecordedAt")
@@ -243,21 +245,21 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
 
                     b.Property<string>("Source")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("source");
 
                     b.HasKey("Id")
                         .HasName("p_k_health_records");
 
+                    b.HasIndex("OlderAdultId")
+                        .HasDatabaseName("i_x_health_records_older_adult_id");
+
                     b.HasIndex("RecordTypeCode")
                         .HasDatabaseName("i_x_health_records_record_type_code");
 
-                    b.HasIndex("OlderAdultId", "RecordedAt")
-                        .HasDatabaseName("i_x_health_records_older_adult_id_recorded_at");
-
-                    b.HasIndex("OlderAdultId", "RecordTypeCode", "RecordedAt")
-                        .HasDatabaseName("i_x_health_records_older_adult_id_record_type_code_recorded_at");
+                    b.HasIndex("RecordedAt")
+                        .HasDatabaseName("i_x_health_records_recorded_at");
 
                     b.ToTable("health_records", "monitoring", t =>
                         {
@@ -269,17 +271,69 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         });
                 });
 
+            modelBuilder.Entity("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates.MonitoringRule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid>("OlderAdultId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("older_adult_id");
+
+                    b.Property<string>("RecordTypeCode")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("record_type_code");
+
+                    b.Property<string>("SeverityLevel")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("severity_level");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_monitoring_rules");
+
+                    b.HasIndex("RecordTypeCode")
+                        .HasDatabaseName("i_x_monitoring_rules_record_type_code");
+
+                    b.HasIndex("OlderAdultId", "RecordTypeCode")
+                        .HasDatabaseName("i_x_monitoring_rules_older_adult_id_record_type_code");
+
+                    b.ToTable("monitoring_rules", "monitoring", t =>
+                        {
+                            t.HasCheckConstraint("ck_rules_min_max", "min_threshold IS NULL OR max_threshold IS NULL OR min_threshold <= max_threshold");
+
+                            t.HasCheckConstraint("ck_rules_threshold", "min_threshold IS NOT NULL OR max_threshold IS NOT NULL");
+                        });
+                });
+
             modelBuilder.Entity("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Entities.RecordType", b =>
                 {
                     b.Property<string>("Code")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("code");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("character varying(80)")
+                        .HasColumnType("text")
                         .HasColumnName("display_name");
 
                     b.Property<bool>("IsActive")
@@ -287,13 +341,13 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         .HasColumnName("is_active");
 
                     b.Property<decimal?>("MaxValidValue")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("max_valid_value");
 
                     b.Property<decimal?>("MinValidValue")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("min_valid_value");
 
                     b.Property<bool>("RequiresValue")
@@ -313,79 +367,6 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                             t.HasCheckConstraint("ck_record_types_range", "min_valid_value IS NULL OR max_valid_value IS NULL OR min_valid_value < max_valid_value");
 
                             t.HasCheckConstraint("ck_record_types_unit", "requires_value = FALSE OR unit IS NOT NULL");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Code = "BLOOD_PRESSURE",
-                            DisplayName = "Blood pressure (systolic)",
-                            IsActive = true,
-                            MaxValidValue = 300m,
-                            MinValidValue = 40m,
-                            RequiresValue = true,
-                            Unit = "mmHg"
-                        },
-                        new
-                        {
-                            Code = "HEART_RATE",
-                            DisplayName = "Heart rate",
-                            IsActive = true,
-                            MaxValidValue = 250m,
-                            MinValidValue = 20m,
-                            RequiresValue = true,
-                            Unit = "bpm"
-                        },
-                        new
-                        {
-                            Code = "GLUCOSE",
-                            DisplayName = "Blood glucose",
-                            IsActive = true,
-                            MaxValidValue = 600m,
-                            MinValidValue = 20m,
-                            RequiresValue = true,
-                            Unit = "mg/dL"
-                        },
-                        new
-                        {
-                            Code = "BODY_TEMPERATURE",
-                            DisplayName = "Body temperature",
-                            IsActive = true,
-                            MaxValidValue = 45m,
-                            MinValidValue = 30m,
-                            RequiresValue = true,
-                            Unit = "°C"
-                        },
-                        new
-                        {
-                            Code = "WEIGHT",
-                            DisplayName = "Weight",
-                            IsActive = true,
-                            MaxValidValue = 300m,
-                            MinValidValue = 1m,
-                            RequiresValue = true,
-                            Unit = "kg"
-                        },
-                        new
-                        {
-                            Code = "FALL_DETECTED",
-                            DisplayName = "Fall detected",
-                            IsActive = true,
-                            RequiresValue = false
-                        },
-                        new
-                        {
-                            Code = "MEDICATION_INTAKE",
-                            DisplayName = "Medication intake",
-                            IsActive = true,
-                            RequiresValue = false
-                        },
-                        new
-                        {
-                            Code = "GENERAL_NOTE",
-                            DisplayName = "General note",
-                            IsActive = true,
-                            RequiresValue = false
                         });
                 });
 
@@ -486,8 +467,8 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                                 .HasColumnName("id");
 
                             b1.Property<decimal>("Value")
-                                .HasPrecision(10, 2)
-                                .HasColumnType("numeric(10,2)")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
                                 .HasColumnName("measurement_value");
 
                             b1.HasKey("HealthRecordId")
@@ -501,6 +482,45 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         });
 
                     b.Navigation("Measurement");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates.MonitoringRule", b =>
+                {
+                    b.HasOne("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Entities.RecordType", null)
+                        .WithMany()
+                        .HasForeignKey("RecordTypeCode")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("f_k_monitoring_rules_record_types_record_type_code");
+
+                    b.OwnsOne("VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.ValueObjects.Threshold", "Threshold", b1 =>
+                        {
+                            b1.Property<Guid>("MonitoringRuleId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<decimal?>("Max")
+                                .HasPrecision(10, 2)
+                                .HasColumnType("numeric(10,2)")
+                                .HasColumnName("max_threshold");
+
+                            b1.Property<decimal?>("Min")
+                                .HasPrecision(10, 2)
+                                .HasColumnType("numeric(10,2)")
+                                .HasColumnName("min_threshold");
+
+                            b1.HasKey("MonitoringRuleId")
+                                .HasName("p_k_monitoring_rules");
+
+                            b1.ToTable("monitoring_rules", "monitoring");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MonitoringRuleId")
+                                .HasConstraintName("f_k_monitoring_rules_monitoring_rules_id");
+                        });
+
+                    b.Navigation("Threshold")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

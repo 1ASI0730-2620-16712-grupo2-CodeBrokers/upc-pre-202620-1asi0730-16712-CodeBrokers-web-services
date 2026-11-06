@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Entities;
+using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.ValueObjects;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 
@@ -17,13 +18,17 @@ public class HealthRecordConfiguration : IEntityTypeConfiguration<HealthRecord>
         });
 
         builder.HasKey(r => r.Id);
-        builder.Property(r => r.Id).ValueGeneratedOnAdd();
+        builder.Property(r => r.Id)
+            .HasConversion(v => v.Value, v => new HealthRecordId(v))
+            .HasColumnName("id")
+            .ValueGeneratedOnAdd();
 
         builder.Property(r => r.OlderAdultId).IsRequired();
         builder.Property(r => r.RecordTypeCode).IsRequired().HasMaxLength(50).HasColumnName("record_type_code");
         
         builder.OwnsOne(r => r.Measurement, m =>
         {
+            m.Property<HealthRecordId>("HealthRecordId").HasColumnName("id");
             m.Property(p => p.Value).HasColumnName("measurement_value").HasPrecision(18, 2);
         });
 
