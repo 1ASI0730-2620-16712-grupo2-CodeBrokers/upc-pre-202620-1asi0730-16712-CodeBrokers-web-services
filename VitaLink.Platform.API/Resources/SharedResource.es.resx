@@ -59,6 +59,9 @@
     <data name="AlertingHealthRecordNotFound" xml:space="preserve">
         <value>No se encontró el registro de salud.</value>
     </data>
+    <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
+        <value>El identificador del registro de salud es obligatorio y no puede estar vacío.</value>
+    </data>
     <data name="MonitoringRuleInvalidReference" xml:space="preserve">
         <value>El identificador del adulto mayor es obligatorio.</value>
     </data>

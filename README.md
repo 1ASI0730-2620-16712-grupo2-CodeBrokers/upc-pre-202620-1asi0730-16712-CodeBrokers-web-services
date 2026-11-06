@@ -163,12 +163,8 @@ Example of a controller translating a `Result`:
 ```csharp
 return result switch
 {
-    Result<Alert, CreateAlertError>.Success success =>
-        CreatedAtAction(nameof(GetAlert), new { id = success.Value.Id.Value },
-            AlertResourceFromEntityAssembler.ToResourceFromEntity(success.Value)),
-
-    Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.DuplicateAlert } =>
-        Problem(statusCode: StatusCodes.Status409Conflict, title: localizer["AlertingAlertDuplicated"].Value),
+    Result<AlertEvaluationResult, CreateAlertError>.Failure { Error: CreateAlertError.HealthRecordNotFound } =>
+        Problem(statusCode: StatusCodes.Status404NotFound, title: localizer["AlertingHealthRecordNotFound"].Value),
 
     _ => Problem(statusCode: StatusCodes.Status500InternalServerError,
         title: localizer["UnexpectedServerError"].Value,
@@ -190,7 +186,7 @@ The culture applied is returned in the `Content-Language` response header.
 
 Messages live in `Resources/SharedResource.resx` (English) and `Resources/SharedResource.es.resx` (Spanish). To add a message:
 
-1. Add the same key to **both** files. Prefix it with your bounded context, e.g. `AlertingAlertDuplicated` or `ElderCareOlderAdultNotFound`.
+1. Add the same key to **both** files. Prefix it with your bounded context, e.g. `AlertingHealthRecordNotFound` or `ElderCareOlderAdultNotFound`.
 2. Inject `IStringLocalizer<SharedResource>` in the controller and read it with `localizer["Key"].Value`.
 3. For data annotations, use the key as the error message: `[Required(ErrorMessage = "ElderCareFullNameRequired")]`.
 
@@ -217,38 +213,30 @@ out-of-range page returns HTTP 200 with an empty `items` array.
 Invalid identifiers, status values or pagination return HTTP 400. A valid alert ID
 that does not exist returns HTTP 404. Closed alerts remain queryable.
 
-### Create an alert from explicit references
+### Evaluate a health record for alerts
 
-`POST /api/v1/alerts` creates a `PENDING` alert using the following JSON body.
-All three identifiers must be nonempty UUIDs. Severity must be `HIGH`, `MEDIUM` or `LOW`.
-Use the ID of an existing health record and the ID of the older adult it belongs to.
+`POST /api/v1/alerts` takes a nonempty health record UUID. The API checks active rules
+for the record's patient and type. If several rules are violated, it creates a `PENDING`
+alert using the rule with the highest severity.
 
 ```json
 {
-  "olderAdultId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "healthRecordId": "9b2c1e7a-1111-4c2d-8e3f-123456789abc",
-  "monitoringRuleId": "5d6e7f80-2222-4a1b-9c8d-abcdef012345",
-  "severity": "HIGH"
+  "healthRecordId": "9b2c1e7a-1111-4c2d-8e3f-123456789abc"
 }
 ```
 
 | Response | Behavior |
 | --- | --- |
-| `201 Created` | Returns an `AlertResource` and a `Location` header pointing to `GET /api/v1/alerts/{id}`. |
-| `400 Bad Request` | Rejects missing, malformed or empty identifiers, invalid severity values, or a record belonging to a different older adult. |
+| `201 Created` | Returns `healthRecordId` and the new `alert`, with a `Location` header pointing to `GET /api/v1/alerts/{id}`. |
+| `200 OK` | Returns `healthRecordId` and the existing `alert` on a retry, including concurrent requests. |
+| `200 OK` | Returns `healthRecordId` and `alert: null` when the record has no numerical value, there is no active rule, or the value is within all limits. Bounds are inclusive. |
+| `400 Bad Request` | The health record identifier is missing, malformed or empty. |
 | `404 Not Found` | The specified health record does not exist. |
-| `409 Conflict` | Rejects an alert for a health record that already has one, including concurrent creation attempts. |
 
 Errors use `ProblemDetails` or `ValidationProblemDetails`. Creation error messages and
 the alert-not-found title support English and Spanish through `Accept-Language`.
 The unique health-record index and atomic `SaveChangesAsync` operation ensure that
 concurrent requests persist at most one alert for the same health record.
-
-This is the provisional creation contract for T-9 part 2a. The API checks that the health
-record exists and belongs to the specified older adult before checking for duplicates.
-Part 2b will evaluate the record against active monitoring rules and derive the severity.
-That completes the US-14 contract based on `healthRecordId`, including HTTP 200 with
-`alert: null` for a value within limits and HTTP 200 with the existing alert on a retry.
 
 ## Conventions
 
