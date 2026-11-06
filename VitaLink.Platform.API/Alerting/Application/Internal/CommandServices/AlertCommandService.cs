@@ -19,59 +19,34 @@ public class AlertCommandService(IAlertRepository alertRepository, IUnitOfWork u
     ExternalMonitoringService monitoringService) : IAlertCommandService
 {
     /// <inheritdoc />
-    public async Task<Result<Alert, CreateAlertError>> Handle(CreateAlertCommand command,
+    public async Task<Result<AlertEvaluationResult, CreateAlertError>> Handle(GenerateAlertFromHealthRecordCommand command,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        if (command.OlderAdultId == Guid.Empty || command.HealthRecordId == Guid.Empty ||
-            command.MonitoringRuleId == Guid.Empty)
-            return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.InvalidReference);
-
-        var healthRecord = await monitoringService.FindHealthRecordAsync(command.HealthRecordId, cancellationToken);
-        if (healthRecord is null)
-            return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.HealthRecordNotFound);
-
-        if (healthRecord.OlderAdultId != command.OlderAdultId)
-            return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.InvalidReference);
-
-        var existingAlert = await alertRepository.FindByHealthRecordAsync(command.HealthRecordId, cancellationToken);
-        if (existingAlert is not null)
-            return new Result<Alert, CreateAlertError>.Failure(CreateAlertError.AlertAlreadyRaised);
-
-        var alert = new Alert(command);
-        return await TrySaveAsync(alert, cancellationToken)
-            ? new Result<Alert, CreateAlertError>.Success(alert)
-            : new Result<Alert, CreateAlertError>.Failure(CreateAlertError.AlertAlreadyRaised);
-    }
-
-    /// <inheritdoc />
-    public async Task<Result<AlertEvaluationResult, CreateAlertError>> EvaluateAsync(Guid healthRecordId,
-        CancellationToken cancellationToken = default)
-    {
+        var healthRecordId = command.HealthRecordId;
         if (healthRecordId == Guid.Empty)
             return new Result<AlertEvaluationResult, CreateAlertError>.Failure(CreateAlertError.InvalidReference);
-
-        var healthRecord = await monitoringService.FindHealthRecordAsync(healthRecordId, cancellationToken);
-        if (healthRecord is null)
-            return new Result<AlertEvaluationResult, CreateAlertError>.Failure(CreateAlertError.HealthRecordNotFound);
 
         var existingAlert = await alertRepository.FindByHealthRecordAsync(healthRecordId, cancellationToken);
         if (existingAlert is not null)
             return new Result<AlertEvaluationResult, CreateAlertError>.Success(
                 new AlertEvaluationResult(healthRecordId, existingAlert, Created: false));
 
-        if (healthRecord.MeasurementValue is null)
-            return new Result<AlertEvaluationResult, CreateAlertError>.Failure(CreateAlertError.UnsupportedHealthRecord);
-
         var risk = await monitoringService.EvaluateHealthRecordAsync(healthRecordId, cancellationToken);
-        // Before exposing this flow, distinguish a missing active rule from an in-range value.
         if (risk is null)
+            return new Result<AlertEvaluationResult, CreateAlertError>.Failure(CreateAlertError.HealthRecordNotFound);
+
+        if (risk.Outcome is HealthRecordRiskOutcome.NotEvaluable or HealthRecordRiskOutcome.NoRuleConfigured
+            or HealthRecordRiskOutcome.WithinLimits)
             return new Result<AlertEvaluationResult, CreateAlertError>.Success(
                 new AlertEvaluationResult(healthRecordId, Alert: null, Created: false));
 
-        var alert = new Alert(new CreateAlertCommand(risk.OlderAdultId, healthRecordId, risk.MonitoringRuleId,
-            risk.Severity));
+        if (risk.Outcome != HealthRecordRiskOutcome.Violated || risk.MonitoringRuleId is not Guid ruleId ||
+            risk.Severity is not { } severity)
+            throw new InvalidOperationException("The risk evaluation did not identify a violated rule and severity.");
+
+        var alert = new Alert(new CreateAlertCommand(risk.OlderAdultId, healthRecordId, ruleId, severity));
         if (await TrySaveAsync(alert, cancellationToken))
             return new Result<AlertEvaluationResult, CreateAlertError>.Success(
                 new AlertEvaluationResult(healthRecordId, alert, Created: true));

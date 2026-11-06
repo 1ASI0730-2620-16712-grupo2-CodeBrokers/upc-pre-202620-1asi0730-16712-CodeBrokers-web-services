@@ -59,4 +59,7 @@
     <data name="AlertingHealthRecordNotFound" xml:space="preserve">
         <value>The health record was not found.</value>
     </data>
+    <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
+        <value>A nonempty health record identifier is required.</value>
+    </data>
 </root>

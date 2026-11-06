@@ -14,7 +14,7 @@ public interface IMonitoringContextFacade
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///     Returns the highest-severity rule violated by the health record, if any.
+    ///     Evaluates an existing record, or returns null when it does not exist.
     /// </summary>
     Task<RiskEvaluationSummary?> EvaluateHealthRecordAsync(Guid healthRecordId,
         CancellationToken cancellationToken = default);
@@ -27,7 +27,18 @@ public record HealthRecordSummary(Guid HealthRecordId, Guid OlderAdultId, string
     decimal? MeasurementValue);
 
 /// <summary>
-///     Identifies the violated monitoring rule and its severity.
+///     Describes the evaluation and identifies the highest-severity violated rule, when applicable.
 /// </summary>
-public record RiskEvaluationSummary(Guid HealthRecordId, Guid OlderAdultId, Guid MonitoringRuleId,
-    SeverityLevel Severity);
+public record RiskEvaluationSummary(Guid HealthRecordId, Guid OlderAdultId, MonitoringEvaluationOutcome Outcome,
+    Guid? MonitoringRuleId = null, SeverityLevel? Severity = null);
+
+/// <summary>
+///     Possible outcomes of evaluating an existing health record.
+/// </summary>
+public enum MonitoringEvaluationOutcome
+{
+    NotEvaluable,
+    NoRuleConfigured,
+    WithinLimits,
+    Violated
+}
