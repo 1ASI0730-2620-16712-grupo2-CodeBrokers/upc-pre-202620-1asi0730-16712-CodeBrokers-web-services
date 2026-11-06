@@ -276,12 +276,6 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("description");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
                         .HasColumnName("is_active");
@@ -296,11 +290,11 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         .HasColumnType("character varying(30)")
                         .HasColumnName("record_type_code");
 
-                    b.Property<string>("SeverityLevel")
+                    b.Property<string>("Severity")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("severity_level");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("severity");
 
                     b.HasKey("Id")
                         .HasName("p_k_monitoring_rules");
@@ -308,14 +302,18 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                     b.HasIndex("RecordTypeCode")
                         .HasDatabaseName("i_x_monitoring_rules_record_type_code");
 
-                    b.HasIndex("OlderAdultId", "RecordTypeCode")
-                        .HasDatabaseName("i_x_monitoring_rules_older_adult_id_record_type_code");
+                    b.HasIndex("OlderAdultId", "RecordTypeCode", "Severity")
+                        .IsUnique()
+                        .HasDatabaseName("uq_mr_active_rule")
+                        .HasFilter("is_active");
 
                     b.ToTable("monitoring_rules", "monitoring", t =>
                         {
-                            t.HasCheckConstraint("ck_rules_min_max", "min_threshold IS NULL OR max_threshold IS NULL OR min_threshold <= max_threshold");
+                            t.HasCheckConstraint("ck_mr_at_least_one_bound", "min_value IS NOT NULL OR max_value IS NOT NULL");
 
-                            t.HasCheckConstraint("ck_rules_threshold", "min_threshold IS NOT NULL OR max_threshold IS NOT NULL");
+                            t.HasCheckConstraint("ck_mr_bounds_consistent", "min_value IS NULL OR max_value IS NULL OR min_value <= max_value");
+
+                            t.HasCheckConstraint("ck_mr_severity", "severity IN ('HIGH','MEDIUM','LOW')");
                         });
                 });
 
@@ -571,12 +569,12 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                             b1.Property<decimal?>("Max")
                                 .HasPrecision(10, 2)
                                 .HasColumnType("numeric(10,2)")
-                                .HasColumnName("max_threshold");
+                                .HasColumnName("max_value");
 
                             b1.Property<decimal?>("Min")
                                 .HasPrecision(10, 2)
                                 .HasColumnType("numeric(10,2)")
-                                .HasColumnName("min_threshold");
+                                .HasColumnName("min_value");
 
                             b1.HasKey("MonitoringRuleId")
                                 .HasName("p_k_monitoring_rules");

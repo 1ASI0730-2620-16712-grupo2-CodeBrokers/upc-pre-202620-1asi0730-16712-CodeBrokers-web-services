@@ -15,4 +15,5 @@ public interface IMonitoringRuleRepository : IBaseRepository<MonitoringRule, Mon
 {
     Task<IEnumerable<MonitoringRule>> FindByOlderAdultAsync(Guid olderAdultId, CancellationToken cancellationToken = default);
     Task<MonitoringRule?> FindByOlderAdultAndTypeAsync(Guid olderAdultId, string recordTypeCode, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<MonitoringRule>> FindActiveByOlderAdultAndTypeAsync(Guid olderAdultId, string recordTypeCode, CancellationToken cancellationToken = default);
 }
