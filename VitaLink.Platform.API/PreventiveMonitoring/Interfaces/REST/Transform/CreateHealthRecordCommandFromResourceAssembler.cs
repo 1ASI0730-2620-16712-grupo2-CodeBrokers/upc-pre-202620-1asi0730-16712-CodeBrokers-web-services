@@ -15,6 +15,7 @@ public static class CreateHealthRecordCommandFromResourceAssembler
             olderAdultId,
             resource.RecordTypeCode!,
             resource.MeasurementValue,
+            resource.Unit,
             resource.Note,
             source,
             resource.RecordedBy.GetValueOrDefault()

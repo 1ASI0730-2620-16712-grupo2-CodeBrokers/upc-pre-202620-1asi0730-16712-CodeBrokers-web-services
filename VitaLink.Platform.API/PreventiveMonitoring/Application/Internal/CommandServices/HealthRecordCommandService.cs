@@ -84,6 +84,16 @@ public class HealthRecordCommandService(
             {
                 return new Result<HealthRecord, CreateHealthRecordError>.Failure(CreateHealthRecordError.ValueOutOfRange);
             }
+
+            // 7. Validar unidad de medida si el catálogo la especifica
+            if (!string.IsNullOrWhiteSpace(recordType.Unit))
+            {
+                if (string.IsNullOrWhiteSpace(command.Unit) ||
+                    !string.Equals(command.Unit.Trim(), recordType.Unit.Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return new Result<HealthRecord, CreateHealthRecordError>.Failure(CreateHealthRecordError.InvalidUnit);
+                }
+            }
         }
 
         var updatedCommand = command with
