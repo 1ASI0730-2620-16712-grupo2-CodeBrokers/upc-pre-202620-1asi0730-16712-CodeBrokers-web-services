@@ -80,6 +80,43 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                     b.ToTable("alerts", "alerting");
                 });
 
+            modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Entities.AlertObservation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AlertId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("alert_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_alert_observations");
+
+                    b.HasIndex("AlertId")
+                        .IsUnique()
+                        .HasDatabaseName("uq_alert_observations_alert_id");
+
+                    b.ToTable("alert_observations", "alerting", t =>
+                        {
+                            t.HasCheckConstraint("ck_alert_observations_text_length", "char_length(text) BETWEEN 1 AND 1000");
+                        });
+                });
+
             modelBuilder.Entity("VitaLink.Platform.API.IAM.Domain.Model.Aggregates.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -483,6 +520,16 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFramewor
                         });
 
                     b.Navigation("StatusHistory");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Entities.AlertObservation", b =>
+                {
+                    b.HasOne("VitaLink.Platform.API.Alerting.Domain.Model.Aggregates.Alert", null)
+                        .WithMany()
+                        .HasForeignKey("AlertId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("f_k_alert_observations_alerts_alert_id");
                 });
 
             modelBuilder.Entity("VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification", b =>

@@ -125,6 +125,9 @@ builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>(
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<IAlertObservationRepository, AlertObservationRepository>();
+builder.Services.AddScoped<IAlertObservationCommandService, AlertObservationCommandService>();
+builder.Services.AddScoped<IAlertObservationQueryService, AlertObservationQueryService>();
 builder.Services.AddScoped<ExternalMonitoringService>();
 
 // Preventive Monitoring Bounded Context
