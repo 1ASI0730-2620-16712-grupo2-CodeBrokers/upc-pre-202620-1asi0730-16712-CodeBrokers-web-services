@@ -59,4 +59,19 @@
     <data name="AlertingHealthRecordNotFound" xml:space="preserve">
         <value>The health record was not found.</value>
     </data>
+    <data name="MonitoringRuleInvalidReference" xml:space="preserve">
+        <value>The older adult identifier is required.</value>
+    </data>
+    <data name="MonitoringRuleInvalidRecordType" xml:space="preserve">
+        <value>The record type is required and must exist.</value>
+    </data>
+    <data name="MonitoringRuleInvalidThreshold" xml:space="preserve">
+        <value>At least one limit is required, and the minimum cannot be greater than the maximum.</value>
+    </data>
+    <data name="MonitoringRuleInvalidSeverity" xml:space="preserve">
+        <value>Severity must be HIGH, MEDIUM or LOW.</value>
+    </data>
+    <data name="MonitoringRuleDuplicateActive" xml:space="preserve">
+        <value>An active rule already exists for this older adult, record type and severity.</value>
+    </data>
 </root>

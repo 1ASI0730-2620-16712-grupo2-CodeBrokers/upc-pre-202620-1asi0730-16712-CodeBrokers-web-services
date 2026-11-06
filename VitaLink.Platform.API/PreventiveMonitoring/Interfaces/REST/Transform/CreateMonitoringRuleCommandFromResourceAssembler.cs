@@ -12,10 +12,10 @@ public static class CreateMonitoringRuleCommandFromResourceAssembler
     public static CreateMonitoringRuleCommand ToCommandFromResource(CreateMonitoringRuleResource resource)
     {
         return new CreateMonitoringRuleCommand(
-            resource.OlderAdultId,
-            resource.RecordTypeCode,
+            resource.OlderAdultId.GetValueOrDefault(),
+            resource.RecordTypeCode!,
             resource.MinThreshold,
             resource.MaxThreshold,
-            Enum.Parse<SeverityLevel>(resource.Severity, ignoreCase: true));
+            Enum.Parse<SeverityLevel>(resource.Severity!, ignoreCase: true));
     }
 }
