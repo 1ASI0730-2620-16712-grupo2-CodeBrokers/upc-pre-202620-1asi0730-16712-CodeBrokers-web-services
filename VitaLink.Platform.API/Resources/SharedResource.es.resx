@@ -62,4 +62,19 @@
     <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
         <value>El identificador del registro de salud es obligatorio y no puede estar vacío.</value>
     </data>
+    <data name="MonitoringRuleInvalidReference" xml:space="preserve">
+        <value>El identificador del adulto mayor es obligatorio.</value>
+    </data>
+    <data name="MonitoringRuleInvalidRecordType" xml:space="preserve">
+        <value>El tipo de registro es obligatorio y debe existir.</value>
+    </data>
+    <data name="MonitoringRuleInvalidThreshold" xml:space="preserve">
+        <value>Se requiere al menos un límite y el mínimo no puede ser mayor que el máximo.</value>
+    </data>
+    <data name="MonitoringRuleInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
+    <data name="MonitoringRuleDuplicateActive" xml:space="preserve">
+        <value>Ya existe una regla activa para este adulto mayor, tipo de registro y severidad.</value>
+    </data>
 </root>

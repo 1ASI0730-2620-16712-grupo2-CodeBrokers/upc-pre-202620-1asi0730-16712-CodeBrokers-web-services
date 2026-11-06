@@ -11,8 +11,7 @@ public record MonitoringRuleResource(
     string RecordTypeCode,
     decimal? MinThreshold,
     decimal? MaxThreshold,
-    string SeverityLevel,
-    string Description,
+    string Severity,
     bool IsActive,
     DateTimeOffset CreatedAt);
     
