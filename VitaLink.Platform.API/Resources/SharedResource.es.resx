@@ -32,4 +32,70 @@
         <data name="AlertingStatusRequired" xml:space="preserve">
         <value>El estado de la alerta es obligatorio.</value>
     </data>
+    <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
+        <value>Ya se generó una alerta para este registro de salud.</value>
+    </data>
+    <data name="AlertingAlertNotFound" xml:space="preserve">
+        <value>No se encontró la alerta.</value>
+    </data>
+    <data name="AlertingInvalidReference" xml:space="preserve">
+        <value>Los identificadores del adulto mayor, del registro de salud y de la regla de monitoreo son obligatorios.</value>
+    </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
+    <data name="NotificationAlertEmailSubject" xml:space="preserve">
+        <value>Alerta de VitaLink: {0}</value>
+    </data>
+    <data name="NotificationAlertEmailBody" xml:space="preserve">
+        <value>Se generó una alerta de gravedad {0} para {1}. Ingrese a VitaLink para revisarla.</value>
+    </data>
+    <data name="NotificationAlreadySent" xml:space="preserve">
+        <value>Ya se envió una notificación de esta alerta a este destinatario.</value>
+    </data>
+    <data name="NotificationMaxAttemptsReached" xml:space="preserve">
+        <value>La notificación alcanzó el número máximo de intentos de envío.</value>
+    </data>
+    <data name="NotificationDeliveryFailed" xml:space="preserve">
+        <value>No se pudo entregar la notificación. Se volverá a intentar.</value>
+    </data>
+    <data name="NotificationNotFound" xml:space="preserve">
+        <value>No se encontró la notificación.</value>
+    </data>
+    <data name="AlertingHealthRecordNotFound" xml:space="preserve">
+        <value>No se encontró el registro de salud.</value>
+    </data>
+    <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
+        <value>El identificador del registro de salud es obligatorio y no puede estar vacío.</value>
+    </data>
+    <data name="MonitoringRuleInvalidReference" xml:space="preserve">
+        <value>El identificador del adulto mayor es obligatorio.</value>
+    </data>
+    <data name="MonitoringRuleInvalidRecordType" xml:space="preserve">
+        <value>El tipo de registro es obligatorio y debe existir.</value>
+    </data>
+    <data name="MonitoringRuleInvalidThreshold" xml:space="preserve">
+        <value>Se requiere al menos un límite y el mínimo no puede ser mayor que el máximo.</value>
+    </data>
+    <data name="MonitoringRuleInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
+    <data name="MonitoringRuleDuplicateActive" xml:space="preserve">
+        <value>Ya existe una regla activa para este adulto mayor, tipo de registro y severidad.</value>
+    </data>
+    <data name="AlertingObservationTooLong" xml:space="preserve">
+        <value>La observación no puede superar los {0} caracteres.</value>
+    </data>
+    <data name="AlertingObservationAlreadyExists" xml:space="preserve">
+        <value>Esta alerta ya tiene una observación.</value>
+    </data>
+    <data name="AlertingObservationRequiresAttended" xml:space="preserve">
+        <value>Solo se puede agregar una observación a una alerta atendida.</value>
+    </data>
+    <data name="AlertingObservationNotFound" xml:space="preserve">
+        <value>Esta alerta no tiene observación.</value>
+    </data>
+    <data name="AlertingObservationInvalidReference" xml:space="preserve">
+        <value>El identificador de la alerta o del autor no puede estar vacío.</value>
+    </data>
 </root>

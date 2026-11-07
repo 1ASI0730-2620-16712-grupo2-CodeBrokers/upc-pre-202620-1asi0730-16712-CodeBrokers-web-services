@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
 using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
+using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
+using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -20,7 +22,16 @@ using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
-using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
+using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;
+using VitaLink.Platform.API.Notification.Application.Services;
+using VitaLink.Platform.API.Notification.Application.Internal.QueryServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
+using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.CommandServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.ACL;
+using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.ACL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +55,7 @@ builder.Services.AddProblemDetails(options =>
         var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
         context.ProblemDetails.Title = localizer["InvalidModelStateTitle"].Value;
     });
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 // Localization: messages come from Resources/SharedResource.*.resx
@@ -52,6 +64,7 @@ builder.Services.AddLocalization();
 // CORS: allowed origins are defined per environment in appsettings.{Environment}.json
 const string allowedOriginsPolicy = "AllowedOriginsPolicy";
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(allowedOriginsPolicy, policy =>
@@ -62,6 +75,7 @@ builder.Services.AddCors(options =>
 
 // Database: PostgreSQL connection string from user-secrets (Development) or environment variables
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 if (string.IsNullOrWhiteSpace(connectionString))
     throw new InvalidOperationException(
         "Connection string 'DefaultConnection' is not set. Configure it with dotnet user-secrets (see README).");
@@ -91,22 +105,39 @@ builder.Services.AddScoped<DemoUserSeeder>();
 // Notification Bounded Context
 builder.Services.Configure<EmailSenderOptions>(
     builder.Configuration.GetSection(EmailSenderOptions.SectionName));
+
 builder.Services.AddHttpClient(ResendEmailSenderService.HttpClientName, client =>
     client.BaseAddress = new Uri("https://api.resend.com/"));
 
 var emailOptions = builder.Configuration.GetSection(EmailSenderOptions.SectionName).Get<EmailSenderOptions>()
                    ?? new EmailSenderOptions();
+
 if (emailOptions.HasApiKey)
     builder.Services.AddScoped<IEmailSenderService, ResendEmailSenderService>();
 else
     builder.Services.AddScoped<IEmailSenderService, LoggingEmailSenderService>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
+builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
 
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 builder.Services.AddScoped<IAlertStatusCommandService, AlertStatusCommandService>();
+builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<IAlertObservationRepository, AlertObservationRepository>();
+builder.Services.AddScoped<IAlertObservationCommandService, AlertObservationCommandService>();
+builder.Services.AddScoped<IAlertObservationQueryService, AlertObservationQueryService>();
+builder.Services.AddScoped<ExternalMonitoringService>();
+
+// Preventive Monitoring Bounded Context
+builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
+builder.Services.AddScoped<IMonitoringRuleRepository, MonitoringRuleRepository>();
+builder.Services.AddScoped<RiskEvaluationService>();
+builder.Services.AddScoped<IMonitoringRuleCommandService, MonitoringRuleCommandService>();
+builder.Services.AddScoped<IMonitoringRuleQueryService, MonitoringRuleQueryService>();
+builder.Services.AddScoped<IMonitoringContextFacade, MonitoringContextFacade>();
 
 var app = builder.Build();
 
@@ -124,10 +155,12 @@ using (var scope = app.Services.CreateScope())
 // Localization runs first so error responses also use the request culture (Accept-Language).
 // en-US is the default; es-419 covers Latin American Spanish and es any other Spanish variant.
 string[] supportedCultures = ["en-US", "es-419", "es"];
+
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
+
 localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
 app.UseRequestLocalization(localizationOptions);
 
