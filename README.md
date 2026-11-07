@@ -163,12 +163,8 @@ Example of a controller translating a `Result`:
 ```csharp
 return result switch
 {
-    Result<Alert, CreateAlertError>.Success success =>
-        CreatedAtAction(nameof(GetAlert), new { id = success.Value.Id.Value },
-            AlertResourceFromEntityAssembler.ToResourceFromEntity(success.Value)),
-
-    Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.DuplicateAlert } =>
-        Problem(statusCode: StatusCodes.Status409Conflict, title: localizer["AlertingAlertDuplicated"].Value),
+    Result<AlertEvaluationResult, CreateAlertError>.Failure { Error: CreateAlertError.HealthRecordNotFound } =>
+        Problem(statusCode: StatusCodes.Status404NotFound, title: localizer["AlertingHealthRecordNotFound"].Value),
 
     _ => Problem(statusCode: StatusCodes.Status500InternalServerError,
         title: localizer["UnexpectedServerError"].Value,
@@ -190,7 +186,7 @@ The culture applied is returned in the `Content-Language` response header.
 
 Messages live in `Resources/SharedResource.resx` (English) and `Resources/SharedResource.es.resx` (Spanish). To add a message:
 
-1. Add the same key to **both** files. Prefix it with your bounded context, e.g. `AlertingAlertDuplicated` or `ElderCareOlderAdultNotFound`.
+1. Add the same key to **both** files. Prefix it with your bounded context, e.g. `AlertingHealthRecordNotFound` or `ElderCareOlderAdultNotFound`.
 2. Inject `IStringLocalizer<SharedResource>` in the controller and read it with `localizer["Key"].Value`.
 3. For data annotations, use the key as the error message: `[Required(ErrorMessage = "ElderCareFullNameRequired")]`.
 
@@ -201,15 +197,6 @@ To check a translation from the terminal:
 ```bash
 curl -i -H "Accept-Language: es-419" http://localhost:5270/api/v1/alerts/not-a-guid
 ```
-
-## Jira progress — Alerting
-
-| Task | Implementation status | Scope |
-| --- | --- | --- |
-| T-8 — Alert aggregate and persistence | Implemented | Alert lifecycle and transition history, EF Core mappings, and the PostgreSQL `AddAlerts` migration. A unique index enforces one alert per health record. |
-| T-10 — Alert queries | Implemented | Paginated alert and pending lists with status and patient filters, plus alert details by ID. |
-| T-9 / US-14 — Automatic alert generation | Pending | Add `POST /api/v1/alerts` to evaluate thresholds and create a pending alert transactionally. Integration requires health-record lookup, active monitoring rules (T-18), and the RC-01 access policy. |
-| T-30 / US-12 — Observation when attending an alert | Pending | Store an optional observation of up to 1,000 characters with the authenticated clinician and server timestamp, reject duplicates, and retain the draft in the web app after a save error. Depends on the attendance API (T-11) and web app integration. |
 
 ## Alert queries
 
@@ -226,6 +213,31 @@ out-of-range page returns HTTP 200 with an empty `items` array.
 Invalid identifiers, status values or pagination return HTTP 400. A valid alert ID
 that does not exist returns HTTP 404. Closed alerts remain queryable.
 
+### Evaluate a health record for alerts
+
+`POST /api/v1/alerts` takes a nonempty health record UUID. The API checks active rules
+for the record's patient and type. If several rules are violated, it creates a `PENDING`
+alert using the rule with the highest severity.
+
+```json
+{
+  "healthRecordId": "9b2c1e7a-1111-4c2d-8e3f-123456789abc"
+}
+```
+
+| Response | Behavior |
+| --- | --- |
+| `201 Created` | Returns `healthRecordId` and the new `alert`, with a `Location` header pointing to `GET /api/v1/alerts/{id}`. |
+| `200 OK` | Returns `healthRecordId` and the existing `alert` on a retry, including concurrent requests. |
+| `200 OK` | Returns `healthRecordId` and `alert: null` when the record has no numerical value, there is no active rule, or the value is within all limits. Bounds are inclusive. |
+| `400 Bad Request` | The health record identifier is missing, malformed or empty. |
+| `404 Not Found` | The specified health record does not exist. |
+
+Errors use `ProblemDetails` or `ValidationProblemDetails`. Creation error messages and
+the alert-not-found title support English and Spanish through `Accept-Language`.
+The unique health-record index and atomic `SaveChangesAsync` operation ensure that
+concurrent requests persist at most one alert for the same health record.
+
 ## Conventions
 
 - **Routes:** every controller is exposed under the `/api/v1` prefix, and the `[controller]` token is converted to kebab-case (`HealthRecordsController` → `/api/v1/health-records`).
@@ -233,3 +245,52 @@ that does not exist returns HTTP 404. Closed alerts remain queryable.
 - **Secrets:** never commit passwords, keys or connection strings. Use user secrets locally and environment variables in deployed environments.
 - **Branches:** GitFlow with `main`, `develop` and `feature/<description>` branches. Pull requests target `develop`.
 - **Commits:** [Conventional Commits](https://www.conventionalcommits.org/) in English, using the bounded context as scope, e.g. `feat(alerting): add alert aggregate`.
+
+
+## Continuous Deployment (CD)
+
+VitaLink uses GitHub Actions, Docker Hub, and Microsoft Azure App Service to automate backend deployment.
+
+### Deployment infrastructure
+
+- **Cloud provider:** Microsoft Azure
+- **Web App:** `vitalink-api-dev`
+- **Container registry:** Docker Hub
+- **Docker image:** `leorg15/vitalink-api:dev`
+- **Database:** Azure Database for PostgreSQL
+- **Container port:** `8080`
+- **Deployment branch:** `develop`
+
+### Deployment workflow
+
+The workflow is defined in `.github/workflows/cd.yml`.
+
+When changes are merged into the `develop` branch:
+
+1. GitHub Actions checks out the repository.
+2. GitHub Actions authenticates with Docker Hub.
+3. A new Docker image is built.
+4. The image is pushed to Docker Hub with the `dev` tag and the commit SHA.
+5. Docker Hub sends a webhook notification to Azure App Service.
+6. Azure pulls the updated image and restarts the application.
+
+### Deployment verification
+
+The deployment can be verified through the health endpoint:
+
+https://vitalink-api-dev-h4gdanfjc5ezbqep.canadacentral-01.azurewebsites.net/api/v1/health
+
+A successful response returns:
+
+```json
+{
+  "status": "Healthy",
+  "database": "Up"
+}
+```
+
+The response also includes a timestamp.
+
+### Security
+
+Docker Hub credentials are stored in GitHub Actions Secrets. Database credentials are configured through Azure App Service environment variables and are not included in the repository.
