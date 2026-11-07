@@ -1,4 +1,4 @@
-namespace VitaLink.ElderCare.Domain.Model.Commands;
+namespace VitaLink.Platform.API.ElderCare.Domain.Model.Commands;
 
 /// <summary>
 ///     Command to associate an older adult with a care provider.

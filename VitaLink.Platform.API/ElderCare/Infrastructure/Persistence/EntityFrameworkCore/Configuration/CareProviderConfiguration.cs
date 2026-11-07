@@ -1,10 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VitaLink.ElderCare.Domain.Model.Aggregates;
-using VitaLink.ElderCare.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates;
+using VitaLink.Platform.API.ElderCare.Domain.Model.ValueObjects;
 
-namespace VitaLink.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
+namespace VitaLink.Platform.API.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 
 /// <summary>
 ///     EF Core mapping for the CareProvider aggregate.

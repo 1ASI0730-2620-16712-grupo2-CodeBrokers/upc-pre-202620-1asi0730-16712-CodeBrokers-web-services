@@ -92,4 +92,25 @@
     <data name="AlertingObservationInvalidReference" xml:space="preserve">
         <value>El identificador de la alerta o del autor no puede estar vacío.</value>
     </data>
+    <data name="ElderCareOlderAdultIdRequired" xml:space="preserve">
+    <value>El identificador del adulto mayor no puede estar vacío.</value>
+    </data>
+        <data name="ElderCareRequestBodyRequired" xml:space="preserve">
+        <value>El cuerpo de la solicitud es obligatorio.</value>
+    </data>
+        <data name="ElderCareProviderIdRequired" xml:space="preserve">
+        <value>El identificador del proveedor de cuidado no puede estar vacío.</value>
+    </data>
+        <data name="ElderCareOlderAdultNotFound" xml:space="preserve">
+        <value>No se encontró al adulto mayor.</value>
+    </data>
+        <data name="ElderCareProviderNotFound" xml:space="preserve">
+        <value>No se encontró al proveedor de cuidado.</value>
+    </data>
+        <data name="ElderCareProviderInactive" xml:space="preserve">
+        <value>El proveedor de cuidado está inactivo.</value>
+    </data>
+        <data name="ElderCareAlreadyAssigned" xml:space="preserve">
+        <value>El adulto mayor ya tiene un proveedor de cuidado asignado.</value>
+    </data>
 </root>

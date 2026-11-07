@@ -1,6 +1,6 @@
-using VitaLink.ElderCare.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.ElderCare.Domain.Model.ValueObjects;
 
-namespace VitaLink.ElderCare.Domain.Model.Aggregates;
+namespace VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates;
 
 public class CareProvider
 {

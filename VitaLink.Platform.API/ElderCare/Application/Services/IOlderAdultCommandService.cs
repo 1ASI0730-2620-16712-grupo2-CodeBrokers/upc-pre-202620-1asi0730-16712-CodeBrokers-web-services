@@ -1,9 +1,9 @@
-using VitaLink.ElderCare.Application.Errors;
-using VitaLink.ElderCare.Domain.Model.Aggregates;
-using VitaLink.ElderCare.Domain.Model.Commands;
+using VitaLink.Platform.API.ElderCare.Application.Errors;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Commands;
 using VitaLink.Platform.API.Shared.Application.Patterns;
 
-namespace VitaLink.ElderCare.Application.Services;
+namespace VitaLink.Platform.API.ElderCare.Application.Services;
 
 /// <summary>
 ///     Defines command operations for managing older adults.

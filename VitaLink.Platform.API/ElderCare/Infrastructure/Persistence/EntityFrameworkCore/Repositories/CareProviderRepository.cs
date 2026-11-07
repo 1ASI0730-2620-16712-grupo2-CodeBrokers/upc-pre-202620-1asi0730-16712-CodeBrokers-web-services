@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using VitaLink.ElderCare.Domain.Model.Aggregates;
-using VitaLink.ElderCare.Domain.Model.ValueObjects;
-using VitaLink.ElderCare.Domain.Repositories;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates;
+using VitaLink.Platform.API.ElderCare.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.ElderCare.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
-namespace VitaLink.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+namespace VitaLink.Platform.API.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
 /// <summary>
 ///     EF Core repository for the CareProvider aggregate.

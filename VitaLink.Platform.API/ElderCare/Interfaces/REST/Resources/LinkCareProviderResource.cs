@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VitaLink.ElderCare.Interfaces.REST.Resources;
+namespace VitaLink.Platform.API.ElderCare.Interfaces.REST.Resources;
 
 /// <summary>
 ///     Request body for associating a care provider with an older adult.

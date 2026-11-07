@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace VitaLink.ElderCare.Domain.Model.ValueObjects;
+namespace VitaLink.Platform.API.ElderCare.Domain.Model.ValueObjects;
 
 public record EmergencyContact
 {

@@ -23,10 +23,10 @@ using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
 // ElderCare
-using VitaLink.ElderCare.Domain.Repositories;
-using VitaLink.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
-using VitaLink.ElderCare.Application.Services;
-using VitaLink.ElderCare.Application.Internal.CommandServices;
+using VitaLink.Platform.API.ElderCare.Domain.Repositories;
+using VitaLink.Platform.API.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.ElderCare.Application.Services;
+using VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
 
 // Notification
 using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;

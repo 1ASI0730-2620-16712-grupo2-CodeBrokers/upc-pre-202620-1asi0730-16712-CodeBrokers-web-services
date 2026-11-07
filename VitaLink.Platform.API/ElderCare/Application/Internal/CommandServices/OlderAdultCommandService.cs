@@ -1,14 +1,14 @@
 
-using VitaLink.ElderCare.Application.Errors;
-using VitaLink.ElderCare.Application.Services;
-using VitaLink.ElderCare.Domain.Model.Aggregates;
-using VitaLink.ElderCare.Domain.Model.Commands;
-using VitaLink.ElderCare.Domain.Model.ValueObjects;
-using VitaLink.ElderCare.Domain.Repositories;
+using VitaLink.Platform.API.ElderCare.Application.Errors;
+using VitaLink.Platform.API.ElderCare.Application.Services;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Commands;
+using VitaLink.Platform.API.ElderCare.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.ElderCare.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Application.Patterns;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 
-namespace VitaLink.ElderCare.Application.Internal.CommandServices;
+namespace VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
 
 /// <summary>
 ///     Handles commands that modify older adult aggregates.

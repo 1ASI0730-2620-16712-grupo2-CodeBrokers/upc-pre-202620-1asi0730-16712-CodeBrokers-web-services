@@ -1,12 +1,13 @@
-
+using Microsoft.Extensions.Localization;
+using VitaLink.Platform.API.Resources;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using VitaLink.ElderCare.Application.Errors;
-using VitaLink.ElderCare.Application.Services;
-using VitaLink.ElderCare.Interfaces.REST.Assemblers;
-using VitaLink.ElderCare.Interfaces.REST.Resources;
+using VitaLink.Platform.API.ElderCare.Application.Errors;
+using VitaLink.Platform.API.ElderCare.Application.Services;
+using VitaLink.Platform.API.ElderCare.Interfaces.REST.Assemblers;
+using VitaLink.Platform.API.ElderCare.Interfaces.REST.Resources;
 
-namespace VitaLink.ElderCare.Interfaces.REST;
+namespace VitaLink.Platform.API.ElderCare.Interfaces.REST;
 
 /// <summary>
 ///     Exposes operations for managing older adults.
@@ -15,7 +16,8 @@ namespace VitaLink.ElderCare.Interfaces.REST;
 [Route("older-adults")]
 [Produces(MediaTypeNames.Application.Json)]
 public class OlderAdultsController(
-    IOlderAdultCommandService commandService) : ControllerBase
+    IOlderAdultCommandService commandService,
+    IStringLocalizer<SharedResource> localizer) : ControllerBase
 {
     /// <summary>
     ///     Associates an older adult with an active care provider.
@@ -73,26 +75,26 @@ public class OlderAdultsController(
                 LinkCareProviderError.OlderAdultNotFound =>
                     Problem(
                         statusCode: StatusCodes.Status404NotFound,
-                        title: "Older adult not found."),
+                        title: localizer["ElderCareOlderAdultNotFound"].Value),
 
                 LinkCareProviderError.CareProviderNotFound =>
                     Problem(
                         statusCode: StatusCodes.Status404NotFound,
-                        title: "Care provider not found."),
+                        title: localizer["ElderCareProviderNotFound"].Value),
 
                 LinkCareProviderError.CareProviderInactive =>
                     Problem(
                         statusCode: StatusCodes.Status409Conflict,
-                        title: "The care provider is inactive."),
+                        title: localizer["ElderCareProviderInactive"].Value),
 
                 LinkCareProviderError.AlreadyAssigned =>
                     Problem(
                         statusCode: StatusCodes.Status409Conflict,
-                        title: "The older adult already has a care provider."),
+                        title: localizer["ElderCareAlreadyAssigned"].Value),
 
                 _ => Problem(
                     statusCode: StatusCodes.Status500InternalServerError,
-                    title: "An unexpected error occurred.")
+                    title: localizer["UnexpectedServerError"].Value)
             });
     }
 }
