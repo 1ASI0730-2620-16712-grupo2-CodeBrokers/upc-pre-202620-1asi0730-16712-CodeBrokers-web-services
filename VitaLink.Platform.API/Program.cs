@@ -124,6 +124,7 @@ builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>(
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
+builder.Services.AddScoped<IAlertStatusCommandService, AlertStatusCommandService>();
 builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
 builder.Services.AddScoped<IAlertObservationRepository, AlertObservationRepository>();
 builder.Services.AddScoped<IAlertObservationCommandService, AlertObservationCommandService>();
