@@ -50,6 +50,11 @@ public class Alert
     public DateTimeOffset LastStatusChangeAt { get; private set; }
 
     public IReadOnlyCollection<AlertStatusChange> StatusHistory => _statusHistory;
+    
+    /// <summary>
+    ///     PostgreSQL row version used for optimistic concurrency.
+    /// </summary>
+    public uint Version { get; private set; }
 
     /// <summary>
     ///     Indicates whether the alert is still waiting to be reviewed.
