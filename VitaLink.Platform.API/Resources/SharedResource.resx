@@ -1,3 +1,6 @@
+
+
+
 <root>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
@@ -65,6 +68,34 @@
     <data name="AlertingHealthRecordNotFound" xml:space="preserve">
         <value>The health record was not found.</value>
     </data>
+
+    <data name="HealthRecordInvalidReference" xml:space="preserve">
+    <value>The older adult and the person recording are required.</value>
+  </data>
+    <data name="HealthRecordInvalidRecordType" xml:space="preserve">
+    <value>The record type does not exist or is not active.</value>
+  </data>
+    <data name="HealthRecordInvalidSource" xml:space="preserve">
+    <value>The source must be OLDER_ADULT, FAMILY_CAREGIVER or CARE_PROVIDER.</value>
+  </data>
+    <data name="HealthRecordValueRequired" xml:space="preserve">
+    <value>This record type requires a numeric value.</value>
+  </data>
+    <data name="HealthRecordValueOutOfRange" xml:space="preserve">
+    <value>The value is outside the valid range for this record type.</value>
+  </data>
+    <data name="HealthRecordInvalidUnit" xml:space="preserve">
+    <value>The unit does not match the unit of this record type.</value>
+  </data>
+    <data name="HealthRecordInvalidNote" xml:space="preserve">
+    <value>The note cannot be blank.</value>
+  </data>
+    <data name="HealthRecordEmpty" xml:space="preserve">
+    <value>A health record needs a numeric value or a note.</value>
+  </data>
+    <data name="HealthRecordInvalidDateRange" xml:space="preserve">
+    <value>The start date cannot be later than the end date.</value>
+  </data>
     <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
         <value>A nonempty health record identifier is required.</value>
     </data>

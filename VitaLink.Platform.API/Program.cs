@@ -42,9 +42,15 @@ using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServi
 using VitaLink.Platform.API.PreventiveMonitoring.Application.ACL;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.ACL;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// En el bloque de Preventive Monitoring Services:
+builder.Services.AddScoped<IRecordTypeRepository, RecordTypeRepository>();
+builder.Services.AddScoped<IHealthRecordCommandService, HealthRecordCommandService>();
+builder.Services.AddScoped<IHealthRecordQueryService, HealthRecordQueryService>();
 
 builder.Services.AddControllers(options =>
 {

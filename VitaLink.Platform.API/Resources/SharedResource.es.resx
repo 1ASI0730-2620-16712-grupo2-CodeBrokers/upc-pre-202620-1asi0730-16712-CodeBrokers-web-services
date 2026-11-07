@@ -65,6 +65,33 @@
     <data name="AlertingHealthRecordNotFound" xml:space="preserve">
         <value>No se encontró el registro de salud.</value>
     </data>
+    <data name="HealthRecordInvalidReference" xml:space="preserve">
+    <value>El adulto mayor y quien registra son obligatorios.</value>
+  </data>
+    <data name="HealthRecordInvalidRecordType" xml:space="preserve">
+    <value>El tipo de registro no existe o no está activo.</value>
+  </data>
+    <data name="HealthRecordInvalidSource" xml:space="preserve">
+    <value>El origen debe ser OLDER_ADULT, FAMILY_CAREGIVER o CARE_PROVIDER.</value>
+  </data>
+    <data name="HealthRecordValueRequired" xml:space="preserve">
+    <value>Este tipo de registro requiere un valor numérico.</value>
+  </data>
+    <data name="HealthRecordValueOutOfRange" xml:space="preserve">
+    <value>El valor está fuera del rango válido para este tipo de registro.</value>
+  </data>
+    <data name="HealthRecordInvalidUnit" xml:space="preserve">
+    <value>La unidad no coincide con la de este tipo de registro.</value>
+  </data>
+    <data name="HealthRecordInvalidNote" xml:space="preserve">
+    <value>La nota no puede estar vacía.</value>
+  </data>
+    <data name="HealthRecordEmpty" xml:space="preserve">
+    <value>Un registro de salud necesita un valor numérico o una nota.</value>
+  </data>
+    <data name="HealthRecordInvalidDateRange" xml:space="preserve">
+    <value>La fecha inicial no puede ser posterior a la fecha final.</value>
+  </data>
     <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
         <value>El identificador del registro de salud es obligatorio y no puede estar vacío.</value>
     </data>
