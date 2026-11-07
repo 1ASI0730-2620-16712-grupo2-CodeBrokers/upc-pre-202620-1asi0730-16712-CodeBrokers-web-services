@@ -26,6 +26,12 @@
     <data name="ConcurrencyConflict" xml:space="preserve">
         <value>Otra solicitud modificó el recurso. Vuelva a cargarlo e inténtelo de nuevo.</value>
     </data>
+    <data name="AlertingInvalidStatusTransition" xml:space="preserve">
+    <value>La transición de estado solicitada para la alerta no está permitida.</value>
+    </data>
+        <data name="AlertingStatusRequired" xml:space="preserve">
+        <value>El estado de la alerta es obligatorio.</value>
+    </data>
     <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
         <value>Ya se generó una alerta para este registro de salud.</value>
     </data>
@@ -86,4 +92,58 @@
     <data name="HealthRecordInvalidDateRange" xml:space="preserve">
     <value>La fecha inicial no puede ser posterior a la fecha final.</value>
   </data>
+    <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
+        <value>El identificador del registro de salud es obligatorio y no puede estar vacío.</value>
+    </data>
+    <data name="MonitoringRuleInvalidReference" xml:space="preserve">
+        <value>El identificador del adulto mayor es obligatorio.</value>
+    </data>
+    <data name="MonitoringRuleInvalidRecordType" xml:space="preserve">
+        <value>El tipo de registro es obligatorio y debe existir.</value>
+    </data>
+    <data name="MonitoringRuleInvalidThreshold" xml:space="preserve">
+        <value>Se requiere al menos un límite y el mínimo no puede ser mayor que el máximo.</value>
+    </data>
+    <data name="MonitoringRuleInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
+    <data name="MonitoringRuleDuplicateActive" xml:space="preserve">
+        <value>Ya existe una regla activa para este adulto mayor, tipo de registro y severidad.</value>
+    </data>
+    <data name="AlertingObservationTooLong" xml:space="preserve">
+        <value>La observación no puede superar los {0} caracteres.</value>
+    </data>
+    <data name="AlertingObservationAlreadyExists" xml:space="preserve">
+        <value>Esta alerta ya tiene una observación.</value>
+    </data>
+    <data name="AlertingObservationRequiresAttended" xml:space="preserve">
+        <value>Solo se puede agregar una observación a una alerta atendida.</value>
+    </data>
+    <data name="AlertingObservationNotFound" xml:space="preserve">
+        <value>Esta alerta no tiene observación.</value>
+    </data>
+    <data name="AlertingObservationInvalidReference" xml:space="preserve">
+        <value>El identificador de la alerta o del autor no puede estar vacío.</value>
+    </data>
+    <data name="ElderCareOlderAdultIdRequired" xml:space="preserve">
+    <value>El identificador del adulto mayor no puede estar vacío.</value>
+    </data>
+        <data name="ElderCareRequestBodyRequired" xml:space="preserve">
+        <value>El cuerpo de la solicitud es obligatorio.</value>
+    </data>
+        <data name="ElderCareProviderIdRequired" xml:space="preserve">
+        <value>El identificador del proveedor de cuidado no puede estar vacío.</value>
+    </data>
+        <data name="ElderCareOlderAdultNotFound" xml:space="preserve">
+        <value>No se encontró al adulto mayor.</value>
+    </data>
+        <data name="ElderCareProviderNotFound" xml:space="preserve">
+        <value>No se encontró al proveedor de cuidado.</value>
+    </data>
+        <data name="ElderCareProviderInactive" xml:space="preserve">
+        <value>El proveedor de cuidado está inactivo.</value>
+    </data>
+        <data name="ElderCareAlreadyAssigned" xml:space="preserve">
+        <value>El adulto mayor ya tiene un proveedor de cuidado asignado.</value>
+    </data>
 </root>

@@ -6,12 +6,7 @@ namespace VitaLink.Platform.API.Alerting.Application.Errors;
 public enum CreateAlertError
 {
     /// <summary>
-    ///     An alert already exists for the health record.
-    /// </summary>
-    AlertAlreadyRaised,
-
-    /// <summary>
-    ///     A required identifier is empty or the health record belongs to another older adult.
+    ///     The health record identifier is empty.
     /// </summary>
     InvalidReference,
 

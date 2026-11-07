@@ -29,6 +29,12 @@
     <data name="ConcurrencyConflict" xml:space="preserve">
         <value>The resource was modified by another request. Reload it and try again.</value>
     </data>
+    <data name="AlertingInvalidStatusTransition" xml:space="preserve">
+    <value>The requested alert status transition is not allowed.</value>
+    </data>
+        <data name="AlertingStatusRequired" xml:space="preserve">
+        <value>Alert status is required.</value>
+    </data>
     <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
         <value>An alert was already raised for this health record.</value>
     </data>
@@ -90,4 +96,58 @@
     <data name="HealthRecordInvalidDateRange" xml:space="preserve">
     <value>The start date cannot be later than the end date.</value>
   </data>
+    <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
+        <value>A nonempty health record identifier is required.</value>
+    </data>
+    <data name="MonitoringRuleInvalidReference" xml:space="preserve">
+        <value>The older adult identifier is required.</value>
+    </data>
+    <data name="MonitoringRuleInvalidRecordType" xml:space="preserve">
+        <value>The record type is required and must exist.</value>
+    </data>
+    <data name="MonitoringRuleInvalidThreshold" xml:space="preserve">
+        <value>At least one limit is required, and the minimum cannot be greater than the maximum.</value>
+    </data>
+    <data name="MonitoringRuleInvalidSeverity" xml:space="preserve">
+        <value>Severity must be HIGH, MEDIUM or LOW.</value>
+    </data>
+    <data name="MonitoringRuleDuplicateActive" xml:space="preserve">
+        <value>An active rule already exists for this older adult, record type and severity.</value>
+    </data>
+    <data name="AlertingObservationTooLong" xml:space="preserve">
+        <value>The observation cannot exceed {0} characters.</value>
+    </data>
+    <data name="AlertingObservationAlreadyExists" xml:space="preserve">
+        <value>This alert already has an observation.</value>
+    </data>
+    <data name="AlertingObservationRequiresAttended" xml:space="preserve">
+        <value>An observation can only be added to an attended alert.</value>
+    </data>
+    <data name="AlertingObservationNotFound" xml:space="preserve">
+        <value>This alert has no observation.</value>
+    </data>
+    <data name="AlertingObservationInvalidReference" xml:space="preserve">
+        <value>The alert or author identifier cannot be empty.</value>
+    </data>
+    <data name="ElderCareOlderAdultIdRequired" xml:space="preserve">
+    <value>The older adult identifier cannot be empty.</value>
+    </data>
+        <data name="ElderCareRequestBodyRequired" xml:space="preserve">
+        <value>Request body is required.</value>
+    </data>
+        <data name="ElderCareProviderIdRequired" xml:space="preserve">
+        <value>The care provider identifier cannot be empty.</value>
+    </data>
+        <data name="ElderCareOlderAdultNotFound" xml:space="preserve">
+        <value>Older adult not found.</value>
+    </data>
+        <data name="ElderCareProviderNotFound" xml:space="preserve">
+        <value>Care provider not found.</value>
+    </data>
+        <data name="ElderCareProviderInactive" xml:space="preserve">
+        <value>The care provider is inactive.</value>
+    </data>
+        <data name="ElderCareAlreadyAssigned" xml:space="preserve">
+        <value>The older adult already has a care provider.</value>
+    </data>
 </root>

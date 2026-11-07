@@ -16,8 +16,7 @@ public static class MonitoringRuleResourceFromEntityAssembler
             entity.RecordTypeCode,
             entity.Threshold.Min,
             entity.Threshold.Max,
-            entity.SeverityLevel,
-            entity.Description,
+            entity.Severity.ToString().ToUpperInvariant(),
             entity.IsActive,
             entity.CreatedAt);
     }

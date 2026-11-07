@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using VitaLink.Platform.API.Alerting.Application.Errors;
-using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
+using VitaLink.Platform.API.Alerting.Application.Results;
+using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Shared.Application.Patterns;
 using VitaLink.Platform.API.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
@@ -21,31 +22,38 @@ public class AlertsController(IAlertQueryService queryService, IAlertCommandServ
     IStringLocalizer<SharedResource> localizer) : ControllerBase
 {
     /// <summary>
-    ///     Creates a pending alert from explicit references, rejecting duplicate health records.
+    ///     Evaluates a health record and creates a pending alert when an active rule is violated.
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(typeof(AlertResource), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AlertEvaluationResource), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AlertEvaluationResource), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateAlert([FromBody] CreateAlertResource resource,
         CancellationToken cancellationToken)
     {
-        var command = CreateAlertCommandFromResourceAssembler.ToCommandFromResource(resource);
+        var command = new GenerateAlertFromHealthRecordCommand(resource.HealthRecordId.GetValueOrDefault());
         var result = await commandService.Handle(command, cancellationToken);
+
+        if (result is Result<AlertEvaluationResult, CreateAlertError>.Success success)
+        {
+            var evaluation = success.Value;
+            var alert = evaluation.Alert is null
+                ? null
+                : AlertResourceFromEntityAssembler.ToResourceFromEntity(evaluation.Alert);
+            var response = new AlertEvaluationResource(evaluation.HealthRecordId, alert);
+
+            return evaluation.Created && alert is not null
+                ? CreatedAtAction(nameof(GetAlert), new { id = alert.Id }, response)
+                : Ok(response);
+        }
 
         return result switch
         {
-            Result<Alert, CreateAlertError>.Success success =>
-                CreatedAtAction(nameof(GetAlert), new { id = success.Value.Id.Value },
-                    AlertResourceFromEntityAssembler.ToResourceFromEntity(success.Value)),
-            Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.AlertAlreadyRaised } =>
-                Problem(statusCode: StatusCodes.Status409Conflict,
-                    title: localizer["AlertingAlertAlreadyRaised"].Value),
-            Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.InvalidReference } =>
+            Result<AlertEvaluationResult, CreateAlertError>.Failure { Error: CreateAlertError.InvalidReference } =>
                 Problem(statusCode: StatusCodes.Status400BadRequest,
-                    title: localizer["AlertingInvalidReference"].Value),
-            Result<Alert, CreateAlertError>.Failure { Error: CreateAlertError.HealthRecordNotFound } =>
+                    title: localizer["AlertingHealthRecordIdRequired"].Value),
+            Result<AlertEvaluationResult, CreateAlertError>.Failure { Error: CreateAlertError.HealthRecordNotFound } =>
                 Problem(statusCode: StatusCodes.Status404NotFound,
                     title: localizer["AlertingHealthRecordNotFound"].Value),
             _ => Problem(statusCode: StatusCodes.Status500InternalServerError,

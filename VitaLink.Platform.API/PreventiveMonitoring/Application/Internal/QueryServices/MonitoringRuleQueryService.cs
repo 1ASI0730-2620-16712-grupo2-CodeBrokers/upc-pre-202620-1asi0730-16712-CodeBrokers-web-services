@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
@@ -18,13 +19,13 @@ public class MonitoringRuleQueryService : IMonitoringRuleQueryService
         _monitoringRuleRepository = monitoringRuleRepository;
     }
 
-    public async Task<IEnumerable<MonitoringRule>> Handle(Guid olderAdultId)
+    public async Task<IEnumerable<MonitoringRule>> Handle(Guid olderAdultId, CancellationToken cancellationToken = default)
     {
-        return await _monitoringRuleRepository.FindByOlderAdultAsync(olderAdultId);
+        return await _monitoringRuleRepository.FindByOlderAdultAsync(olderAdultId, cancellationToken);
     }
 
-    public async Task<MonitoringRule?> Handle(Guid olderAdultId, string recordTypeCode)
+    public async Task<MonitoringRule?> Handle(Guid olderAdultId, string recordTypeCode, CancellationToken cancellationToken = default)
     {
-        return await _monitoringRuleRepository.FindByOlderAdultAndTypeAsync(olderAdultId, recordTypeCode);
+        return await _monitoringRuleRepository.FindByOlderAdultAndTypeAsync(olderAdultId, recordTypeCode, cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using VitaLink.Platform.API.Shared.Domain.Model.ValueObjects;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Commands;
 
@@ -10,5 +11,4 @@ public record CreateMonitoringRuleCommand(
     string RecordTypeCode,
     decimal? MinThreshold,
     decimal? MaxThreshold,
-    string SeverityLevel,
-    string Description);
+    SeverityLevel Severity);
