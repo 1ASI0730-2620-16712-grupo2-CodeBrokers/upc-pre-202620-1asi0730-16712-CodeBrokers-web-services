@@ -22,9 +22,18 @@ using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
 using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
+// ElderCare
+using VitaLink.Platform.API.ElderCare.Domain.Repositories;
+using VitaLink.Platform.API.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.ElderCare.Application.Services;
+using VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
+
+// Notification
 using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Notification.Application.Services;
 using VitaLink.Platform.API.Notification.Application.Internal.QueryServices;
+
+// PreventiveMonitoring
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
@@ -138,6 +147,11 @@ builder.Services.AddScoped<RiskEvaluationService>();
 builder.Services.AddScoped<IMonitoringRuleCommandService, MonitoringRuleCommandService>();
 builder.Services.AddScoped<IMonitoringRuleQueryService, MonitoringRuleQueryService>();
 builder.Services.AddScoped<IMonitoringContextFacade, MonitoringContextFacade>();
+
+// Elder Care Bounded Context
+builder.Services.AddScoped<ICareProviderRepository, CareProviderRepository>();
+builder.Services.AddScoped<IOlderAdultRepository, OlderAdultRepository>();
+builder.Services.AddScoped<IOlderAdultCommandService, OlderAdultCommandService>();
 
 var app = builder.Build();
 

@@ -98,4 +98,25 @@
     <data name="AlertingObservationInvalidReference" xml:space="preserve">
         <value>The alert or author identifier cannot be empty.</value>
     </data>
+    <data name="ElderCareOlderAdultIdRequired" xml:space="preserve">
+    <value>The older adult identifier cannot be empty.</value>
+    </data>
+        <data name="ElderCareRequestBodyRequired" xml:space="preserve">
+        <value>Request body is required.</value>
+    </data>
+        <data name="ElderCareProviderIdRequired" xml:space="preserve">
+        <value>The care provider identifier cannot be empty.</value>
+    </data>
+        <data name="ElderCareOlderAdultNotFound" xml:space="preserve">
+        <value>Older adult not found.</value>
+    </data>
+        <data name="ElderCareProviderNotFound" xml:space="preserve">
+        <value>Care provider not found.</value>
+    </data>
+        <data name="ElderCareProviderInactive" xml:space="preserve">
+        <value>The care provider is inactive.</value>
+    </data>
+        <data name="ElderCareAlreadyAssigned" xml:space="preserve">
+        <value>The older adult already has a care provider.</value>
+    </data>
 </root>
