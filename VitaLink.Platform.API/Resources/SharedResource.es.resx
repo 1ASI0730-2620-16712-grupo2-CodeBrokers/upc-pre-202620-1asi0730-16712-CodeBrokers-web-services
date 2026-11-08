@@ -62,6 +62,9 @@
     <data name="NotificationNotFound" xml:space="preserve">
         <value>No se encontró la notificación.</value>
     </data>
+    <data name="NotificationOlderAdultFallback" xml:space="preserve">
+        <value>su familiar</value>
+    </data>
     <data name="AlertingHealthRecordNotFound" xml:space="preserve">
         <value>No se encontró el registro de salud.</value>
     </data>

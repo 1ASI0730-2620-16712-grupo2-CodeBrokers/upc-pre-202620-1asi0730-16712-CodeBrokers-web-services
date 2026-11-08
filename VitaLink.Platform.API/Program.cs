@@ -32,6 +32,7 @@ using VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Notification.Application.Services;
 using VitaLink.Platform.API.Notification.Application.Internal.QueryServices;
+using VitaLink.Platform.API.Notification.Application.Internal.EventHandlers;
 
 // PreventiveMonitoring
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
@@ -135,12 +136,17 @@ else
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
 builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
+builder.Services.Configure<AlertRecipientOptions>(
+    builder.Configuration.GetSection(AlertRecipientOptions.SectionName));
+builder.Services.AddScoped<AlertRaisedEmailNotifier>();
 
 // Alerting Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 builder.Services.AddScoped<IAlertStatusCommandService, AlertStatusCommandService>();
-builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<AlertCommandService>();
+// T-15: sends the email notification of every new alert (see NotifyingAlertCommandService)
+builder.Services.AddScoped<IAlertCommandService, NotifyingAlertCommandService>();
 builder.Services.AddScoped<IAlertObservationRepository, AlertObservationRepository>();
 builder.Services.AddScoped<IAlertObservationCommandService, AlertObservationCommandService>();
 builder.Services.AddScoped<IAlertObservationQueryService, AlertObservationQueryService>();
