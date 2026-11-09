@@ -1,0 +1,156 @@
+
+
+
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="UnexpectedServerError" xml:space="preserve">
+        <value>An unexpected error occurred.</value>
+    </data>
+    <data name="UnexpectedErrorProcessingRequest" xml:space="preserve">
+        <value>The request could not be processed. Please try again later.</value>
+    </data>
+    <data name="InvalidModelStateTitle" xml:space="preserve">
+        <value>The request contains invalid values.</value>
+    </data>
+    <data name="ResourceNotFound" xml:space="preserve">
+        <value>The requested resource was not found.</value>
+    </data>
+    <data name="ConcurrencyConflict" xml:space="preserve">
+        <value>The resource was modified by another request. Reload it and try again.</value>
+    </data>
+    <data name="AlertingInvalidStatusTransition" xml:space="preserve">
+    <value>The requested alert status transition is not allowed.</value>
+    </data>
+        <data name="AlertingStatusRequired" xml:space="preserve">
+        <value>Alert status is required.</value>
+    </data>
+    <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
+        <value>An alert was already raised for this health record.</value>
+    </data>
+    <data name="AlertingAlertNotFound" xml:space="preserve">
+        <value>The alert was not found.</value>
+    </data>
+    <data name="AlertingInvalidReference" xml:space="preserve">
+        <value>The older adult, health record and monitoring rule identifiers are required.</value>
+    </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>Severity must be HIGH, MEDIUM or LOW.</value>
+    </data>
+    <data name="NotificationAlertEmailSubject" xml:space="preserve">
+        <value>VitaLink alert: {0}</value>
+    </data>
+    <data name="NotificationAlertEmailBody" xml:space="preserve">
+        <value>An alert with {0} severity was raised for {1}. Open VitaLink to review it.</value>
+    </data>
+    <data name="NotificationAlreadySent" xml:space="preserve">
+        <value>A notification for this alert was already sent to this recipient.</value>
+    </data>
+    <data name="NotificationMaxAttemptsReached" xml:space="preserve">
+        <value>The notification reached the maximum number of delivery attempts.</value>
+    </data>
+    <data name="NotificationDeliveryFailed" xml:space="preserve">
+        <value>The notification could not be delivered. It will be retried.</value>
+    </data>
+    <data name="NotificationNotFound" xml:space="preserve">
+        <value>The notification was not found.</value>
+    </data>
+    <data name="NotificationOlderAdultFallback" xml:space="preserve">
+        <value>your family member</value>
+    </data>
+    <data name="AlertingHealthRecordNotFound" xml:space="preserve">
+        <value>The health record was not found.</value>
+    </data>
+
+    <data name="HealthRecordInvalidReference" xml:space="preserve">
+    <value>The older adult and the person recording are required.</value>
+  </data>
+    <data name="HealthRecordInvalidRecordType" xml:space="preserve">
+    <value>The record type does not exist or is not active.</value>
+  </data>
+    <data name="HealthRecordInvalidSource" xml:space="preserve">
+    <value>The source must be OLDER_ADULT, FAMILY_CAREGIVER or CARE_PROVIDER.</value>
+  </data>
+    <data name="HealthRecordValueRequired" xml:space="preserve">
+    <value>This record type requires a numeric value.</value>
+  </data>
+    <data name="HealthRecordValueOutOfRange" xml:space="preserve">
+    <value>The value is outside the valid range for this record type.</value>
+  </data>
+    <data name="HealthRecordInvalidUnit" xml:space="preserve">
+    <value>The unit does not match the unit of this record type.</value>
+  </data>
+    <data name="HealthRecordInvalidNote" xml:space="preserve">
+    <value>The note cannot be blank.</value>
+  </data>
+    <data name="HealthRecordEmpty" xml:space="preserve">
+    <value>A health record needs a numeric value or a note.</value>
+  </data>
+    <data name="HealthRecordInvalidDateRange" xml:space="preserve">
+    <value>The start date cannot be later than the end date.</value>
+  </data>
+    <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
+        <value>A nonempty health record identifier is required.</value>
+    </data>
+    <data name="MonitoringRuleInvalidReference" xml:space="preserve">
+        <value>The older adult identifier is required.</value>
+    </data>
+    <data name="MonitoringRuleInvalidRecordType" xml:space="preserve">
+        <value>The record type is required and must exist.</value>
+    </data>
+    <data name="MonitoringRuleInvalidThreshold" xml:space="preserve">
+        <value>At least one limit is required, and the minimum cannot be greater than the maximum.</value>
+    </data>
+    <data name="MonitoringRuleInvalidSeverity" xml:space="preserve">
+        <value>Severity must be HIGH, MEDIUM or LOW.</value>
+    </data>
+    <data name="MonitoringRuleDuplicateActive" xml:space="preserve">
+        <value>An active rule already exists for this older adult, record type and severity.</value>
+    </data>
+    <data name="AlertingObservationTooLong" xml:space="preserve">
+        <value>The observation cannot exceed {0} characters.</value>
+    </data>
+    <data name="AlertingObservationAlreadyExists" xml:space="preserve">
+        <value>This alert already has an observation.</value>
+    </data>
+    <data name="AlertingObservationRequiresAttended" xml:space="preserve">
+        <value>An observation can only be added to an attended alert.</value>
+    </data>
+    <data name="AlertingObservationNotFound" xml:space="preserve">
+        <value>This alert has no observation.</value>
+    </data>
+    <data name="AlertingObservationInvalidReference" xml:space="preserve">
+        <value>The alert or author identifier cannot be empty.</value>
+    </data>
+    <data name="ElderCareOlderAdultIdRequired" xml:space="preserve">
+    <value>The older adult identifier cannot be empty.</value>
+    </data>
+        <data name="ElderCareRequestBodyRequired" xml:space="preserve">
+        <value>Request body is required.</value>
+    </data>
+        <data name="ElderCareProviderIdRequired" xml:space="preserve">
+        <value>The care provider identifier cannot be empty.</value>
+    </data>
+        <data name="ElderCareOlderAdultNotFound" xml:space="preserve">
+        <value>Older adult not found.</value>
+    </data>
+        <data name="ElderCareProviderNotFound" xml:space="preserve">
+        <value>Care provider not found.</value>
+    </data>
+        <data name="ElderCareProviderInactive" xml:space="preserve">
+        <value>The care provider is inactive.</value>
+    </data>
+        <data name="ElderCareAlreadyAssigned" xml:space="preserve">
+        <value>The older adult already has a care provider.</value>
+    </data>
+</root>
