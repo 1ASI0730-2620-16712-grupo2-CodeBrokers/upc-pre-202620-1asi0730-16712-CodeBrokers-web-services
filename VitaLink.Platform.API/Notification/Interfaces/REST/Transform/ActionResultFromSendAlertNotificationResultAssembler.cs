@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using VitaLink.Platform.API.Notification.Application.Errors;
+using VitaLink.Platform.API.Notification.Domain.Model.Errors;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;

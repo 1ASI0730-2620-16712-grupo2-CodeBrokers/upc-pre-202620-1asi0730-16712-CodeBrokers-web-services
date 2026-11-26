@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using VitaLink.Platform.API.Notification.Application.Errors;
-using VitaLink.Platform.API.Notification.Application.Services;
+using VitaLink.Platform.API.Notification.Domain.Model.Errors;
+using VitaLink.Platform.API.Notification.Application.CommandServices;
 using VitaLink.Platform.API.Notification.Domain.Model.Commands;
 using VitaLink.Platform.API.Notification.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
-using VitaLink.Platform.API.Notification.Domain.Services;
+using VitaLink.Platform.API.Notification.Application.Internal.OutboundServices;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 using VitaLink.Platform.API.Shared.Domain.Repositories;

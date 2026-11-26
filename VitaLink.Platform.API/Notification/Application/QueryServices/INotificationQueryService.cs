@@ -1,7 +1,7 @@
 using VitaLink.Platform.API.Notification.Domain.Model.Queries;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;
 
-namespace VitaLink.Platform.API.Notification.Application.Services;
+namespace VitaLink.Platform.API.Notification.Application.QueryServices;
 
 /// <summary>
 ///     Query service for notification read operations.

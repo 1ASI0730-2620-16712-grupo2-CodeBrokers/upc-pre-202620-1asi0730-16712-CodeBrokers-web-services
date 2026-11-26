@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Options;
 using VitaLink.Platform.API.Notification.Domain.Model.ValueObjects;
-using VitaLink.Platform.API.Notification.Domain.Services;
+using VitaLink.Platform.API.Notification.Application.Internal.OutboundServices;
 
 namespace VitaLink.Platform.API.Notification.Infrastructure.Email;
 

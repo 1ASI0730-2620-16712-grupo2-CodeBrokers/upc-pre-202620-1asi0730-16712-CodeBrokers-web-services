@@ -1,4 +1,4 @@
-namespace VitaLink.Platform.API.Notification.Application.Errors;
+namespace VitaLink.Platform.API.Notification.Domain.Model.Errors;
 
 /// <summary>
 ///     Expected errors when sending an alert notification.
