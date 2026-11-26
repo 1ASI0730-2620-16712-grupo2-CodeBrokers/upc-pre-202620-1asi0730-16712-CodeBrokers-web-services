@@ -1,6 +1,6 @@
 
-using VitaLink.Platform.API.ElderCare.Application.Errors;
-using VitaLink.Platform.API.ElderCare.Application.Services;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Errors;
+using VitaLink.Platform.API.ElderCare.Application.CommandServices;
 using VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates;
 using VitaLink.Platform.API.ElderCare.Domain.Model.Commands;
 using VitaLink.Platform.API.ElderCare.Domain.Model.ValueObjects;

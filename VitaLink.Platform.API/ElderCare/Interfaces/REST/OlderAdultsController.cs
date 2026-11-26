@@ -2,9 +2,9 @@ using Microsoft.Extensions.Localization;
 using VitaLink.Platform.API.Shared.Resources;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using VitaLink.Platform.API.ElderCare.Application.Errors;
-using VitaLink.Platform.API.ElderCare.Application.Services;
-using VitaLink.Platform.API.ElderCare.Interfaces.REST.Assemblers;
+using VitaLink.Platform.API.ElderCare.Domain.Model.Errors;
+using VitaLink.Platform.API.ElderCare.Application.CommandServices;
+using VitaLink.Platform.API.ElderCare.Interfaces.REST.Transform;
 using VitaLink.Platform.API.ElderCare.Interfaces.REST.Resources;
 
 namespace VitaLink.Platform.API.ElderCare.Interfaces.REST;

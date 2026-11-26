@@ -1,7 +1,7 @@
 using VitaLink.Platform.API.ElderCare.Domain.Model.Commands;
 using VitaLink.Platform.API.ElderCare.Interfaces.REST.Resources;
 
-namespace VitaLink.Platform.API.ElderCare.Interfaces.REST.Assemblers;
+namespace VitaLink.Platform.API.ElderCare.Interfaces.REST.Transform;
 
 /// <summary>
 ///     Converts a REST resource into a command for linking a care provider.
