@@ -149,4 +149,28 @@
         <data name="ElderCareAlreadyAssigned" xml:space="preserve">
         <value>El adulto mayor ya tiene un proveedor de cuidado asignado.</value>
     </data>
+    <data name="IamInvalidRole" xml:space="preserve">
+        <value>El rol debe ser CARE_PROVIDER o FAMILY_CAREGIVER.</value>
+    </data>
+    <data name="IamInvalidEmail" xml:space="preserve">
+        <value>El correo electrónico no es válido.</value>
+    </data>
+    <data name="IamInvalidPassword" xml:space="preserve">
+        <value>La contraseña debe tener entre 8 y 72 caracteres.</value>
+    </data>
+    <data name="IamRoleNotAllowed" xml:space="preserve">
+        <value>Este rol no se puede registrar mediante el registro.</value>
+    </data>
+    <data name="IamEmailAlreadyRegistered" xml:space="preserve">
+        <value>Ya existe una cuenta con este correo electrónico.</value>
+    </data>
+    <data name="IamInvalidCredentials" xml:space="preserve">
+        <value>El correo o la contraseña son incorrectos.</value>
+    </data>
+    <data name="IamAccountDisabled" xml:space="preserve">
+        <value>Esta cuenta no está habilitada para iniciar sesión.</value>
+    </data>
+    <data name="IamInvalidProfile" xml:space="preserve">
+        <value>El nombre, el apellido y la especialidad son obligatorios para un médico y no pueden superar su longitud máxima.</value>
+    </data>
 </root>
