@@ -6,7 +6,7 @@ using VitaLink.Platform.API.Notification.Application.Services;
 using VitaLink.Platform.API.Notification.Domain.Model.Queries;
 using VitaLink.Platform.API.Notification.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Notification.Interfaces.REST.Transform;
-using VitaLink.Platform.API.Resources;
+using VitaLink.Platform.API.Shared.Resources;
 
 namespace VitaLink.Platform.API.Notification.Interfaces.REST;
 

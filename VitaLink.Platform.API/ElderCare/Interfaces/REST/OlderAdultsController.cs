@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Localization;
-using VitaLink.Platform.API.Resources;
+using VitaLink.Platform.API.Shared.Resources;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using VitaLink.Platform.API.ElderCare.Application.Errors;

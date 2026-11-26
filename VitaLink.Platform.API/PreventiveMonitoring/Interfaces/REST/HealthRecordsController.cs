@@ -14,8 +14,8 @@ using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Queries;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Resources;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Transform;
-using VitaLink.Platform.API.Resources;
-using VitaLink.Platform.API.Shared.Application.Patterns;
+using VitaLink.Platform.API.Shared.Resources;
+using VitaLink.Platform.API.Shared.Application.Model;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST;
 

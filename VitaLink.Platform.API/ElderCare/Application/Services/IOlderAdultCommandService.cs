@@ -1,7 +1,7 @@
 using VitaLink.Platform.API.ElderCare.Application.Errors;
 using VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates;
 using VitaLink.Platform.API.ElderCare.Domain.Model.Commands;
-using VitaLink.Platform.API.Shared.Application.Patterns;
+using VitaLink.Platform.API.Shared.Application.Model;
 
 namespace VitaLink.Platform.API.ElderCare.Application.Services;
 
