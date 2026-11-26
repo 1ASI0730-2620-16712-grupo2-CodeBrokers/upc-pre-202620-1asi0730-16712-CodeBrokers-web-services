@@ -1,4 +1,4 @@
-using VitaLink.Platform.API.Notification.Application.Services;
+using VitaLink.Platform.API.Notification.Application.QueryServices;
 using VitaLink.Platform.API.Notification.Domain.Model.Queries;
 using VitaLink.Platform.API.Notification.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Notification.Domain.Repositories;

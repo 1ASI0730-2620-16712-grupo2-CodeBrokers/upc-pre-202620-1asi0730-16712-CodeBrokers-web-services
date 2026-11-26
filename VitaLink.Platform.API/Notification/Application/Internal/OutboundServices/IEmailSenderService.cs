@@ -1,6 +1,6 @@
 using VitaLink.Platform.API.Notification.Domain.Model.ValueObjects;
 
-namespace VitaLink.Platform.API.Notification.Domain.Services;
+namespace VitaLink.Platform.API.Notification.Application.Internal.OutboundServices;
 
 /// <summary>
 ///     Port for sending emails through an external provider.

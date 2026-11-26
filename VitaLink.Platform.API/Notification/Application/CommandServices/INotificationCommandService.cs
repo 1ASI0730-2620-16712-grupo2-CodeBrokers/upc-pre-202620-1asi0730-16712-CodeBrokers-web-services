@@ -1,9 +1,9 @@
-using VitaLink.Platform.API.Notification.Application.Errors;
+using VitaLink.Platform.API.Notification.Domain.Model.Errors;
 using VitaLink.Platform.API.Notification.Domain.Model.Commands;
 using VitaLink.Platform.API.Shared.Application.Model;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;
 
-namespace VitaLink.Platform.API.Notification.Application.Services;
+namespace VitaLink.Platform.API.Notification.Application.CommandServices;
 
 /// <summary>
 ///     Command service for notification operations.

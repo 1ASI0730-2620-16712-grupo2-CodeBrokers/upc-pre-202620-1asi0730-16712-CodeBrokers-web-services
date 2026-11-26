@@ -20,7 +20,7 @@ using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCor
 using VitaLink.Platform.API.Shared.Infrastructure.Interfaces.AspNetCore.Configuration;
 using VitaLink.Platform.API.Shared.Interfaces.REST.ProblemDetails;
 using VitaLink.Platform.API.Shared.Infrastructure.Pipeline.Middleware;
-using VitaLink.Platform.API.Notification.Domain.Services;
+using VitaLink.Platform.API.Notification.Application.Internal.OutboundServices;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
 // ElderCare
 using VitaLink.Platform.API.ElderCare.Domain.Repositories;
@@ -30,7 +30,8 @@ using VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
 
 // Notification
 using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;
-using VitaLink.Platform.API.Notification.Application.Services;
+using VitaLink.Platform.API.Notification.Application.CommandServices;
+using VitaLink.Platform.API.Notification.Application.QueryServices;
 using VitaLink.Platform.API.Notification.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Notification.Application.Internal.EventHandlers;
 
