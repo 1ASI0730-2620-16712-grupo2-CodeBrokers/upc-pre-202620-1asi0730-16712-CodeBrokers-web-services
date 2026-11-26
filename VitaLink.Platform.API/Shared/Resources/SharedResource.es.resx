@@ -164,4 +164,10 @@
     <data name="IamEmailAlreadyRegistered" xml:space="preserve">
         <value>Ya existe una cuenta con este correo electrónico.</value>
     </data>
+    <data name="IamInvalidCredentials" xml:space="preserve">
+        <value>El correo o la contraseña son incorrectos.</value>
+    </data>
+    <data name="IamAccountDisabled" xml:space="preserve">
+        <value>Esta cuenta no está habilitada para iniciar sesión.</value>
+    </data>
 </root>

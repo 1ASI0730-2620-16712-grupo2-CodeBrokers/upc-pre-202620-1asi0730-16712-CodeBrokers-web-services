@@ -61,4 +61,34 @@ public class AuthenticationController(
                     title: localizer["UnexpectedServerError"].Value)
             });
     }
+
+    /// <summary>
+    ///     Signs in and returns an access token.
+    /// </summary>
+    /// <param name="resource">Sign-in data.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    [HttpPost("sign-in")]
+    [ProducesResponseType(typeof(AuthenticatedUserResource), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> SignIn([FromBody] SignInResource resource, CancellationToken cancellationToken)
+    {
+        var command = SignInCommandFromResourceAssembler.ToCommandFromResource(resource);
+        var result = await userCommandService.Handle(command, cancellationToken);
+
+        return result.Fold<IActionResult>(
+            authenticated => Ok(AuthenticatedUserResourceFromResultAssembler.ToResourceFromResult(authenticated)),
+            error => error switch
+            {
+                SignInError.InvalidCredentials => Problem(
+                    statusCode: StatusCodes.Status401Unauthorized,
+                    title: localizer["IamInvalidCredentials"].Value),
+                SignInError.AccountDisabled => Problem(
+                    statusCode: StatusCodes.Status403Forbidden,
+                    title: localizer["IamAccountDisabled"].Value),
+                _ => Problem(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    title: localizer["UnexpectedServerError"].Value)
+            });
+    }
 }

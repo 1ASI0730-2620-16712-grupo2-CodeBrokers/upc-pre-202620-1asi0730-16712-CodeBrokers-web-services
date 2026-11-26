@@ -8,10 +8,12 @@ using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.IAM.Application.CommandServices;
 using VitaLink.Platform.API.IAM.Application.Internal.CommandServices;
+using VitaLink.Platform.API.IAM.Application.Internal.OutboundServices;
 using VitaLink.Platform.API.IAM.Domain.Repositories;
 using VitaLink.Platform.API.IAM.Domain.Services;
 using VitaLink.Platform.API.IAM.Infrastructure.Hashing.BCrypt;
 using VitaLink.Platform.API.IAM.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.IAM.Infrastructure.Tokens.JWT;
 using VitaLink.Platform.API.IAM.Infrastructure.Seeding;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -112,6 +114,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
+builder.Services.AddOptions<JwtOptions>()
+    .Bind(builder.Configuration.GetSection(JwtOptions.SectionName))
+    .Validate(o => o.IsValid, "IAM:Jwt:SigningKey is required and must have at least 32 characters.")
+    .ValidateOnStart();
+builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 builder.Services.Configure<DemoUserOptions>(builder.Configuration.GetSection(DemoUserOptions.SectionName));
 builder.Services.AddScoped<DemoUserSeeder>();
 

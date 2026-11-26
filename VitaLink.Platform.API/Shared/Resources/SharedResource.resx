@@ -168,4 +168,10 @@
     <data name="IamEmailAlreadyRegistered" xml:space="preserve">
         <value>An account with this email already exists.</value>
     </data>
+    <data name="IamInvalidCredentials" xml:space="preserve">
+        <value>The email or password is incorrect.</value>
+    </data>
+    <data name="IamAccountDisabled" xml:space="preserve">
+        <value>This account is not enabled to sign in.</value>
+    </data>
 </root>
