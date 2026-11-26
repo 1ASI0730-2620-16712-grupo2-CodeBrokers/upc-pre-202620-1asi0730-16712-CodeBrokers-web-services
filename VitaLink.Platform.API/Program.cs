@@ -41,7 +41,9 @@ using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Services;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.CommandServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.CommandServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.QueryServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.ACL;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.ACL;
 
