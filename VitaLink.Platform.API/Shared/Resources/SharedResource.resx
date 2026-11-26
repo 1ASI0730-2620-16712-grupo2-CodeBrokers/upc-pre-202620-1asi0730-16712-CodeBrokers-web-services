@@ -153,4 +153,19 @@
         <data name="ElderCareAlreadyAssigned" xml:space="preserve">
         <value>The older adult already has a care provider.</value>
     </data>
+    <data name="IamInvalidRole" xml:space="preserve">
+        <value>The role must be CARE_PROVIDER or FAMILY_CAREGIVER.</value>
+    </data>
+    <data name="IamInvalidEmail" xml:space="preserve">
+        <value>The email address is not valid.</value>
+    </data>
+    <data name="IamInvalidPassword" xml:space="preserve">
+        <value>The password must have between 8 and 72 characters.</value>
+    </data>
+    <data name="IamRoleNotAllowed" xml:space="preserve">
+        <value>This role cannot be registered through sign-up.</value>
+    </data>
+    <data name="IamEmailAlreadyRegistered" xml:space="preserve">
+        <value>An account with this email already exists.</value>
+    </data>
 </root>

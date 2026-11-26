@@ -6,6 +6,8 @@ using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.IAM.Application.CommandServices;
+using VitaLink.Platform.API.IAM.Application.Internal.CommandServices;
 using VitaLink.Platform.API.IAM.Domain.Repositories;
 using VitaLink.Platform.API.IAM.Domain.Services;
 using VitaLink.Platform.API.IAM.Infrastructure.Hashing.BCrypt;
@@ -109,6 +111,7 @@ builder.Services.AddOpenApi();
 // IAM Bounded Context
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserCommandService, UserCommandService>();
 builder.Services.Configure<DemoUserOptions>(builder.Configuration.GetSection(DemoUserOptions.SectionName));
 builder.Services.AddScoped<DemoUserSeeder>();
 
