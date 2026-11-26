@@ -1,9 +1,9 @@
-using VitaLink.Platform.API.Alerting.Application.Errors;
+using VitaLink.Platform.API.Alerting.Domain.Model.Errors;
 using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Shared.Application.Model;
 
-namespace VitaLink.Platform.API.Alerting.Domain.Services;
+namespace VitaLink.Platform.API.Alerting.Application.CommandServices;
 
 /// <summary>
 ///     Defines operations for changing alert statuses.

@@ -2,7 +2,7 @@ using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 
-namespace VitaLink.Platform.API.Alerting.Domain.Services;
+namespace VitaLink.Platform.API.Alerting.Application.QueryServices;
 
 /// <summary>
 ///     Provides read-only alert searches and detail queries.

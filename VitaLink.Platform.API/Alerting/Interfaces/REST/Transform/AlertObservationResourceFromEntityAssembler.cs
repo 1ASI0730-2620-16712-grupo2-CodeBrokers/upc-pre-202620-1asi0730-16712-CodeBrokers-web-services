@@ -1,7 +1,7 @@
 using VitaLink.Platform.API.Alerting.Domain.Model.Entities;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 
-namespace VitaLink.Platform.API.Alerting.Interfaces.REST.Assemblers;
+namespace VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 
 /// <summary>Converts a saved observation into its REST representation.</summary>
 public static class AlertObservationResourceFromEntityAssembler

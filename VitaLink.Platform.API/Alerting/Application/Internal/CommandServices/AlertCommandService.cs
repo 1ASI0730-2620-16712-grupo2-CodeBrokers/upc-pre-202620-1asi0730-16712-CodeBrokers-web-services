@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using VitaLink.Platform.API.Alerting.Application.Errors;
+using VitaLink.Platform.API.Alerting.Domain.Model.Errors;
 using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Application.Results;
 using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
-using VitaLink.Platform.API.Alerting.Domain.Services;
+using VitaLink.Platform.API.Alerting.Application.CommandServices;
 using VitaLink.Platform.API.Shared.Application.Model;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 

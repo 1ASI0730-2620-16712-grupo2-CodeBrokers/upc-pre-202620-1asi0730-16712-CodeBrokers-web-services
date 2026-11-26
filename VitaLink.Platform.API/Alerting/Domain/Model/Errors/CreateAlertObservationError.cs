@@ -1,4 +1,4 @@
-namespace VitaLink.Platform.API.Alerting.Application.Errors;
+namespace VitaLink.Platform.API.Alerting.Domain.Model.Errors;
 
 /// <summary>Expected failures when saving an observation.</summary>
 public enum CreateAlertObservationError

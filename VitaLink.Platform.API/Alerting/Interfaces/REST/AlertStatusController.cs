@@ -2,13 +2,13 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using VitaLink.Platform.API.Alerting.Application.Errors;
-using VitaLink.Platform.API.Alerting.Domain.Services;
+using VitaLink.Platform.API.Alerting.Domain.Model.Errors;
+using VitaLink.Platform.API.Alerting.Application.CommandServices;
+using VitaLink.Platform.API.Alerting.Application.QueryServices;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
-using VitaLink.Platform.API.Alerting.Interfaces.REST.Assemblers;
 
 namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 
