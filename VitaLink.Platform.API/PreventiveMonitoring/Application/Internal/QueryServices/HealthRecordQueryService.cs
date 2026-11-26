@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using VitaLink.Platform.API.PreventiveMonitoring.Application.Errors;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.QueryServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Errors;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Queries;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;

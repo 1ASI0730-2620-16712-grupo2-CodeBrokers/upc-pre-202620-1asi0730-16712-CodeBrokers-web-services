@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 
-namespace VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServices;
+namespace VitaLink.Platform.API.PreventiveMonitoring.Application.QueryServices;
 
 /// <summary>
 ///     Query service interface for monitoring rules.
