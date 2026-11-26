@@ -1,6 +1,6 @@
 using VitaLink.Platform.API.Alerting.Domain.Model.Entities;
 
-namespace VitaLink.Platform.API.Alerting.Domain.Services;
+namespace VitaLink.Platform.API.Alerting.Application.QueryServices;
 
 /// <summary>Retrieves the observation for an alert.</summary>
 public interface IAlertObservationQueryService

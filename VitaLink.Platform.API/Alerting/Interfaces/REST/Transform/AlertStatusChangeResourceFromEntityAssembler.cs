@@ -2,7 +2,7 @@ using VitaLink.Platform.API.Alerting.Domain.Model.Entities;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 
-namespace VitaLink.Platform.API.Alerting.Interfaces.REST.Assemblers;
+namespace VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 
 /// <summary>
 ///     Converts alert status history entities into REST resources.

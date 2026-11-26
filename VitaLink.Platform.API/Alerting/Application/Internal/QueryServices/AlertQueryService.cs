@@ -2,7 +2,7 @@ using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
-using VitaLink.Platform.API.Alerting.Domain.Services;
+using VitaLink.Platform.API.Alerting.Application.QueryServices;
 
 namespace VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 

@@ -1,9 +1,9 @@
-using VitaLink.Platform.API.Alerting.Application.Errors;
+using VitaLink.Platform.API.Alerting.Domain.Model.Errors;
 using VitaLink.Platform.API.Alerting.Application.Results;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Shared.Application.Model;
 
-namespace VitaLink.Platform.API.Alerting.Domain.Services;
+namespace VitaLink.Platform.API.Alerting.Application.CommandServices;
 
 /// <summary>
 ///     Creates alerts and reports expected creation failures.

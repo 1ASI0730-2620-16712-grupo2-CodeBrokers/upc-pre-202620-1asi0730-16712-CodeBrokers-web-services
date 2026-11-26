@@ -1,8 +1,8 @@
-using VitaLink.Platform.API.Alerting.Application.Errors;
+using VitaLink.Platform.API.Alerting.Domain.Model.Errors;
 using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Alerting.Application.Results;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
-using VitaLink.Platform.API.Alerting.Domain.Services;
+using VitaLink.Platform.API.Alerting.Application.CommandServices;
 using VitaLink.Platform.API.Shared.Application.Model;
 
 namespace VitaLink.Platform.API.Notification.Application.Internal.EventHandlers;
