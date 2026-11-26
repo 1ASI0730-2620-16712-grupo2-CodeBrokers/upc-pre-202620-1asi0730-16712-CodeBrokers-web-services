@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using VitaLink.Platform.API.Shared.Domain.Model;
+using VitaLink.Platform.API.Shared.Domain.Model.Entities;
 
 namespace VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Interceptors;
 

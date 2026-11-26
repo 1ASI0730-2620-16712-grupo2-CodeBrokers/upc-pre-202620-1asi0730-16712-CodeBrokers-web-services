@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
 using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
@@ -14,12 +13,13 @@ using VitaLink.Platform.API.IAM.Infrastructure.Persistence.EntityFrameworkCore.R
 using VitaLink.Platform.API.IAM.Infrastructure.Seeding;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
-using VitaLink.Platform.API.Resources;
+using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using VitaLink.Platform.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
-using VitaLink.Platform.API.Shared.Interfaces.ASP.Configuration;
-using VitaLink.Platform.API.Shared.Interfaces.ASP.Middleware;
+using VitaLink.Platform.API.Shared.Infrastructure.Interfaces.AspNetCore.Configuration;
+using VitaLink.Platform.API.Shared.Interfaces.REST.ProblemDetails;
+using VitaLink.Platform.API.Shared.Infrastructure.Pipeline.Middleware;
 using VitaLink.Platform.API.Notification.Domain.Services;
 using VitaLink.Platform.API.Notification.Infrastructure.Email;
 // ElderCare
@@ -64,17 +64,11 @@ builder.Services.AddControllers(options =>
 
 // Error handling: unexpected exceptions are returned as RFC 7807 ProblemDetails
 builder.Services.AddProblemDetails(options =>
-    options.CustomizeProblemDetails = context =>
-    {
-        // Validation errors (automatic 400 and ValidationProblem()) get a localized title
-        if (context.ProblemDetails is not HttpValidationProblemDetails) return;
-        var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
-        context.ProblemDetails.Title = localizer["InvalidModelStateTitle"].Value;
-    });
+    options.CustomizeProblemDetails = ProblemDetailsConfiguration.Customize);
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-// Localization: messages come from Resources/SharedResource.*.resx
+// Localization: messages come from Shared/Resources/SharedResource.*.resx
 builder.Services.AddLocalization();
 
 // CORS: allowed origins are defined per environment in appsettings.{Environment}.json

@@ -84,11 +84,13 @@ VitaLink.Platform.API/
 ├── CareCoordination/
 ├── Notification/
 ├── Marketing/
+├── Migrations/             # EF Core migrations and model snapshot of the single AppDbContext
 └── Shared/                 # Shared Kernel
     ├── Domain/             # Aggregates, entities, value objects, commands, queries, repository contracts
     ├── Application/        # Command and query services
     ├── Infrastructure/     # Persistence and external service adapters
-    └── Interfaces/         # REST controllers, resources and assemblers
+    ├── Interfaces/         # REST controllers, resources and ProblemDetails configuration
+    └── Resources/          # Localized messages (SharedResource.*.resx)
 ```
 
 ## Persistence
@@ -100,7 +102,7 @@ The persistence layer lives in `Shared` and is shared by every bounded context:
 | `AppDbContext` | `Shared/Infrastructure/Persistence/EntityFrameworkCore/Configuration` | Single EF Core context for all bounded contexts |
 | `IBaseRepository<TEntity, TId>` / `BaseRepository<TEntity, TId>` | `Shared/Domain/Repositories` / `Shared/Infrastructure/.../Repositories` | Common CRUD operations. Repositories register changes but never save them |
 | `IUnitOfWork` / `UnitOfWork` | Same folders | `CompleteAsync()` commits all pending changes of a use case at once |
-| `IAuditableEntity` | `Shared/Domain/Model` | Entities implementing it get `CreatedAt` and `UpdatedAt` filled automatically |
+| `IAuditableEntity` | `Shared/Domain/Model/Entities` | Entities implementing it get `CreatedAt` and `UpdatedAt` filled automatically |
 
 Naming convention: tables are plural and every database identifier is snake_case (`HealthRecord.RecordedAt` → `health_records.recorded_at`). This is applied automatically.
 
@@ -139,7 +141,7 @@ public class AlertConfiguration : IEntityTypeConfiguration<Alert>
 Create a migration after changing the model, from the repository root:
 
 ```bash
-dotnet ef migrations add <MigrationName> --project VitaLink.Platform.API --output-dir Shared/Infrastructure/Persistence/EntityFrameworkCore/Migrations
+dotnet ef migrations add <MigrationName> --project VitaLink.Platform.API --output-dir Migrations
 ```
 
 - Include **one migration per pull request**.
@@ -151,9 +153,9 @@ dotnet ef migrations add <MigrationName> --project VitaLink.Platform.API --outpu
 
 | Situation | How it is handled | HTTP response |
 |---|---|---|
-| Expected business failure (duplicate, invalid transition, not found) | The command service returns `Result<TValue, TError>` (`Shared/Application/Patterns`) and the controller translates the error | `4xx` with `ProblemDetails` |
+| Expected business failure (duplicate, invalid transition, not found) | The command service returns `Result<TValue, TError>` (`Shared/Application/Model`) and the controller translates the error | `4xx` with `ProblemDetails` |
 | Invalid request (model binding or data annotations) | Automatic in `[ApiController]` controllers, or `ValidationProblem(ModelState)` | `400` with `ValidationProblemDetails` |
-| Unexpected exception | `GlobalExceptionHandler` (`Shared/Interfaces/ASP/Middleware`) logs it | `500` with `ProblemDetails`, without exception details |
+| Unexpected exception | `GlobalExceptionHandler` (`Shared/Infrastructure/Pipeline/Middleware`) logs it | `500` with `ProblemDetails`, without exception details |
 
 - Do not throw exceptions for expected business failures, and do not wrap controllers in a generic `try/catch`: unexpected exceptions already reach the global handler.
 - Error responses follow RFC 7807 (`ProblemDetails`). Use `Problem(...)` or `ValidationProblem(...)` in controllers instead of returning plain strings.
@@ -184,7 +186,7 @@ The API answers in the language of the `Accept-Language` request header:
 
 The culture applied is returned in the `Content-Language` response header.
 
-Messages live in `Resources/SharedResource.resx` (English) and `Resources/SharedResource.es.resx` (Spanish). To add a message:
+Messages live in `Shared/Resources/SharedResource.resx` (English) and `Shared/Resources/SharedResource.es.resx` (Spanish). To add a message:
 
 1. Add the same key to **both** files. Prefix it with your bounded context, e.g. `AlertingHealthRecordNotFound` or `ElderCareOlderAdultNotFound`.
 2. Inject `IStringLocalizer<SharedResource>` in the controller and read it with `localizer["Key"].Value`.

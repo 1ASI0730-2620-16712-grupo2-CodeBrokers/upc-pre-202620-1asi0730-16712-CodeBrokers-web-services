@@ -7,8 +7,8 @@ using VitaLink.Platform.API.IAM.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Application.Errors;
 using VitaLink.Platform.API.Notification.Application.Services;
 using VitaLink.Platform.API.Notification.Domain.Model.Commands;
-using VitaLink.Platform.API.Resources;
-using VitaLink.Platform.API.Shared.Application.Patterns;
+using VitaLink.Platform.API.Shared.Resources;
+using VitaLink.Platform.API.Shared.Application.Model;
 using VitaLink.Platform.API.Shared.Domain.Model.ValueObjects;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;
 

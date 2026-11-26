@@ -7,7 +7,7 @@ using VitaLink.Platform.API.PreventiveMonitoring.Application.Errors;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Commands;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Repositories;
-using VitaLink.Platform.API.Shared.Application.Patterns;
+using VitaLink.Platform.API.Shared.Application.Model;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.CommandServices;

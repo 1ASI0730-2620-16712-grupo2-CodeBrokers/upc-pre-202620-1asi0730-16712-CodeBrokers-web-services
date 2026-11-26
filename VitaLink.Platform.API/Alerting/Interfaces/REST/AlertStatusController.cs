@@ -6,7 +6,7 @@ using VitaLink.Platform.API.Alerting.Application.Errors;
 using VitaLink.Platform.API.Alerting.Domain.Services;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
-using VitaLink.Platform.API.Resources;
+using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Assemblers;
 

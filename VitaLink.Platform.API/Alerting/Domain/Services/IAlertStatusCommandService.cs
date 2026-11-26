@@ -1,7 +1,7 @@
 using VitaLink.Platform.API.Alerting.Application.Errors;
 using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
-using VitaLink.Platform.API.Shared.Application.Patterns;
+using VitaLink.Platform.API.Shared.Application.Model;
 
 namespace VitaLink.Platform.API.Alerting.Domain.Services;
 

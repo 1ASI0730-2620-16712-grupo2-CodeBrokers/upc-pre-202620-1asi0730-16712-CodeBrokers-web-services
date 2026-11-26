@@ -7,7 +7,7 @@ using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Domain.Services;
-using VitaLink.Platform.API.Shared.Application.Patterns;
+using VitaLink.Platform.API.Shared.Application.Model;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 
 namespace VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
