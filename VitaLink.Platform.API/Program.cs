@@ -25,7 +25,7 @@ using VitaLink.Platform.API.Notification.Infrastructure.Email;
 // ElderCare
 using VitaLink.Platform.API.ElderCare.Domain.Repositories;
 using VitaLink.Platform.API.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
-using VitaLink.Platform.API.ElderCare.Application.Services;
+using VitaLink.Platform.API.ElderCare.Application.CommandServices;
 using VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
 
 // Notification
