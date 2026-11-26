@@ -1,5 +1,7 @@
+using System.Transactions;
 using VitaLink.Platform.API.IAM.Application.CommandServices;
 using VitaLink.Platform.API.IAM.Application.Internal.OutboundServices;
+using VitaLink.Platform.API.IAM.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.IAM.Application.Results;
 using VitaLink.Platform.API.IAM.Domain.Model.Aggregates;
 using VitaLink.Platform.API.IAM.Domain.Model.Commands;
@@ -17,6 +19,7 @@ public class UserCommandService(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     ITokenService tokenService,
+    ExternalElderCareService externalElderCareService,
     IUnitOfWork unitOfWork) : IUserCommandService
 {
     /// <inheritdoc />
@@ -41,6 +44,13 @@ public class UserCommandService(
         if (!PasswordPolicy.IsValid(command.Password))
             return new Result<User, SignUpError>.Failure(SignUpError.InvalidPassword);
 
+        // A care provider needs a profile, so the name and the specialty are required.
+        if (command.Role == UserRole.CareProvider
+            && (string.IsNullOrWhiteSpace(command.FirstName)
+                || string.IsNullOrWhiteSpace(command.LastName)
+                || string.IsNullOrWhiteSpace(command.Specialty)))
+            return new Result<User, SignUpError>.Failure(SignUpError.InvalidProfile);
+
         if (await userRepository.ExistsByEmailAsync(email, cancellationToken))
             return new Result<User, SignUpError>.Failure(SignUpError.EmailAlreadyRegistered);
 
@@ -49,8 +59,31 @@ public class UserCommandService(
         // Email verification is out of scope: accounts are created ready to sign in.
         user.VerifyAccount();
 
+        if (command.Role != UserRole.CareProvider)
+        {
+            await userRepository.AddAsync(user, cancellationToken);
+            await unitOfWork.CompleteAsync(cancellationToken);
+            return new Result<User, SignUpError>.Success(user);
+        }
+
+        // The care provider profile has a foreign key to the account, and EF Core cannot order two inserts
+        // across bounded contexts: the account is saved first, then the profile, in one transaction.
+        // If the profile is rejected, leaving the scope without completing it rolls the account back too.
+        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
         await userRepository.AddAsync(user, cancellationToken);
         await unitOfWork.CompleteAsync(cancellationToken);
+
+        var profile = await externalElderCareService.AddCareProviderProfileAsync(
+            user.Id.Value, command.FirstName!, command.LastName!, command.Specialty!, cancellationToken);
+
+        if (profile == CareProviderProfileResult.InvalidData)
+            return new Result<User, SignUpError>.Failure(SignUpError.InvalidProfile);
+        if (profile != CareProviderProfileResult.Added)
+            return new Result<User, SignUpError>.Failure(SignUpError.UnexpectedError);
+
+        await unitOfWork.CompleteAsync(cancellationToken);
+        transaction.Complete();
 
         return new Result<User, SignUpError>.Success(user);
     }

@@ -50,6 +50,9 @@ public class AuthenticationController(
                 SignUpError.InvalidPassword => Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: localizer["IamInvalidPassword"].Value),
+                SignUpError.InvalidProfile => Problem(
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: localizer["IamInvalidProfile"].Value),
                 SignUpError.RoleNotAllowed => Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: localizer["IamRoleNotAllowed"].Value),

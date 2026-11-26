@@ -11,6 +11,9 @@ public enum SignUpError
     /// <summary>The password does not meet the password policy.</summary>
     InvalidPassword,
 
+    /// <summary>The profile data (name, last name, specialty) is missing or not valid.</summary>
+    InvalidProfile,
+
     /// <summary>The role cannot be registered through sign-up.</summary>
     RoleNotAllowed,
 

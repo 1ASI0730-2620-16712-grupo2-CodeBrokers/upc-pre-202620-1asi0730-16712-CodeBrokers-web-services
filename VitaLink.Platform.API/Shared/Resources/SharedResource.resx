@@ -174,4 +174,7 @@
     <data name="IamAccountDisabled" xml:space="preserve">
         <value>This account is not enabled to sign in.</value>
     </data>
+    <data name="IamInvalidProfile" xml:space="preserve">
+        <value>The first name, last name and specialty are required for a care provider and cannot exceed their maximum length.</value>
+    </data>
 </root>

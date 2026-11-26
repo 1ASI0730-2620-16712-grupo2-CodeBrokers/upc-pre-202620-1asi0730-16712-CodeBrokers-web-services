@@ -170,4 +170,7 @@
     <data name="IamAccountDisabled" xml:space="preserve">
         <value>Esta cuenta no está habilitada para iniciar sesión.</value>
     </data>
+    <data name="IamInvalidProfile" xml:space="preserve">
+        <value>El nombre, el apellido y la especialidad son obligatorios para un médico y no pueden superar su longitud máxima.</value>
+    </data>
 </root>

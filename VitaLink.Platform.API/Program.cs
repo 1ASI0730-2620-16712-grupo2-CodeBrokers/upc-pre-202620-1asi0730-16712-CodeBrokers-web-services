@@ -9,6 +9,7 @@ using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkC
 using VitaLink.Platform.API.IAM.Application.CommandServices;
 using VitaLink.Platform.API.IAM.Application.Internal.CommandServices;
 using VitaLink.Platform.API.IAM.Application.Internal.OutboundServices;
+using VitaLink.Platform.API.IAM.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.IAM.Domain.Repositories;
 using VitaLink.Platform.API.IAM.Domain.Services;
 using VitaLink.Platform.API.IAM.Infrastructure.Hashing.BCrypt;
@@ -29,8 +30,10 @@ using VitaLink.Platform.API.Notification.Infrastructure.Email;
 // ElderCare
 using VitaLink.Platform.API.ElderCare.Domain.Repositories;
 using VitaLink.Platform.API.ElderCare.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using VitaLink.Platform.API.ElderCare.Application.ACL;
 using VitaLink.Platform.API.ElderCare.Application.CommandServices;
 using VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
+using VitaLink.Platform.API.ElderCare.Interfaces.ACL;
 
 // Notification
 using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;
@@ -113,6 +116,7 @@ builder.Services.AddOpenApi();
 // IAM Bounded Context
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ExternalElderCareService>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
 builder.Services.AddOptions<JwtOptions>()
     .Bind(builder.Configuration.GetSection(JwtOptions.SectionName))
@@ -168,6 +172,7 @@ builder.Services.AddScoped<IMonitoringContextFacade, MonitoringContextFacade>();
 builder.Services.AddScoped<ICareProviderRepository, CareProviderRepository>();
 builder.Services.AddScoped<IOlderAdultRepository, OlderAdultRepository>();
 builder.Services.AddScoped<IOlderAdultCommandService, OlderAdultCommandService>();
+builder.Services.AddScoped<IElderCareContextFacade, ElderCareContextFacade>();
 
 var app = builder.Build();
 

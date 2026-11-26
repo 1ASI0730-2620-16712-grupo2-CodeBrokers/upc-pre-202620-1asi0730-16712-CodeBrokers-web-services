@@ -12,5 +12,5 @@ public static class SignUpCommandFromResourceAssembler
     /// <param name="resource">Request body.</param>
     /// <param name="role">Role already parsed from <see cref="SignUpResource.Role"/>.</param>
     public static SignUpCommand ToCommandFromResource(SignUpResource resource, UserRole role) =>
-        new(resource.Email, resource.Password, role);
+        new(resource.Email, resource.Password, role, resource.FirstName, resource.LastName, resource.Specialty);
 }
