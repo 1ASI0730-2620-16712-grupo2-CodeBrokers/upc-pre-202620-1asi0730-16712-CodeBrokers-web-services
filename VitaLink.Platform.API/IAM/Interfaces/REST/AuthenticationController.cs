@@ -55,6 +55,15 @@ public class AuthenticationController(
                 SignUpError.InvalidProfile => Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: localizer["IamInvalidProfile"].Value),
+                SignUpError.InvalidLicense => Problem(
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: localizer["IamInvalidLicense"].Value),
+                SignUpError.ClinicNotFound => Problem(
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: localizer["IamClinicNotFound"].Value),
+                SignUpError.LicenseAlreadyInUse => Problem(
+                    statusCode: StatusCodes.Status409Conflict,
+                    title: localizer["IamLicenseAlreadyInUse"].Value),
                 SignUpError.RoleNotAllowed => Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: localizer["IamRoleNotAllowed"].Value),

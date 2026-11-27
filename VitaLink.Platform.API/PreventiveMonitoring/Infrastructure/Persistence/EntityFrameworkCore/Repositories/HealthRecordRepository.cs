@@ -54,4 +54,25 @@ public class HealthRecordRepository : BaseRepository<HealthRecord, HealthRecordI
             .Take(take)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<HealthRecord>> FindLatestPerTypeAsync(
+        Guid olderAdultId,
+        CancellationToken cancellationToken = default)
+    {
+        // Records that are the newest of their type for the older adult.
+        var latest = await Context.Set<HealthRecord>()
+            .Where(r => r.OlderAdultId == olderAdultId
+                        && r.RecordedAt == Context.Set<HealthRecord>()
+                            .Where(other => other.OlderAdultId == olderAdultId
+                                            && other.RecordTypeCode == r.RecordTypeCode)
+                            .Max(other => other.RecordedAt))
+            .ToListAsync(cancellationToken);
+
+        // When two records of a type share the same instant, keep one.
+        return latest
+            .GroupBy(r => r.RecordTypeCode)
+            .Select(group => group.First())
+            .OrderBy(r => r.RecordTypeCode)
+            .ToList();
+    }
 }

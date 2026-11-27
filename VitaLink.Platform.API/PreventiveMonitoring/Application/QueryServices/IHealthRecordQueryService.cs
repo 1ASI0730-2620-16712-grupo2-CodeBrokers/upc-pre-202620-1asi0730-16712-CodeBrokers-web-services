@@ -13,4 +13,11 @@ public interface IHealthRecordQueryService
     Task<Result<IEnumerable<HealthRecord>, GetHealthRecordsError>> Handle(
         GetHealthRecordsByOlderAdultQuery query,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Gets the most recent record of each record type for an older adult.
+    /// </summary>
+    Task<IReadOnlyList<HealthRecord>> Handle(
+        GetLatestHealthRecordsByOlderAdultQuery query,
+        CancellationToken cancellationToken = default);
 }

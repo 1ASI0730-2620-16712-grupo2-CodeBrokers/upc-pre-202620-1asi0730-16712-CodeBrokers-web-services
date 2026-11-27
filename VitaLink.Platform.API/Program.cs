@@ -45,6 +45,11 @@ using VitaLink.Platform.API.ElderCare.Application.ACL;
 using VitaLink.Platform.API.ElderCare.Application.CommandServices;
 using VitaLink.Platform.API.ElderCare.Application.Internal.CommandServices;
 using VitaLink.Platform.API.ElderCare.Interfaces.ACL;
+using VitaLink.Platform.API.ElderCare.Application.Internal.QueryServices;
+using VitaLink.Platform.API.ElderCare.Application.QueryServices;
+using VitaLink.Platform.API.ElderCare.Domain.Services;
+using VitaLink.Platform.API.ElderCare.Infrastructure.Licensing;
+using VitaLink.Platform.API.ElderCare.Infrastructure.Seeding;
 
 // Notification
 using VitaLink.Platform.API.Notification.Application.Internal.CommandServices;
@@ -141,6 +146,11 @@ builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ExternalElderCareService>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
+builder.Services.AddScoped<IFamilyCaregiverLinkRepository, FamilyCaregiverLinkRepository>();
+builder.Services.AddScoped<IElderCarePatientFacade, ElderCarePatientFacade>();
+builder.Services.AddScoped<IMonitoringRegistrationFacade, MonitoringRegistrationFacade>();
+builder.Services.AddScoped<ExternalCaregiverRegistrationService>();
+builder.Services.AddScoped<ICaregiverRegistrationCommandService, CaregiverRegistrationCommandService>();
 builder.Services.AddOptions<JwtOptions>()
     .Bind(builder.Configuration.GetSection(JwtOptions.SectionName))
     .Validate(o => o.IsValid, "IAM:Jwt:SigningKey is required and must have at least 32 characters.")
@@ -224,6 +234,14 @@ builder.Services.AddScoped<ICareProviderRepository, CareProviderRepository>();
 builder.Services.AddScoped<IOlderAdultRepository, OlderAdultRepository>();
 builder.Services.AddScoped<IOlderAdultCommandService, OlderAdultCommandService>();
 builder.Services.AddScoped<IElderCareContextFacade, ElderCareContextFacade>();
+builder.Services.AddScoped<IClinicRepository, ClinicRepository>();
+builder.Services.AddScoped<IRegisteredLicenseRepository, RegisteredLicenseRepository>();
+builder.Services.AddScoped<ILicenseValidationService, SimulatedLicenseValidationService>();
+builder.Services.AddScoped<IClinicQueryService, ClinicQueryService>();
+builder.Services.AddScoped<ICareProviderQueryService, CareProviderQueryService>();
+builder.Services.AddScoped<ILicenseQueryService, LicenseQueryService>();
+builder.Services.AddScoped<IOlderAdultQueryService, OlderAdultQueryService>();
+builder.Services.AddScoped<ElderCareSeeder>();
 
 var app = builder.Build();
 
@@ -232,6 +250,8 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     context.Database.Migrate();
+
+    await scope.ServiceProvider.GetRequiredService<ElderCareSeeder>().SeedAsync();
 
     await scope.ServiceProvider.GetRequiredService<DemoUserSeeder>().SeedAsync();
 }

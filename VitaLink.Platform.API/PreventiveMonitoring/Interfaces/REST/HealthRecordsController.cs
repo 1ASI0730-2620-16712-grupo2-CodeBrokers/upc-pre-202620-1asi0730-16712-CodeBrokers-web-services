@@ -61,6 +61,22 @@ public class HealthRecordsController(
         };
     }
 
+    /// <summary>
+    ///     Gets the most recent measurement of each type for the older adult, used by the status view.
+    /// </summary>
+    [HttpGet("latest")]
+    [ProducesResponseType(typeof(IEnumerable<HealthRecordResource>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetLatestHealthRecords(
+        [FromRoute] Guid olderAdultId,
+        CancellationToken cancellationToken)
+    {
+        var records = await healthRecordQueryService.Handle(
+            new GetLatestHealthRecordsByOlderAdultQuery(olderAdultId),
+            cancellationToken);
+
+        return Ok(records.Select(HealthRecordResourceFromEntityAssembler.ToResourceFromEntity));
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetHealthRecords(
         [FromRoute] Guid olderAdultId,

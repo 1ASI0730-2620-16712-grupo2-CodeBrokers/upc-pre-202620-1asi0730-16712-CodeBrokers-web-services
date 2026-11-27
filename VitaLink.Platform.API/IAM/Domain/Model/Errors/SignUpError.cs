@@ -14,6 +14,15 @@ public enum SignUpError
     /// <summary>The profile data (name, last name, specialty) is missing or not valid.</summary>
     InvalidProfile,
 
+    /// <summary>The professional license is missing, has a wrong format or is not registered.</summary>
+    InvalidLicense,
+
+    /// <summary>Another account already uses the professional license.</summary>
+    LicenseAlreadyInUse,
+
+    /// <summary>The selected clinic does not exist.</summary>
+    ClinicNotFound,
+
     /// <summary>The role cannot be registered through sign-up.</summary>
     RoleNotAllowed,
 

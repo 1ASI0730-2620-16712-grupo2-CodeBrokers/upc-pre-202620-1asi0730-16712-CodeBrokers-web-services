@@ -44,4 +44,37 @@
     <data name="IamTooManyAttempts" xml:space="preserve">
         <value>Demasiados intentos de inicio de sesión. Inténtalo de nuevo en un minuto.</value>
     </data>
+    <data name="IamInvalidLicense" xml:space="preserve">
+        <value>La licencia profesional no es válida o no está registrada.</value>
+    </data>
+    <data name="IamLicenseAlreadyInUse" xml:space="preserve">
+        <value>La licencia profesional ya está en uso por otra cuenta.</value>
+    </data>
+    <data name="IamClinicNotFound" xml:space="preserve">
+        <value>La clínica seleccionada no existe.</value>
+    </data>
+    <data name="IamRegistrationFieldRequired" xml:space="preserve">
+        <value>Este campo es obligatorio.</value>
+    </data>
+    <data name="IamRegistrationFieldTooLong" xml:space="preserve">
+        <value>El texto no puede superar los {0} caracteres.</value>
+    </data>
+    <data name="IamRegistrationInvalidBirthDate" xml:space="preserve">
+        <value>La fecha de nacimiento es obligatoria y no puede ser futura.</value>
+    </data>
+    <data name="IamRegistrationMeasurementOutOfRange" xml:space="preserve">
+        <value>El valor debe estar entre {0} y {1}.</value>
+    </data>
+    <data name="IamRegistrationPressureOrder" xml:space="preserve">
+        <value>La presión sistólica debe ser mayor que la diastólica.</value>
+    </data>
+    <data name="IamRegistrationAuthorizationRequired" xml:space="preserve">
+        <value>Debes confirmar que estás autorizado para registrar a este paciente.</value>
+    </data>
+    <data name="IamRegistrationProviderNotFound" xml:space="preserve">
+        <value>El médico seleccionado no existe.</value>
+    </data>
+    <data name="IamRegistrationProviderInactive" xml:space="preserve">
+        <value>El médico seleccionado no está activo.</value>
+    </data>
 </root>

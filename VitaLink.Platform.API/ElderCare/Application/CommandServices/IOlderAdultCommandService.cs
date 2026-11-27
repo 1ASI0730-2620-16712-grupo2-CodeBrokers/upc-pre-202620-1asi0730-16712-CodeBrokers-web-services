@@ -21,4 +21,28 @@ public interface IOlderAdultCommandService
     Task<Result<OlderAdult, LinkCareProviderError>> Handle(
         LinkCareProviderCommand command,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Registers an older adult.
+    /// </summary>
+    /// <param name="command">The creation command.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>
+    ///     The created older adult or the fields that are not valid.
+    /// </returns>
+    Task<Result<OlderAdult, SaveOlderAdultError>> Handle(
+        CreateOlderAdultCommand command,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Updates the profile of an older adult.
+    /// </summary>
+    /// <param name="command">The update command.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>
+    ///     The updated older adult or an expected business error.
+    /// </returns>
+    Task<Result<OlderAdult, SaveOlderAdultError>> Handle(
+        UpdateOlderAdultCommand command,
+        CancellationToken cancellationToken = default);
 }
