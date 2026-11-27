@@ -4,6 +4,7 @@ using VitaLink.Platform.API.Alerting.Domain.Model.Errors;
 using VitaLink.Platform.API.Alerting.Application.Results;
 using VitaLink.Platform.API.Alerting.Domain.Model.Commands;
 using VitaLink.Platform.API.Shared.Application.Model;
+using VitaLink.Platform.API.Alerting.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
@@ -20,7 +21,8 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 [ApiController]
 [Route("[controller]")]
 public class AlertsController(IAlertQueryService queryService, IAlertCommandService commandService,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<AlertingMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     /// <summary>
     ///     Evaluates a health record and creates a pending alert when an active rule is violated.
@@ -58,8 +60,8 @@ public class AlertsController(IAlertQueryService queryService, IAlertCommandServ
                 Problem(statusCode: StatusCodes.Status404NotFound,
                     title: localizer["AlertingHealthRecordNotFound"].Value),
             _ => Problem(statusCode: StatusCodes.Status500InternalServerError,
-                title: localizer["UnexpectedServerError"].Value,
-                detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+                title: commonLocalizer["UnexpectedServerError"].Value,
+                detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value)
         };
     }
 

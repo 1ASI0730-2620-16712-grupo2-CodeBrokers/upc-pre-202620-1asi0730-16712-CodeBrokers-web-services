@@ -14,6 +14,7 @@ using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Queries;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Resources;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Transform;
+using VitaLink.Platform.API.PreventiveMonitoring.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 
@@ -25,7 +26,8 @@ namespace VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST;
 public class HealthRecordsController(
     IHealthRecordCommandService healthRecordCommandService,
     IHealthRecordQueryService healthRecordQueryService,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<PreventiveMonitoringMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateHealthRecord(
@@ -50,10 +52,10 @@ public class HealthRecordsController(
                 CreateHealthRecordError.InvalidUnit => Problem(statusCode: 400, title: localizer["HealthRecordInvalidUnit"].Value),
                 CreateHealthRecordError.InvalidNote => Problem(statusCode: 400, title: localizer["HealthRecordInvalidNote"].Value),
                 CreateHealthRecordError.EmptyRecord => Problem(statusCode: 400, title: localizer["HealthRecordEmpty"].Value),
-                _ => Problem(statusCode: 500, title: localizer["UnexpectedServerError"].Value, detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+                _ => Problem(statusCode: 500, title: commonLocalizer["UnexpectedServerError"].Value, detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value)
             },
 
-            _ => Problem(statusCode: 500, title: localizer["UnexpectedServerError"].Value, detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+            _ => Problem(statusCode: 500, title: commonLocalizer["UnexpectedServerError"].Value, detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value)
         };
     }
 
@@ -76,10 +78,10 @@ public class HealthRecordsController(
             Result<IEnumerable<HealthRecord>, GetHealthRecordsError>.Failure failure => failure.Error switch
             {
                 GetHealthRecordsError.InvalidDateRange => Problem(statusCode: 400, title: localizer["HealthRecordInvalidDateRange"].Value),
-                _ => Problem(statusCode: 500, title: localizer["UnexpectedServerError"].Value, detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+                _ => Problem(statusCode: 500, title: commonLocalizer["UnexpectedServerError"].Value, detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value)
             },
 
-            _ => Problem(statusCode: 500, title: localizer["UnexpectedServerError"].Value, detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+            _ => Problem(statusCode: 500, title: commonLocalizer["UnexpectedServerError"].Value, detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value)
         };
     }
 }

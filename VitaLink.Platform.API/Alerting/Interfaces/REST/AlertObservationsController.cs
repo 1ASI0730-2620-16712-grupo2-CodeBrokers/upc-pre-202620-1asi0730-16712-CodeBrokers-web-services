@@ -8,6 +8,7 @@ using VitaLink.Platform.API.Alerting.Application.CommandServices;
 using VitaLink.Platform.API.Alerting.Application.QueryServices;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
+using VitaLink.Platform.API.Alerting.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 
@@ -19,7 +20,8 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 [Produces(MediaTypeNames.Application.Json)]
 public class AlertObservationsController(IAlertObservationCommandService commandService,
     IAlertObservationQueryService queryService, IAlertQueryService alerts,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<AlertingMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(AlertObservationResource), StatusCodes.Status201Created)]
@@ -82,6 +84,6 @@ public class AlertObservationsController(IAlertObservationCommandService command
 
     private ObjectResult UnexpectedError() =>
         Problem(statusCode: StatusCodes.Status500InternalServerError,
-            title: localizer["UnexpectedServerError"].Value,
-            detail: localizer["UnexpectedErrorProcessingRequest"].Value);
+            title: commonLocalizer["UnexpectedServerError"].Value,
+            detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value);
 }

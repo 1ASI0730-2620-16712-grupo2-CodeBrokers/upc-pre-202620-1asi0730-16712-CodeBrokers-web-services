@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using VitaLink.Platform.API.Notification.Domain.Model.Errors;
+using VitaLink.Platform.API.Notification.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;
@@ -18,12 +19,14 @@ public static class ActionResultFromSendAlertNotificationResultAssembler
     /// <param name="result">The result returned by the command service.</param>
     /// <param name="controller">The controller that produces the response.</param>
     /// <param name="localizer">Localizer for the response titles.</param>
+    /// <param name="commonLocalizer">Localizer for the shared response messages.</param>
     /// <param name="getNotificationByIdActionName">Action used to build the location header.</param>
     /// <returns>The HTTP action result.</returns>
     public static ActionResult ToActionResultFromSendAlertNotificationResult(
         Result<NotificationAggregate, SendAlertNotificationError> result,
         ControllerBase controller,
-        IStringLocalizer<SharedResource> localizer,
+        IStringLocalizer<NotificationMessages> localizer,
+        IStringLocalizer<CommonMessages> commonLocalizer,
         string getNotificationByIdActionName) =>
         result switch
         {
@@ -47,7 +50,7 @@ public static class ActionResultFromSendAlertNotificationResultAssembler
                     title: localizer["NotificationDeliveryFailed"].Value),
 
             _ => controller.Problem(statusCode: StatusCodes.Status500InternalServerError,
-                title: localizer["UnexpectedServerError"].Value,
-                detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+                title: commonLocalizer["UnexpectedServerError"].Value,
+                detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value)
         };
 }

@@ -6,7 +6,7 @@ using VitaLink.Platform.API.Notification.Domain.Model.Commands;
 using VitaLink.Platform.API.Notification.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Application.Internal.OutboundServices;
-using VitaLink.Platform.API.Shared.Resources;
+using VitaLink.Platform.API.Notification.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;
@@ -25,7 +25,7 @@ public class NotificationCommandService(
     INotificationRepository notificationRepository,
     IEmailSenderService emailSenderService,
     IUnitOfWork unitOfWork,
-    IStringLocalizer<SharedResource> localizer,
+    IStringLocalizer<NotificationMessages> localizer,
     ILogger<NotificationCommandService> logger) : INotificationCommandService
 {
     /// <inheritdoc />

@@ -69,9 +69,10 @@ builder.Services.AddControllers(options =>
     options.Conventions.Add(new KebabCaseRouteNamingConvention());
     options.UseGeneralRoutePrefix("api/v1");
 })
-    // Data annotation messages (e.g. [Required(ErrorMessage = "Key")]) are looked up in SharedResource
+    // Data annotation messages (e.g. [Required(ErrorMessage = "Key")]) are looked up in the messages of the bounded context that owns the annotated type
     .AddDataAnnotationsLocalization(options =>
-        options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(SharedResource)));
+        options.DataAnnotationLocalizerProvider = (modelType, factory) =>
+            MessageResourceSelector.Create(modelType, factory));
 
 // Error handling: unexpected exceptions are returned as RFC 7807 ProblemDetails
 builder.Services.AddProblemDetails(options =>
@@ -79,7 +80,7 @@ builder.Services.AddProblemDetails(options =>
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-// Localization: messages come from Shared/Resources/SharedResource.*.resx
+// Localization: messages come from the Resources folder of each bounded context (*Messages.resx) and Shared/Resources (CommonMessages.resx)
 builder.Services.AddLocalization();
 
 // CORS: allowed origins are defined per environment in appsettings.{Environment}.json

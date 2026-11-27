@@ -19,7 +19,7 @@ namespace VitaLink.Platform.API.Shared.Infrastructure.Pipeline.Middleware;
 /// <param name="logger">The logger.</param>
 public sealed class GlobalExceptionHandler(
     IProblemDetailsService problemDetailsService,
-    IStringLocalizer<SharedResource> localizer,
+    IStringLocalizer<CommonMessages> localizer,
     ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     /// <inheritdoc />
