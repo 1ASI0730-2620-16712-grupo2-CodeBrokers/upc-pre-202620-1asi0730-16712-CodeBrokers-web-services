@@ -85,7 +85,37 @@ public class NotificationCommandService(
         return new MessageContent(subject, body);
     }
 
+    /// <summary>
+    ///     Waits before each new attempt when the provider fails (VTL-111). The first attempt is immediate;
+    ///     the number of entries is the number of retries in the same request.
+    /// </summary>
+    private static readonly TimeSpan[] RetryDelays = [TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(1500)];
+
+    /// <summary>
+    ///     Sends the email and, when the provider fails, retries a limited number of times (VTL-111, US-32 CA-04).
+    ///     Every attempt is recorded in the notification (attempts, status and failure reason); it is only marked
+    ///     as sent when the provider returns a receipt. A failed notification can still be retried later by sending
+    ///     the same command again, until <see cref="NotificationAggregate.MaxAttempts" />.
+    /// </summary>
+    /// <returns><c>true</c> when the provider confirmed the delivery.</returns>
     private async Task<bool> TrySendAsync(
+        NotificationAggregate notification, string recipientEmail, CancellationToken cancellationToken)
+    {
+        for (var retry = 0; ; retry++)
+        {
+            if (await TrySendOnceAsync(notification, recipientEmail, cancellationToken))
+                return true;
+
+            if (retry >= RetryDelays.Length || !notification.CanRetry())
+                return false;
+
+            logger.LogInformation("Retrying notification {NotificationId} (attempt {Attempt} of {MaxAttempts})",
+                notification.Id, notification.Attempts + 1, NotificationAggregate.MaxAttempts);
+            await Task.Delay(RetryDelays[retry], cancellationToken);
+        }
+    }
+
+    private async Task<bool> TrySendOnceAsync(
         NotificationAggregate notification, string recipientEmail, CancellationToken cancellationToken)
     {
         DeliveryReceipt receipt;

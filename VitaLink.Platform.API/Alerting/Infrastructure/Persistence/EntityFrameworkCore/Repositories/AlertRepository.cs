@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
@@ -75,5 +75,16 @@ public class AlertRepository(AppDbContext context)
     {
         return await Context.Set<Alert>()
             .FirstOrDefaultAsync(a => a.HealthRecordId == healthRecordId, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Alert>> FindByIdsAsync(
+        IReadOnlyCollection<Guid> alertIds, CancellationToken cancellationToken = default)
+    {
+        var ids = alertIds.Distinct().Select(id => new AlertId(id)).ToList();
+        return await Context.Set<Alert>()
+            .AsNoTracking()
+            .Where(a => ids.Contains(a.Id))
+            .ToListAsync(cancellationToken);
     }
 }

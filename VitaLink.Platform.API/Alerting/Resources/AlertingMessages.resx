@@ -53,4 +53,10 @@
     <data name="AlertingObservationInvalidReference" xml:space="preserve">
         <value>The alert or author identifier cannot be empty.</value>
     </data>
+    <data name="AlertingSeverityNotAllowed" xml:space="preserve">
+        <value>The priority cannot be sent: the server derives it from the monitoring rules.</value>
+    </data>
+    <data name="AlertingStatusHistoryInvalidIds" xml:space="preserve">
+        <value>Send between 1 and {0} alert identifiers.</value>
+    </data>
 </root>
