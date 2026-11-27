@@ -11,11 +11,14 @@ using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Alerting.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
+using VitaLink.Platform.API.IAM.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 
 /// <summary>Registers and retrieves the observation for an alert.</summary>
 [ApiController]
+[Authorize]
 [Route("alerts/{alertId:guid}/observation")]
 [Produces(MediaTypeNames.Application.Json)]
 public class AlertObservationsController(IAlertObservationCommandService commandService,
@@ -23,6 +26,7 @@ public class AlertObservationsController(IAlertObservationCommandService command
     IStringLocalizer<AlertingMessages> localizer,
     IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
+    [Authorize(UserRole.CareProvider)]
     [HttpPost]
     [ProducesResponseType(typeof(AlertObservationResource), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

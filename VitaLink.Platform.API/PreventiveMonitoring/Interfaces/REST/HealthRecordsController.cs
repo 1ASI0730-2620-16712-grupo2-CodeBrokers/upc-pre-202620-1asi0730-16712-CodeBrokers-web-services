@@ -17,10 +17,12 @@ using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Transform;
 using VitaLink.Platform.API.PreventiveMonitoring.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST;
 
 [ApiController]
+[Authorize]
 [Route("older-adults/{olderAdultId:guid}/health-records")]
 [Produces(MediaTypeNames.Application.Json)]
 public class HealthRecordsController(

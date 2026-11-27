@@ -16,6 +16,8 @@ using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Transform;
 using VitaLink.Platform.API.PreventiveMonitoring.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
+using VitaLink.Platform.API.IAM.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST;
 
@@ -23,6 +25,7 @@ namespace VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST;
 ///     Controller for managing monitoring rules.
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 public class MonitoringRulesController(
@@ -34,6 +37,7 @@ public class MonitoringRulesController(
     /// <summary>
     ///     Creates an active monitoring rule for an older adult and record type.
     /// </summary>
+    [Authorize(UserRole.CareProvider)]
     [HttpPost]
     [ProducesResponseType(typeof(MonitoringRuleResource), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
