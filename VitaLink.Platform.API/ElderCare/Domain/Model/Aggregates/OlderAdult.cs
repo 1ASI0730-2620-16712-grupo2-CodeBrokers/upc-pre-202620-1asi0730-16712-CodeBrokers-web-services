@@ -47,6 +47,33 @@ public class OlderAdult
         CreatedAt = DateTimeOffset.UtcNow;
     }
     
+    /// <summary>
+    ///     Replaces the profile data of the older adult.
+    /// </summary>
+    /// <remarks>
+    ///     The care provider assignment is not changed here.
+    /// </remarks>
+    public void UpdateProfile(
+        FullName fullName,
+        DateOnly birthDate,
+        Address? address,
+        EmergencyContact? emergencyContact,
+        bool isMonitoringActive)
+    {
+        ArgumentNullException.ThrowIfNull(fullName);
+
+        if (birthDate == default || birthDate > DateOnly.FromDateTime(DateTime.UtcNow))
+            throw new ArgumentException(
+                "Birth date must be valid and cannot be in the future.",
+                nameof(birthDate));
+
+        FullName = fullName;
+        BirthDate = birthDate;
+        Address = address;
+        EmergencyContact = emergencyContact;
+        IsMonitoringActive = isMonitoringActive;
+    }
+
     public void LinkCareProvider(Guid providerId)
     {
         if (providerId == Guid.Empty)
