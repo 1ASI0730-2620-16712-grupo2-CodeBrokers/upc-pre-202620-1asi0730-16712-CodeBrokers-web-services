@@ -23,4 +23,33 @@ public class CareProviderRepository(AppDbContext context)
                 provider => provider.UserId == userId,
                 cancellationToken);
     }
+
+    public async Task<bool> ExistsByLicenseNumberAsync(
+        string licenseNumber,
+        CancellationToken cancellationToken = default)
+    {
+        return await Context.Set<CareProvider>()
+            .AnyAsync(
+                provider => provider.LicenseNumber == licenseNumber,
+                cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<CareProvider>> FindActiveAsync(
+        Guid? clinicId,
+        bool onlyIndependent,
+        CancellationToken cancellationToken = default)
+    {
+        var query = Context.Set<CareProvider>()
+            .Where(provider => provider.IsActive);
+
+        if (clinicId is not null)
+            query = query.Where(provider => provider.ClinicId == clinicId);
+        else if (onlyIndependent)
+            query = query.Where(provider => provider.ClinicId == null);
+
+        return await query
+            .OrderBy(provider => provider.FullName.LastName)
+            .ThenBy(provider => provider.FullName.FirstName)
+            .ToListAsync(cancellationToken);
+    }
 }

@@ -38,6 +38,15 @@
     <data name="IamInvalidProfile" xml:space="preserve">
         <value>The first name, last name and specialty are required for a care provider and cannot exceed their maximum length.</value>
     </data>
+    <data name="IamInvalidLicense" xml:space="preserve">
+        <value>The professional license is not valid or is not registered.</value>
+    </data>
+    <data name="IamLicenseAlreadyInUse" xml:space="preserve">
+        <value>The professional license is already used by another account.</value>
+    </data>
+    <data name="IamClinicNotFound" xml:space="preserve">
+        <value>The selected clinic does not exist.</value>
+    </data> 
     <data name="IamRegistrationFieldRequired" xml:space="preserve">
         <value>This field is required.</value>
     </data>

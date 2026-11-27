@@ -11,10 +11,14 @@ namespace VitaLink.Platform.API.IAM.Interfaces.REST.Resources;
 /// <param name="FirstName">First name. Required when the role is <c>CARE_PROVIDER</c>.</param>
 /// <param name="LastName">Last name. Required when the role is <c>CARE_PROVIDER</c>.</param>
 /// <param name="Specialty">Medical specialty. Required when the role is <c>CARE_PROVIDER</c>.</param>
+/// <param name="LicenseNumber">Professional license, 4 to 10 digits. Required when the role is <c>CARE_PROVIDER</c>.</param>
+/// <param name="ClinicId">Clinic the care provider works in. Omit it for an independent provider.</param>
 public sealed record SignUpResource(
     [Required] string Email,
     [Required] string Password,
     [Required] string Role,
     string? FirstName = null,
     string? LastName = null,
-    string? Specialty = null);
+    string? Specialty = null,
+    string? LicenseNumber = null,
+    Guid? ClinicId = null);

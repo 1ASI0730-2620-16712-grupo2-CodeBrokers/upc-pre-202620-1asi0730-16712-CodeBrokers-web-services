@@ -9,6 +9,8 @@ public class CareProvider
     public FullName FullName { get; private set; }
     public Specialty Specialty { get; private set; }
     public string? Institution { get; private set; }
+    public string? LicenseNumber { get; private set; }
+    public Guid? ClinicId { get; private set; }
     public bool IsActive { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
@@ -40,6 +42,29 @@ public class CareProvider
         Specialty = specialty;
         IsActive = true;
         CreatedAt = DateTimeOffset.UtcNow;
+    }
+
+    // Constructor para registrar un proveedor con licencia y clinica (sin clinica = independiente)
+    public CareProvider(
+        Guid userId,
+        FullName fullName,
+        Specialty specialty,
+        string licenseNumber,
+        Guid? clinicId)
+        : this(userId, fullName, specialty)
+    {
+        if (!LicenseNumberRules.IsValidFormat(licenseNumber))
+            throw new ArgumentException(
+                "License number must have 4 to 10 digits.",
+                nameof(licenseNumber));
+
+        if (clinicId == Guid.Empty)
+            throw new ArgumentException(
+                "Clinic ID cannot be empty.",
+                nameof(clinicId));
+
+        LicenseNumber = LicenseNumberRules.Normalize(licenseNumber);
+        ClinicId = clinicId;
     }
 
     public void UpdateSpecialty(Specialty specialty)

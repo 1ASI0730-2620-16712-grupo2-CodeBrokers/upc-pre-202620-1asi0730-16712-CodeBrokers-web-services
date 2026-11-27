@@ -65,6 +65,21 @@ public class CareProviderConfiguration : IEntityTypeConfiguration<CareProvider>
             .HasColumnName("institution")
             .HasMaxLength(160);
 
+        // Professional license (4 to 10 digits). Nullable: older profiles have none.
+        // A license can belong to a single account (unique index; PostgreSQL allows several nulls).
+        builder.Property(p => p.LicenseNumber)
+            .HasColumnName("license_number")
+            .HasMaxLength(10);
+
+        builder.HasIndex(p => p.LicenseNumber)
+            .IsUnique();
+
+        // Clinic the provider works in. Null means independent. The clinic is checked by the application.
+        builder.Property(p => p.ClinicId)
+            .HasColumnName("clinic_id");
+
+        builder.HasIndex(p => p.ClinicId);
+
         builder.Property(p => p.IsActive)
             .HasColumnName("is_active")
             .HasDefaultValue(true)

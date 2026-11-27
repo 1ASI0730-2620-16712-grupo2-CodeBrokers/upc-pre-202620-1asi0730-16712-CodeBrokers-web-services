@@ -15,12 +15,16 @@ public interface IElderCareContextFacade
     /// <param name="firstName">First name.</param>
     /// <param name="lastName">Last name.</param>
     /// <param name="specialty">Medical specialty.</param>
+    /// <param name="licenseNumber">Professional license (4 to 10 digits, registered and not used by another account).</param>
+    /// <param name="clinicId">Clinic the provider works in, or null when independent.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     Task<CareProviderProfileOutcome> AddCareProviderProfileAsync(
         Guid userId,
         string firstName,
         string lastName,
         string specialty,
+        string licenseNumber,
+        Guid? clinicId,
         CancellationToken cancellationToken = default);
 }
 
@@ -36,5 +40,14 @@ public enum CareProviderProfileOutcome
     InvalidData,
 
     /// <summary>The account already has a care provider profile.</summary>
-    AlreadyExists
+    AlreadyExists,
+
+    /// <summary>The license has a wrong format or is not in the registry.</summary>
+    InvalidLicense,
+
+    /// <summary>Another account already uses the license.</summary>
+    LicenseAlreadyInUse,
+
+    /// <summary>The clinic does not exist.</summary>
+    ClinicNotFound
 }

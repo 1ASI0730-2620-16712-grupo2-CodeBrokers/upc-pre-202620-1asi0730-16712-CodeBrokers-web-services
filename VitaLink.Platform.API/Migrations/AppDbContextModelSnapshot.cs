@@ -129,6 +129,10 @@ namespace VitaLink.Platform.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("clinic_id");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -144,6 +148,11 @@ namespace VitaLink.Platform.API.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
+                    b.Property<string>("LicenseNumber")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("license_number");
+
                     b.Property<string>("Specialty")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -157,6 +166,13 @@ namespace VitaLink.Platform.API.Migrations
                     b.HasKey("Id")
                         .HasName("p_k_care_providers");
 
+                    b.HasIndex("ClinicId")
+                        .HasDatabaseName("i_x_care_providers_clinic_id");
+
+                    b.HasIndex("LicenseNumber")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_care_providers_license_number");
+
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasDatabaseName("i_x_care_providers_user_id");
@@ -164,6 +180,38 @@ namespace VitaLink.Platform.API.Migrations
                     b.ToTable("care_providers", "elder_care");
                 });
 
+            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.Clinic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)")
+                        .HasColumnName("district");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_clinics");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_clinics_name");
+
+                     b.ToTable("clinics", "elder_care");
+                });
+                      
             modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.FamilyCaregiverLink", b =>
                 {
                     b.Property<Guid>("Id")
@@ -246,6 +294,35 @@ namespace VitaLink.Platform.API.Migrations
                         .HasDatabaseName("i_x_older_adults_user_id");
 
                     b.ToTable("older_adults", "elder_care");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.RegisteredLicense", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("HolderName")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)")
+                        .HasColumnName("holder_name");
+
+                    b.Property<string>("LicenseNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("license_number");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_license_registries");
+
+                    b.HasIndex("LicenseNumber")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_license_registries_license_number");
+
+                    b.ToTable("license_registries", "elder_care");
                 });
 
             modelBuilder.Entity("VitaLink.Platform.API.IAM.Domain.Model.Aggregates.User", b =>
@@ -785,13 +862,11 @@ namespace VitaLink.Platform.API.Migrations
                                 .HasColumnName("id");
 
                             b1.Property<string>("Name")
-                                .IsRequired()
                                 .HasMaxLength(160)
                                 .HasColumnType("character varying(160)")
                                 .HasColumnName("emergency_contact_name");
 
                             b1.Property<string>("PhoneNumber")
-                                .IsRequired()
                                 .HasMaxLength(20)
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("emergency_contact_phone");
