@@ -4,6 +4,9 @@ using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Application.CommandServices;
+using VitaLink.Platform.API.Alerting.Application.ACL;
+using VitaLink.Platform.API.Alerting.Interfaces.ACL;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Application.QueryServices;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -63,6 +66,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IRecordTypeRepository, RecordTypeRepository>();
 builder.Services.AddScoped<IHealthRecordCommandService, HealthRecordCommandService>();
 builder.Services.AddScoped<IHealthRecordQueryService, HealthRecordQueryService>();
+// VTL-108: a saved health record is evaluated by Alerting through its facade
+builder.Services.AddScoped<ExternalAlertingService>();
+builder.Services.AddScoped<IAlertingContextFacade, AlertingContextFacade>();
 
 builder.Services.AddControllers(options =>
 {
