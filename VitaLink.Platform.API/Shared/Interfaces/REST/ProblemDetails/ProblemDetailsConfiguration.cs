@@ -20,7 +20,7 @@ public static class ProblemDetailsConfiguration
     {
         if (context.ProblemDetails is not HttpValidationProblemDetails) return;
 
-        var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
+        var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<CommonMessages>>();
         context.ProblemDetails.Title = localizer["InvalidModelStateTitle"].Value;
     }
 }

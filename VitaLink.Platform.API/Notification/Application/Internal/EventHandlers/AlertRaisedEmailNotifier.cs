@@ -7,7 +7,7 @@ using VitaLink.Platform.API.IAM.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Domain.Model.Errors;
 using VitaLink.Platform.API.Notification.Application.CommandServices;
 using VitaLink.Platform.API.Notification.Domain.Model.Commands;
-using VitaLink.Platform.API.Shared.Resources;
+using VitaLink.Platform.API.Notification.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 using VitaLink.Platform.API.Shared.Domain.Model.ValueObjects;
 using NotificationAggregate = VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification;
@@ -33,7 +33,7 @@ public class AlertRaisedEmailNotifier(
     IUserRepository userRepository,
     IOlderAdultRepository olderAdultRepository,
     INotificationCommandService notificationCommandService,
-    IStringLocalizer<SharedResource> localizer,
+    IStringLocalizer<NotificationMessages> localizer,
     ILogger<AlertRaisedEmailNotifier> logger)
 {
     /// <summary>

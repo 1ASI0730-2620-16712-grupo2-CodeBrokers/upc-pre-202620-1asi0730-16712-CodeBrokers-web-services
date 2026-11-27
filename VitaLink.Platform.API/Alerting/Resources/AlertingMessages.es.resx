@@ -1,0 +1,53 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AlertingInvalidStatusTransition" xml:space="preserve">
+        <value>La transición de estado solicitada para la alerta no está permitida.</value>
+    </data>
+    <data name="AlertingStatusRequired" xml:space="preserve">
+        <value>El estado de la alerta es obligatorio.</value>
+    </data>
+    <data name="AlertingAlertAlreadyRaised" xml:space="preserve">
+        <value>Ya se generó una alerta para este registro de salud.</value>
+    </data>
+    <data name="AlertingAlertNotFound" xml:space="preserve">
+        <value>No se encontró la alerta.</value>
+    </data>
+    <data name="AlertingInvalidReference" xml:space="preserve">
+        <value>Los identificadores del adulto mayor, del registro de salud y de la regla de monitoreo son obligatorios.</value>
+    </data>
+    <data name="AlertingInvalidSeverity" xml:space="preserve">
+        <value>La severidad debe ser HIGH, MEDIUM o LOW.</value>
+    </data>
+    <data name="AlertingHealthRecordNotFound" xml:space="preserve">
+        <value>No se encontró el registro de salud.</value>
+    </data>
+    <data name="AlertingHealthRecordIdRequired" xml:space="preserve">
+        <value>El identificador del registro de salud es obligatorio y no puede estar vacío.</value>
+    </data>
+    <data name="AlertingObservationTooLong" xml:space="preserve">
+        <value>La observación no puede superar los {0} caracteres.</value>
+    </data>
+    <data name="AlertingObservationAlreadyExists" xml:space="preserve">
+        <value>Esta alerta ya tiene una observación.</value>
+    </data>
+    <data name="AlertingObservationRequiresAttended" xml:space="preserve">
+        <value>Solo se puede agregar una observación a una alerta atendida.</value>
+    </data>
+    <data name="AlertingObservationNotFound" xml:space="preserve">
+        <value>Esta alerta no tiene observación.</value>
+    </data>
+    <data name="AlertingObservationInvalidReference" xml:space="preserve">
+        <value>El identificador de la alerta o del autor no puede estar vacío.</value>
+    </data>
+</root>

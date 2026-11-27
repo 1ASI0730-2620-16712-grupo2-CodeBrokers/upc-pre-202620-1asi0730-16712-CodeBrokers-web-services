@@ -7,6 +7,7 @@ using VitaLink.Platform.API.Notification.Application.QueryServices;
 using VitaLink.Platform.API.Notification.Domain.Model.Queries;
 using VitaLink.Platform.API.Notification.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Notification.Interfaces.REST.Transform;
+using VitaLink.Platform.API.Notification.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 
 namespace VitaLink.Platform.API.Notification.Interfaces.REST;
@@ -17,6 +18,7 @@ namespace VitaLink.Platform.API.Notification.Interfaces.REST;
 /// <param name="notificationCommandService">Notification command service.</param>
 /// <param name="notificationQueryService">Notification query service.</param>
 /// <param name="localizer">Localizer for the response titles.</param>
+/// <param name="commonLocalizer">Localizer for the shared response messages.</param>
 [ApiController]
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
@@ -24,7 +26,8 @@ namespace VitaLink.Platform.API.Notification.Interfaces.REST;
 public class NotificationsController(
     INotificationCommandService notificationCommandService,
     INotificationQueryService notificationQueryService,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<NotificationMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     /// <summary>
     ///     Sends the email notification of an alert to a recipient.
@@ -42,7 +45,7 @@ public class NotificationsController(
         var command = SendAlertNotificationCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result = await notificationCommandService.Handle(command, cancellationToken);
         return ActionResultFromSendAlertNotificationResultAssembler.ToActionResultFromSendAlertNotificationResult(
-            result, this, localizer, nameof(GetNotificationById));
+            result, this, localizer, commonLocalizer, nameof(GetNotificationById));
     }
 
     /// <summary>

@@ -6,6 +6,7 @@ using VitaLink.Platform.API.IAM.Domain.Model.Errors;
 using VitaLink.Platform.API.IAM.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.IAM.Interfaces.REST.Resources;
 using VitaLink.Platform.API.IAM.Interfaces.REST.Transform;
+using VitaLink.Platform.API.IAM.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 
 namespace VitaLink.Platform.API.IAM.Interfaces.REST;
@@ -18,7 +19,8 @@ namespace VitaLink.Platform.API.IAM.Interfaces.REST;
 [Produces(MediaTypeNames.Application.Json)]
 public class AuthenticationController(
     IUserCommandService userCommandService,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<IamMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     /// <summary>
     ///     Registers a care provider or family caregiver account.
@@ -61,7 +63,7 @@ public class AuthenticationController(
                     title: localizer["IamEmailAlreadyRegistered"].Value),
                 _ => Problem(
                     statusCode: StatusCodes.Status500InternalServerError,
-                    title: localizer["UnexpectedServerError"].Value)
+                    title: commonLocalizer["UnexpectedServerError"].Value)
             });
     }
 
@@ -91,7 +93,7 @@ public class AuthenticationController(
                     title: localizer["IamAccountDisabled"].Value),
                 _ => Problem(
                     statusCode: StatusCodes.Status500InternalServerError,
-                    title: localizer["UnexpectedServerError"].Value)
+                    title: commonLocalizer["UnexpectedServerError"].Value)
             });
     }
 }

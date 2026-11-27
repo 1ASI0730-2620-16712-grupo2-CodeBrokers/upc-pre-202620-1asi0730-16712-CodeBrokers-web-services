@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Localization;
+using VitaLink.Platform.API.ElderCare.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,8 @@ namespace VitaLink.Platform.API.ElderCare.Interfaces.REST;
 [Produces(MediaTypeNames.Application.Json)]
 public class OlderAdultsController(
     IOlderAdultCommandService commandService,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<ElderCareMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     /// <summary>
     ///     Associates an older adult with an active care provider.
@@ -94,7 +96,7 @@ public class OlderAdultsController(
 
                 _ => Problem(
                     statusCode: StatusCodes.Status500InternalServerError,
-                    title: localizer["UnexpectedServerError"].Value)
+                    title: commonLocalizer["UnexpectedServerError"].Value)
             });
     }
 }

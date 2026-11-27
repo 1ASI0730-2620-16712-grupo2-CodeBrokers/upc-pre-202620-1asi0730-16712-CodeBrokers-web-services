@@ -13,6 +13,7 @@ using VitaLink.Platform.API.PreventiveMonitoring.Application.QueryServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Resources;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST.Transform;
+using VitaLink.Platform.API.PreventiveMonitoring.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Shared.Application.Model;
 
@@ -27,7 +28,8 @@ namespace VitaLink.Platform.API.PreventiveMonitoring.Interfaces.REST;
 public class MonitoringRulesController(
     IMonitoringRuleCommandService commandService,
     IMonitoringRuleQueryService queryService,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<PreventiveMonitoringMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     /// <summary>
     ///     Creates an active monitoring rule for an older adult and record type.
@@ -60,8 +62,8 @@ public class MonitoringRulesController(
                 Problem(statusCode: StatusCodes.Status409Conflict,
                     title: localizer["MonitoringRuleDuplicateActive"].Value),
             _ => Problem(statusCode: StatusCodes.Status500InternalServerError,
-                title: localizer["UnexpectedServerError"].Value,
-                detail: localizer["UnexpectedErrorProcessingRequest"].Value)
+                title: commonLocalizer["UnexpectedServerError"].Value,
+                detail: commonLocalizer["UnexpectedErrorProcessingRequest"].Value)
         };
     }
 

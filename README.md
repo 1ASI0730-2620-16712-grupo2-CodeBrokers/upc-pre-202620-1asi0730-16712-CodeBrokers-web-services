@@ -90,7 +90,7 @@ VitaLink.Platform.API/
     ├── Application/        # Command and query services
     ├── Infrastructure/     # Persistence and external service adapters
     ├── Interfaces/         # REST controllers, resources and ProblemDetails configuration
-    └── Resources/          # Localized messages (SharedResource.*.resx)
+    └── Resources/          # Localized messages (*Messages.*.resx)
 ```
 
 ## Persistence
@@ -186,10 +186,10 @@ The API answers in the language of the `Accept-Language` request header:
 
 The culture applied is returned in the `Content-Language` response header.
 
-Messages live in `Shared/Resources/SharedResource.resx` (English) and `Shared/Resources/SharedResource.es.resx` (Spanish). To add a message:
+Messages live in the `Resources` folder of each bounded context (e.g. `IAM/Resources/IamMessages.resx` in English and `IamMessages.es.resx` in Spanish). Messages used by several contexts live in `Shared/Resources/CommonMessages.*`. To add a message:
 
 1. Add the same key to **both** files. Prefix it with your bounded context, e.g. `AlertingHealthRecordNotFound` or `ElderCareOlderAdultNotFound`.
-2. Inject `IStringLocalizer<SharedResource>` in the controller and read it with `localizer["Key"].Value`.
+2. Inject the messages of your context (e.g. `IStringLocalizer<IamMessages>`) in the controller and read it with `localizer["Key"].Value`; inject `IStringLocalizer<CommonMessages>` for the shared keys.
 3. For data annotations, use the key as the error message: `[Required(ErrorMessage = "ElderCareFullNameRequired")]`.
 
 Shared keys already available: `UnexpectedServerError`, `UnexpectedErrorProcessingRequest`, `InvalidModelStateTitle`, `ResourceNotFound` and `ConcurrencyConflict`.

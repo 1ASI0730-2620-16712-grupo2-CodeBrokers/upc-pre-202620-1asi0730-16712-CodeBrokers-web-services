@@ -7,6 +7,7 @@ using VitaLink.Platform.API.Alerting.Application.CommandServices;
 using VitaLink.Platform.API.Alerting.Application.QueryServices;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
+using VitaLink.Platform.API.Alerting.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 
@@ -21,7 +22,8 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 public class AlertStatusController(
     IAlertStatusCommandService commandService,
     IAlertQueryService queryService,
-    IStringLocalizer<SharedResource> localizer) : ControllerBase
+    IStringLocalizer<AlertingMessages> localizer,
+    IStringLocalizer<CommonMessages> commonLocalizer) : ControllerBase
 {
     /// <summary>
     ///     Updates an alert status with optimistic concurrency control.
@@ -82,7 +84,7 @@ public class AlertStatusController(
                 UpdateAlertStatusError.AlertNotFound =>
                     Problem(
                         statusCode: StatusCodes.Status404NotFound,
-                        title: localizer["ResourceNotFound"].Value),
+                        title: commonLocalizer["ResourceNotFound"].Value),
 
                 UpdateAlertStatusError.InvalidTransition =>
                     Problem(
@@ -92,11 +94,11 @@ public class AlertStatusController(
                 UpdateAlertStatusError.ConcurrencyConflict =>
                     Problem(
                         statusCode: StatusCodes.Status409Conflict,
-                        title: localizer["ConcurrencyConflict"].Value),
+                        title: commonLocalizer["ConcurrencyConflict"].Value),
 
                 _ => Problem(
                     statusCode: StatusCodes.Status500InternalServerError,
-                    title: localizer["UnexpectedServerError"].Value)
+                    title: commonLocalizer["UnexpectedServerError"].Value)
             });
     }
     /// <summary>
@@ -133,7 +135,7 @@ public class AlertStatusController(
         {
             return Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: localizer["ResourceNotFound"].Value);
+                title: commonLocalizer["ResourceNotFound"].Value);
         }
 
         var history = alert.StatusHistory
