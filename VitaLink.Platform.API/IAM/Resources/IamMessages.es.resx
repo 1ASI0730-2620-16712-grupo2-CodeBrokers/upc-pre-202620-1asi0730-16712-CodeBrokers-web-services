@@ -35,4 +35,13 @@
     <data name="IamInvalidProfile" xml:space="preserve">
         <value>El nombre, el apellido y la especialidad son obligatorios para un médico y no pueden superar su longitud máxima.</value>
     </data>
+    <data name="IamInvalidLicense" xml:space="preserve">
+        <value>La licencia profesional no es válida o no está registrada.</value>
+    </data>
+    <data name="IamLicenseAlreadyInUse" xml:space="preserve">
+        <value>La licencia profesional ya está en uso por otra cuenta.</value>
+    </data>
+    <data name="IamClinicNotFound" xml:space="preserve">
+        <value>La clínica seleccionada no existe.</value>
+    </data>
 </root>

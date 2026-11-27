@@ -35,4 +35,22 @@
     <data name="ElderCareAlreadyAssigned" xml:space="preserve">
         <value>The older adult already has a care provider.</value>
     </data>
+    <data name="ElderCareClinicOrIndependent" xml:space="preserve">
+        <value>Use either clinicId or independent, not both.</value>
+    </data>
+    <data name="ElderCareFieldRequired" xml:space="preserve">
+        <value>This field is required.</value>
+    </data>
+    <data name="ElderCareFieldRequiredToActivate" xml:space="preserve">
+        <value>This field is required to activate the monitoring.</value>
+    </data>
+    <data name="ElderCareFieldTooLong" xml:space="preserve">
+        <value>The text cannot exceed {0} characters.</value>
+    </data>
+    <data name="ElderCareInvalidBirthDate" xml:space="preserve">
+        <value>The birth date is required and cannot be in the future.</value>
+    </data>
+    <data name="ElderCareInvalidPhone" xml:space="preserve">
+        <value>The phone number must have 7 to 20 characters, with digits and the symbols + ( ) - or spaces.</value>
+    </data>
 </root>

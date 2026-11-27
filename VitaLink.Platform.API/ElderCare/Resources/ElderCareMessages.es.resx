@@ -32,4 +32,22 @@
     <data name="ElderCareAlreadyAssigned" xml:space="preserve">
         <value>El adulto mayor ya tiene un proveedor de cuidado asignado.</value>
     </data>
+    <data name="ElderCareClinicOrIndependent" xml:space="preserve">
+        <value>Usa clinicId o independent, no ambos.</value>
+    </data>
+    <data name="ElderCareFieldRequired" xml:space="preserve">
+        <value>Este campo es obligatorio.</value>
+    </data>
+    <data name="ElderCareFieldRequiredToActivate" xml:space="preserve">
+        <value>Este campo es obligatorio para activar el monitoreo.</value>
+    </data>
+    <data name="ElderCareFieldTooLong" xml:space="preserve">
+        <value>El texto no puede superar los {0} caracteres.</value>
+    </data>
+    <data name="ElderCareInvalidBirthDate" xml:space="preserve">
+        <value>La fecha de nacimiento es obligatoria y no puede ser futura.</value>
+    </data>
+    <data name="ElderCareInvalidPhone" xml:space="preserve">
+        <value>El teléfono debe tener entre 7 y 20 caracteres, con dígitos y los símbolos + ( ) - o espacios.</value>
+    </data>
 </root>

@@ -22,88 +22,6 @@ namespace VitaLink.Platform.API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.CareProvider", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Institution")
-                        .HasMaxLength(160)
-                        .HasColumnType("character varying(160)")
-                        .HasColumnName("institution");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Specialty")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)")
-                        .HasColumnName("specialty");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("p_k_care_providers");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("i_x_care_providers_user_id");
-
-                    b.ToTable("care_providers", "elder_care");
-                });
-
-            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.OlderAdult", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid?>("AssignedProviderId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("assigned_provider_id");
-
-                    b.Property<DateOnly>("BirthDate")
-                        .HasColumnType("date")
-                        .HasColumnName("birth_date");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<bool>("IsMonitoringActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_monitoring_active");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("p_k_older_adults");
-
-                    b.HasIndex("AssignedProviderId")
-                        .HasDatabaseName("i_x_older_adults_assigned_provider_id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("i_x_older_adults_user_id");
-
-                    b.ToTable("older_adults", "elder_care");
-                });
-
             modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Aggregates.Alert", b =>
                 {
                     b.Property<Guid>("Id")
@@ -203,6 +121,165 @@ namespace VitaLink.Platform.API.Migrations
                         {
                             t.HasCheckConstraint("ck_alert_observations_text_length", "char_length(text) BETWEEN 1 AND 1000");
                         });
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.CareProvider", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("clinic_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Institution")
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)")
+                        .HasColumnName("institution");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("LicenseNumber")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("license_number");
+
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)")
+                        .HasColumnName("specialty");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_care_providers");
+
+                    b.HasIndex("ClinicId")
+                        .HasDatabaseName("i_x_care_providers_clinic_id");
+
+                    b.HasIndex("LicenseNumber")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_care_providers_license_number");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_care_providers_user_id");
+
+                    b.ToTable("care_providers", "elder_care");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.Clinic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)")
+                        .HasColumnName("district");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_clinics");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_clinics_name");
+
+                    b.ToTable("clinics", "elder_care");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.OlderAdult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("AssignedProviderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("assigned_provider_id");
+
+                    b.Property<DateOnly>("BirthDate")
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsMonitoringActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_monitoring_active");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_older_adults");
+
+                    b.HasIndex("AssignedProviderId")
+                        .HasDatabaseName("i_x_older_adults_assigned_provider_id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_older_adults_user_id");
+
+                    b.ToTable("older_adults", "elder_care");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.RegisteredLicense", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("HolderName")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)")
+                        .HasColumnName("holder_name");
+
+                    b.Property<string>("LicenseNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("license_number");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_license_registries");
+
+                    b.HasIndex("LicenseNumber")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_license_registries_license_number");
+
+                    b.ToTable("license_registries", "elder_care");
                 });
 
             modelBuilder.Entity("VitaLink.Platform.API.IAM.Domain.Model.Aggregates.User", b =>
@@ -562,6 +639,64 @@ namespace VitaLink.Platform.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Aggregates.Alert", b =>
+                {
+                    b.OwnsMany("VitaLink.Platform.API.Alerting.Domain.Model.Entities.AlertStatusChange", "StatusHistory", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<Guid>("AlertId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("alert_id");
+
+                            b1.Property<DateTimeOffset>("ChangedAt")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("changed_at");
+
+                            b1.Property<Guid>("ChangedBy")
+                                .HasColumnType("uuid")
+                                .HasColumnName("changed_by");
+
+                            b1.Property<string>("FromStatus")
+                                .IsRequired()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasColumnName("from_status");
+
+                            b1.Property<string>("ToStatus")
+                                .IsRequired()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasColumnName("to_status");
+
+                            b1.HasKey("Id")
+                                .HasName("p_k_alert_status_changes");
+
+                            b1.HasIndex("AlertId")
+                                .HasDatabaseName("i_x_alert_status_changes_alert_id");
+
+                            b1.ToTable("alert_status_changes", "alerting");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AlertId")
+                                .HasConstraintName("f_k_alert_status_changes_alerts_alert_id");
+                        });
+
+                    b.Navigation("StatusHistory");
+                });
+
+            modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Entities.AlertObservation", b =>
+                {
+                    b.HasOne("VitaLink.Platform.API.Alerting.Domain.Model.Aggregates.Alert", null)
+                        .WithMany()
+                        .HasForeignKey("AlertId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("f_k_alert_observations_alerts_alert_id");
+                });
+
             modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.CareProvider", b =>
                 {
                     b.OwnsOne("VitaLink.Platform.API.ElderCare.Domain.Model.ValueObjects.FullName", "FullName", b1 =>
@@ -664,13 +799,11 @@ namespace VitaLink.Platform.API.Migrations
                                 .HasColumnName("id");
 
                             b1.Property<string>("Name")
-                                .IsRequired()
                                 .HasMaxLength(160)
                                 .HasColumnType("character varying(160)")
                                 .HasColumnName("emergency_contact_name");
 
                             b1.Property<string>("PhoneNumber")
-                                .IsRequired()
                                 .HasMaxLength(20)
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("emergency_contact_phone");
@@ -691,64 +824,6 @@ namespace VitaLink.Platform.API.Migrations
 
                     b.Navigation("FullName")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Aggregates.Alert", b =>
-                {
-                    b.OwnsMany("VitaLink.Platform.API.Alerting.Domain.Model.Entities.AlertStatusChange", "StatusHistory", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<Guid>("AlertId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("alert_id");
-
-                            b1.Property<DateTimeOffset>("ChangedAt")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("changed_at");
-
-                            b1.Property<Guid>("ChangedBy")
-                                .HasColumnType("uuid")
-                                .HasColumnName("changed_by");
-
-                            b1.Property<string>("FromStatus")
-                                .IsRequired()
-                                .HasMaxLength(15)
-                                .HasColumnType("character varying(15)")
-                                .HasColumnName("from_status");
-
-                            b1.Property<string>("ToStatus")
-                                .IsRequired()
-                                .HasMaxLength(15)
-                                .HasColumnType("character varying(15)")
-                                .HasColumnName("to_status");
-
-                            b1.HasKey("Id")
-                                .HasName("p_k_alert_status_changes");
-
-                            b1.HasIndex("AlertId")
-                                .HasDatabaseName("i_x_alert_status_changes_alert_id");
-
-                            b1.ToTable("alert_status_changes", "alerting");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AlertId")
-                                .HasConstraintName("f_k_alert_status_changes_alerts_alert_id");
-                        });
-
-                    b.Navigation("StatusHistory");
-                });
-
-            modelBuilder.Entity("VitaLink.Platform.API.Alerting.Domain.Model.Entities.AlertObservation", b =>
-                {
-                    b.HasOne("VitaLink.Platform.API.Alerting.Domain.Model.Aggregates.Alert", null)
-                        .WithMany()
-                        .HasForeignKey("AlertId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("f_k_alert_observations_alerts_alert_id");
                 });
 
             modelBuilder.Entity("VitaLink.Platform.API.Notification.Domain.Model.Aggregates.Notification", b =>
