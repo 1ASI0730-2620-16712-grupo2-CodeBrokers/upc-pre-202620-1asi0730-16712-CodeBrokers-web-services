@@ -38,4 +38,10 @@
     <data name="IamInvalidProfile" xml:space="preserve">
         <value>The first name, last name and specialty are required for a care provider and cannot exceed their maximum length.</value>
     </data>
+    <data name="IamUnauthorized" xml:space="preserve">
+        <value>Sign in to continue.</value>
+    </data>
+    <data name="IamForbidden" xml:space="preserve">
+        <value>Your role does not have access to this resource.</value>
+    </data>
 </root>

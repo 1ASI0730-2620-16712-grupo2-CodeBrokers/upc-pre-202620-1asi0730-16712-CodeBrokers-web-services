@@ -20,6 +20,9 @@ using VitaLink.Platform.API.IAM.Infrastructure.Hashing.BCrypt;
 using VitaLink.Platform.API.IAM.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.IAM.Infrastructure.Tokens.JWT;
 using VitaLink.Platform.API.IAM.Infrastructure.Seeding;
+using VitaLink.Platform.API.IAM.Application.QueryServices;
+using VitaLink.Platform.API.IAM.Application.Internal.QueryServices;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Extensions;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Resources;
@@ -140,6 +143,7 @@ builder.Services.AddOptions<JwtOptions>()
     .ValidateOnStart();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
+builder.Services.AddScoped<IUserQueryService, UserQueryService>();
 builder.Services.Configure<DemoUserOptions>(builder.Configuration.GetSection(DemoUserOptions.SectionName));
 builder.Services.AddScoped<DemoUserSeeder>();
 
@@ -225,6 +229,9 @@ app.MapScalarApiReference();
 app.UseHttpsRedirection();
 
 app.UseCors(allowedOriginsPolicy);
+
+// IAM: sets the signed-in user from the Bearer token; [Authorize] on the controllers decides the access
+app.UseRequestAuthorization();
 
 app.UseAuthorization();
 
