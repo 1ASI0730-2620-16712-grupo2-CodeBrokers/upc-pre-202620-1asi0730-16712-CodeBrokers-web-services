@@ -35,4 +35,28 @@
     <data name="IamInvalidProfile" xml:space="preserve">
         <value>El nombre, el apellido y la especialidad son obligatorios para un médico y no pueden superar su longitud máxima.</value>
     </data>
+    <data name="IamRegistrationFieldRequired" xml:space="preserve">
+        <value>Este campo es obligatorio.</value>
+    </data>
+    <data name="IamRegistrationFieldTooLong" xml:space="preserve">
+        <value>El texto no puede superar los {0} caracteres.</value>
+    </data>
+    <data name="IamRegistrationInvalidBirthDate" xml:space="preserve">
+        <value>La fecha de nacimiento es obligatoria y no puede ser futura.</value>
+    </data>
+    <data name="IamRegistrationMeasurementOutOfRange" xml:space="preserve">
+        <value>El valor debe estar entre {0} y {1}.</value>
+    </data>
+    <data name="IamRegistrationPressureOrder" xml:space="preserve">
+        <value>La presión sistólica debe ser mayor que la diastólica.</value>
+    </data>
+    <data name="IamRegistrationAuthorizationRequired" xml:space="preserve">
+        <value>Debes confirmar que estás autorizado para registrar a este paciente.</value>
+    </data>
+    <data name="IamRegistrationProviderNotFound" xml:space="preserve">
+        <value>El médico seleccionado no existe.</value>
+    </data>
+    <data name="IamRegistrationProviderInactive" xml:space="preserve">
+        <value>El médico seleccionado no está activo.</value>
+    </data>
 </root>

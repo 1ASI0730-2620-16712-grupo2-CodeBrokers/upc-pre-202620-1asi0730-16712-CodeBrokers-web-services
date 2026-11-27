@@ -4,6 +4,8 @@ using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Application.CommandServices;
+using VitaLink.Platform.API.Alerting.Application.ACL;
+using VitaLink.Platform.API.Alerting.Interfaces.ACL;
 using VitaLink.Platform.API.Alerting.Application.QueryServices;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -123,6 +125,12 @@ builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ExternalElderCareService>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
+builder.Services.AddScoped<IFamilyCaregiverLinkRepository, FamilyCaregiverLinkRepository>();
+builder.Services.AddScoped<IElderCarePatientFacade, ElderCarePatientFacade>();
+builder.Services.AddScoped<IMonitoringRegistrationFacade, MonitoringRegistrationFacade>();
+builder.Services.AddScoped<IAlertingContextFacade, AlertingContextFacade>();
+builder.Services.AddScoped<ExternalCaregiverRegistrationService>();
+builder.Services.AddScoped<ICaregiverRegistrationCommandService, CaregiverRegistrationCommandService>();
 builder.Services.AddOptions<JwtOptions>()
     .Bind(builder.Configuration.GetSection(JwtOptions.SectionName))
     .Validate(o => o.IsValid, "IAM:Jwt:SigningKey is required and must have at least 32 characters.")
