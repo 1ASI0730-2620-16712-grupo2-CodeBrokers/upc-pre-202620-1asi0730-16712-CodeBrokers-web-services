@@ -138,6 +138,7 @@ builder.Services.AddOptions<JwtOptions>()
     .Bind(builder.Configuration.GetSection(JwtOptions.SectionName))
     .Validate(o => o.IsValid, "IAM:Jwt:SigningKey is required and must have at least 32 characters.")
     .ValidateOnStart();
+builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 builder.Services.Configure<DemoUserOptions>(builder.Configuration.GetSection(DemoUserOptions.SectionName));
 builder.Services.AddScoped<DemoUserSeeder>();
