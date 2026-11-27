@@ -44,4 +44,7 @@
     <data name="IamForbidden" xml:space="preserve">
         <value>Your role does not have access to this resource.</value>
     </data>
+    <data name="IamTooManyAttempts" xml:space="preserve">
+        <value>Too many sign-in attempts. Try again in a minute.</value>
+    </data>
 </root>

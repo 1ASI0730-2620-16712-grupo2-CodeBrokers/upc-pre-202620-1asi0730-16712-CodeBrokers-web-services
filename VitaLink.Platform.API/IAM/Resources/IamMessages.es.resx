@@ -41,4 +41,7 @@
     <data name="IamForbidden" xml:space="preserve">
         <value>Tu rol no tiene acceso a este recurso.</value>
     </data>
+    <data name="IamTooManyAttempts" xml:space="preserve">
+        <value>Demasiados intentos de inicio de sesión. Inténtalo de nuevo en un minuto.</value>
+    </data>
 </root>

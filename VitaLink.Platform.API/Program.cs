@@ -1,4 +1,7 @@
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
 using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
@@ -23,6 +26,7 @@ using VitaLink.Platform.API.IAM.Infrastructure.Seeding;
 using VitaLink.Platform.API.IAM.Application.QueryServices;
 using VitaLink.Platform.API.IAM.Application.Internal.QueryServices;
 using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Extensions;
+using VitaLink.Platform.API.IAM.Resources;
 using VitaLink.Platform.API.Notification.Domain.Repositories;
 using VitaLink.Platform.API.Notification.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using VitaLink.Platform.API.Shared.Resources;
@@ -145,6 +149,31 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserQueryService, UserQueryService>();
 builder.Services.AddScoped<ISessionCommandService, SessionCommandService>();
+
+// TS-04 CA-04: at most 5 sign-in attempts per minute from the same client IP
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        HttpMethods.IsPost(context.Request.Method)
+        && context.Request.Path.StartsWithSegments("/api/v1/authentication/sign-in")
+            ? RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(1),
+                    QueueLimit = 0
+                })
+            : RateLimitPartition.GetNoLimiter("not-limited"));
+    options.OnRejected = (rejected, _) =>
+    {
+        var localizer = rejected.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<IamMessages>>();
+        return new ValueTask(Results.Problem(
+                statusCode: StatusCodes.Status429TooManyRequests,
+                title: localizer["IamTooManyAttempts"].Value)
+            .ExecuteAsync(rejected.HttpContext));
+    };
+});
 builder.Services.Configure<DemoUserOptions>(builder.Configuration.GetSection(DemoUserOptions.SectionName));
 builder.Services.AddScoped<DemoUserSeeder>();
 
@@ -230,6 +259,8 @@ app.MapScalarApiReference();
 app.UseHttpsRedirection();
 
 app.UseCors(allowedOriginsPolicy);
+
+app.UseRateLimiter();
 
 // IAM: sets the signed-in user from the Bearer token; [Authorize] on the controllers decides the access
 app.UseRequestAuthorization();
