@@ -15,22 +15,29 @@ public class ExternalElderCareService(IElderCareContextFacade elderCareContextFa
     /// <param name="firstName">First name.</param>
     /// <param name="lastName">Last name.</param>
     /// <param name="specialty">Medical specialty.</param>
+    /// <param name="licenseNumber">Professional license.</param>
+    /// <param name="clinicId">Clinic the provider works in, or null when independent.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     public async Task<CareProviderProfileResult> AddCareProviderProfileAsync(
         Guid userId,
         string firstName,
         string lastName,
         string specialty,
+        string licenseNumber,
+        Guid? clinicId,
         CancellationToken cancellationToken = default)
     {
         var outcome = await elderCareContextFacade.AddCareProviderProfileAsync(
-            userId, firstName, lastName, specialty, cancellationToken);
+            userId, firstName, lastName, specialty, licenseNumber, clinicId, cancellationToken);
 
         return outcome switch
         {
             CareProviderProfileOutcome.Added => CareProviderProfileResult.Added,
             CareProviderProfileOutcome.InvalidData => CareProviderProfileResult.InvalidData,
             CareProviderProfileOutcome.AlreadyExists => CareProviderProfileResult.AlreadyExists,
+            CareProviderProfileOutcome.InvalidLicense => CareProviderProfileResult.InvalidLicense,
+            CareProviderProfileOutcome.LicenseAlreadyInUse => CareProviderProfileResult.LicenseAlreadyInUse,
+            CareProviderProfileOutcome.ClinicNotFound => CareProviderProfileResult.ClinicNotFound,
             _ => throw new InvalidOperationException("Unknown care provider profile outcome.")
         };
     }
@@ -48,5 +55,14 @@ public enum CareProviderProfileResult
     InvalidData,
 
     /// <summary>The account already has a profile.</summary>
-    AlreadyExists
+    AlreadyExists,
+
+    /// <summary>The license has a wrong format or is not registered.</summary>
+    InvalidLicense,
+
+    /// <summary>Another account already uses the license.</summary>
+    LicenseAlreadyInUse,
+
+    /// <summary>The clinic does not exist.</summary>
+    ClinicNotFound
 }

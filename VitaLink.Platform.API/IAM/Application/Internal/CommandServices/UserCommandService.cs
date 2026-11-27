@@ -51,6 +51,10 @@ public class UserCommandService(
                 || string.IsNullOrWhiteSpace(command.Specialty)))
             return new Result<User, SignUpError>.Failure(SignUpError.InvalidProfile);
 
+        // ...and the professional license, which is verified (simulated) when the profile is created.
+        if (command.Role == UserRole.CareProvider && string.IsNullOrWhiteSpace(command.LicenseNumber))
+            return new Result<User, SignUpError>.Failure(SignUpError.InvalidLicense);
+
         if (await userRepository.ExistsByEmailAsync(email, cancellationToken))
             return new Result<User, SignUpError>.Failure(SignUpError.EmailAlreadyRegistered);
 
@@ -75,12 +79,29 @@ public class UserCommandService(
         await unitOfWork.CompleteAsync(cancellationToken);
 
         var profile = await externalElderCareService.AddCareProviderProfileAsync(
-            user.Id.Value, command.FirstName!, command.LastName!, command.Specialty!, cancellationToken);
+            user.Id.Value,
+            command.FirstName!,
+            command.LastName!,
+            command.Specialty!,
+            command.LicenseNumber!,
+            command.ClinicId,
+            cancellationToken);
 
-        if (profile == CareProviderProfileResult.InvalidData)
-            return new Result<User, SignUpError>.Failure(SignUpError.InvalidProfile);
-        if (profile != CareProviderProfileResult.Added)
-            return new Result<User, SignUpError>.Failure(SignUpError.UnexpectedError);
+        switch (profile)
+        {
+            case CareProviderProfileResult.Added:
+                break;
+            case CareProviderProfileResult.InvalidData:
+                return new Result<User, SignUpError>.Failure(SignUpError.InvalidProfile);
+            case CareProviderProfileResult.InvalidLicense:
+                return new Result<User, SignUpError>.Failure(SignUpError.InvalidLicense);
+            case CareProviderProfileResult.LicenseAlreadyInUse:
+                return new Result<User, SignUpError>.Failure(SignUpError.LicenseAlreadyInUse);
+            case CareProviderProfileResult.ClinicNotFound:
+                return new Result<User, SignUpError>.Failure(SignUpError.ClinicNotFound);
+            default:
+                return new Result<User, SignUpError>.Failure(SignUpError.UnexpectedError);
+        }
 
         await unitOfWork.CompleteAsync(cancellationToken);
         transaction.Complete();
