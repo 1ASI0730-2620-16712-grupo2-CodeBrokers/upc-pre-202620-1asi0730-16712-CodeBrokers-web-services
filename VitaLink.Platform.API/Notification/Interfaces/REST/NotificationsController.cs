@@ -9,6 +9,8 @@ using VitaLink.Platform.API.Notification.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Notification.Interfaces.REST.Transform;
 using VitaLink.Platform.API.Notification.Resources;
 using VitaLink.Platform.API.Shared.Resources;
+using VitaLink.Platform.API.IAM.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.Notification.Interfaces.REST;
 
@@ -20,6 +22,7 @@ namespace VitaLink.Platform.API.Notification.Interfaces.REST;
 /// <param name="localizer">Localizer for the response titles.</param>
 /// <param name="commonLocalizer">Localizer for the shared response messages.</param>
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("Notifications")]
@@ -34,6 +37,7 @@ public class NotificationsController(
     /// </summary>
     /// <param name="resource">Alert and recipient data.</param>
     /// <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
+    [Authorize(UserRole.CareProvider)]
     [HttpPost]
     [ProducesResponseType(typeof(NotificationResource), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]

@@ -7,6 +7,8 @@ using VitaLink.Platform.API.ElderCare.Domain.Model.Errors;
 using VitaLink.Platform.API.ElderCare.Application.CommandServices;
 using VitaLink.Platform.API.ElderCare.Interfaces.REST.Transform;
 using VitaLink.Platform.API.ElderCare.Interfaces.REST.Resources;
+using VitaLink.Platform.API.IAM.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.ElderCare.Interfaces.REST;
 
@@ -14,6 +16,7 @@ namespace VitaLink.Platform.API.ElderCare.Interfaces.REST;
 ///     Exposes operations for managing older adults.
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("older-adults")]
 [Produces(MediaTypeNames.Application.Json)]
 public class OlderAdultsController(
@@ -24,6 +27,7 @@ public class OlderAdultsController(
     /// <summary>
     ///     Associates an older adult with an active care provider.
     /// </summary>
+    [Authorize(UserRole.CareProvider)]
     [HttpPatch("{id:guid}/care-provider")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails),

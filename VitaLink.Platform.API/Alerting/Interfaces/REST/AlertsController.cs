@@ -12,6 +12,8 @@ using VitaLink.Platform.API.Alerting.Application.CommandServices;
 using VitaLink.Platform.API.Alerting.Application.QueryServices;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
+using VitaLink.Platform.API.IAM.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 
@@ -19,6 +21,7 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 ///     Exposes alert creation, paginated searches and alert details.
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class AlertsController(IAlertQueryService queryService, IAlertCommandService commandService,
     IStringLocalizer<AlertingMessages> localizer,
@@ -27,6 +30,7 @@ public class AlertsController(IAlertQueryService queryService, IAlertCommandServ
     /// <summary>
     ///     Evaluates a health record and creates a pending alert when an active rule is violated.
     /// </summary>
+    [Authorize(UserRole.CareProvider)]
     [HttpPost]
     [ProducesResponseType(typeof(AlertEvaluationResource), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(AlertEvaluationResource), StatusCodes.Status201Created)]

@@ -6,6 +6,7 @@ using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Resources;
 using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 using VitaLink.Platform.API.Alerting.Resources;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 
@@ -15,6 +16,7 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 /// <param name="queryService">Alert query service.</param>
 /// <param name="localizer">Localizer for the Alerting messages.</param>
 [ApiController]
+[Authorize]
 [Route("alerts/status-history")]
 [Produces(MediaTypeNames.Application.Json)]
 public class AlertStatusHistoryController(

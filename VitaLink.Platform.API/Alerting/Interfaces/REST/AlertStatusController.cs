@@ -10,6 +10,8 @@ using VitaLink.Platform.API.Alerting.Interfaces.REST.Transform;
 using VitaLink.Platform.API.Alerting.Resources;
 using VitaLink.Platform.API.Shared.Resources;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.IAM.Domain.Model.ValueObjects;
+using VitaLink.Platform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 
@@ -17,6 +19,7 @@ namespace VitaLink.Platform.API.Alerting.Interfaces.REST;
 ///     Exposes alert status change operations.
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("alerts/{alertId:guid}/status")]
 [Produces(MediaTypeNames.Application.Json)]
 public class AlertStatusController(
@@ -28,6 +31,7 @@ public class AlertStatusController(
     /// <summary>
     ///     Updates an alert status with optimistic concurrency control.
     /// </summary>
+    [Authorize(UserRole.CareProvider, UserRole.FamilyCaregiver)]
     [HttpPatch]
     [ProducesResponseType(typeof(AlertStatusResource), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
