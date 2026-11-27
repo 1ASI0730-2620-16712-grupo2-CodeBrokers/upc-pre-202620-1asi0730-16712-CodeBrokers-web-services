@@ -11,4 +11,9 @@ public interface IAlertQueryService
 {
     Task<AlertPage> Handle(GetAlertsQuery query, CancellationToken cancellationToken = default);
     Task<Alert?> Handle(AlertId id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Gets several alerts with their status history in a single query (VTL-109).
+    /// </summary>
+    Task<IReadOnlyList<Alert>> Handle(GetAlertsStatusHistoryQuery query, CancellationToken cancellationToken = default);
 }
