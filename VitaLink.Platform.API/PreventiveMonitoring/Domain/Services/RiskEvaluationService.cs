@@ -35,6 +35,8 @@ public class RiskEvaluationService(IMonitoringRuleRepository monitoringRuleRepos
         var mostSevere = rules
             .Where(rule => rule.Threshold.IsViolatedBy(value))
             .OrderByDescending(rule => SeverityRank(rule.Severity))
+            // CA-01 (US-15): with equal severity, the rule with the lowest identifier wins
+            .ThenBy(rule => rule.Id.Value)
             .FirstOrDefault();
 
         return mostSevere is null

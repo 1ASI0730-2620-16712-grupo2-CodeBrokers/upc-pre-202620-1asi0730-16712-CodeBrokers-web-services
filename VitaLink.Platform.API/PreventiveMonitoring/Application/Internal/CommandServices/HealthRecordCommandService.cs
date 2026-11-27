@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.CommandServices;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Errors;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Aggregates;
 using VitaLink.Platform.API.PreventiveMonitoring.Domain.Model.Commands;
@@ -16,7 +17,8 @@ namespace VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.Comman
 public class HealthRecordCommandService(
     IHealthRecordRepository healthRecordRepository,
     IRecordTypeRepository recordTypeRepository,
-    IUnitOfWork unitOfWork) : IHealthRecordCommandService
+    IUnitOfWork unitOfWork,
+    ExternalAlertingService alertingService) : IHealthRecordCommandService
 {
     public async Task<Result<HealthRecord, CreateHealthRecordError>> Handle(
         CreateHealthRecordCommand command,
@@ -108,6 +110,10 @@ public class HealthRecordCommandService(
             var healthRecord = new HealthRecord(updatedCommand);
             await healthRecordRepository.AddAsync(healthRecord, cancellationToken);
             await unitOfWork.CompleteAsync(cancellationToken);
+
+            // VTL-108: the record is already saved; evaluate the monitoring rules and raise the alert
+            // (and its email) automatically. A failure here is logged and never undoes the record.
+            await alertingService.EvaluateHealthRecordAsync(healthRecord.Id.Value, cancellationToken);
 
             return new Result<HealthRecord, CreateHealthRecordError>.Success(healthRecord);
         }

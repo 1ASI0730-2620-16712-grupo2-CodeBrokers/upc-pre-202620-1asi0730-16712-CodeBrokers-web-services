@@ -1,4 +1,4 @@
-﻿using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
+using VitaLink.Platform.API.Alerting.Domain.Model.Aggregates;
 using VitaLink.Platform.API.Alerting.Domain.Model.ValueObjects;
 using VitaLink.Platform.API.Alerting.Domain.Model.Queries;
 using VitaLink.Platform.API.Shared.Domain.Repositories;
@@ -37,4 +37,13 @@ public interface IAlertRepository : IBaseRepository<Alert, AlertId>
   ///     Finds the alert raised by a health record, used to keep alert creation idempotent.
   /// </summary>
   Task<Alert?> FindByHealthRecordAsync(Guid healthRecordId, CancellationToken cancellationToken = default);
+
+  /// <summary>
+  ///     Finds several alerts, with their status history, in a single query.
+  /// </summary>
+  /// <param name="alertIds">Identifiers of the alerts.</param>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>The alerts that exist; unknown identifiers are ignored.</returns>
+  Task<IReadOnlyList<Alert>> FindByIdsAsync(IReadOnlyCollection<Guid> alertIds,
+    CancellationToken cancellationToken = default);
 }

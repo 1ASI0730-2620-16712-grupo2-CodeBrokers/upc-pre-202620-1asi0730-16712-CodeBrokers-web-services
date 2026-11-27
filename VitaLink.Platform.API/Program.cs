@@ -4,6 +4,9 @@ using VitaLink.Platform.API.Alerting.Application.Internal.QueryServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.CommandServices;
 using VitaLink.Platform.API.Alerting.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Application.CommandServices;
+using VitaLink.Platform.API.Alerting.Application.ACL;
+using VitaLink.Platform.API.Alerting.Interfaces.ACL;
+using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.OutboundServices.ACL;
 using VitaLink.Platform.API.Alerting.Application.QueryServices;
 using VitaLink.Platform.API.Alerting.Domain.Repositories;
 using VitaLink.Platform.API.Alerting.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
@@ -53,6 +56,7 @@ using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServi
 using VitaLink.Platform.API.PreventiveMonitoring.Application.QueryServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.ACL;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.ACL;
+using VitaLink.Platform.API.Shared.Infrastructure.Interfaces.AspNetCore.OpenApi;
 
 
 
@@ -63,6 +67,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IRecordTypeRepository, RecordTypeRepository>();
 builder.Services.AddScoped<IHealthRecordCommandService, HealthRecordCommandService>();
 builder.Services.AddScoped<IHealthRecordQueryService, HealthRecordQueryService>();
+// VTL-108: a saved health record is evaluated by Alerting through its facade
+builder.Services.AddScoped<ExternalAlertingService>();
+builder.Services.AddScoped<IAlertingContextFacade, AlertingContextFacade>();
 
 builder.Services.AddControllers(options =>
 {
@@ -116,7 +123,11 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    options.AddSchemaTransformer<ExamplesSchemaTransformer>();
+});
 
 // IAM Bounded Context
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
@@ -206,11 +217,9 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseExceptionHandler();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+// OpenAPI / Scalar are available in every environment (also Azure) to verify the contracts
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 

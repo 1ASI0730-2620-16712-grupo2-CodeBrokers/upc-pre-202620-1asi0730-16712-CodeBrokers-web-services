@@ -18,4 +18,9 @@ public class AlertQueryService(IAlertRepository repository) : IAlertQueryService
     /// <inheritdoc />
     public Task<Alert?> Handle(AlertId id, CancellationToken cancellationToken = default) =>
         repository.FindByIdAsync(id, cancellationToken);
+
+    /// <inheritdoc />
+    public Task<IReadOnlyList<Alert>> Handle(GetAlertsStatusHistoryQuery query,
+        CancellationToken cancellationToken = default) =>
+        repository.FindByIdsAsync(query.AlertIds, cancellationToken);
 }

@@ -50,4 +50,10 @@
     <data name="AlertingObservationInvalidReference" xml:space="preserve">
         <value>El identificador de la alerta o del autor no puede estar vacío.</value>
     </data>
+    <data name="AlertingSeverityNotAllowed" xml:space="preserve">
+        <value>No se puede enviar la prioridad: el servidor la calcula a partir de las reglas de monitoreo.</value>
+    </data>
+    <data name="AlertingStatusHistoryInvalidIds" xml:space="preserve">
+        <value>Envía entre 1 y {0} identificadores de alerta.</value>
+    </data>
 </root>
