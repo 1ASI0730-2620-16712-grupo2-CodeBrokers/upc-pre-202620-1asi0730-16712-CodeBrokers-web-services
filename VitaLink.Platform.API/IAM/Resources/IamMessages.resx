@@ -38,4 +38,28 @@
     <data name="IamInvalidProfile" xml:space="preserve">
         <value>The first name, last name and specialty are required for a care provider and cannot exceed their maximum length.</value>
     </data>
+    <data name="IamRegistrationFieldRequired" xml:space="preserve">
+        <value>This field is required.</value>
+    </data>
+    <data name="IamRegistrationFieldTooLong" xml:space="preserve">
+        <value>The text cannot exceed {0} characters.</value>
+    </data>
+    <data name="IamRegistrationInvalidBirthDate" xml:space="preserve">
+        <value>The birth date is required and cannot be in the future.</value>
+    </data>
+    <data name="IamRegistrationMeasurementOutOfRange" xml:space="preserve">
+        <value>The value must be between {0} and {1}.</value>
+    </data>
+    <data name="IamRegistrationPressureOrder" xml:space="preserve">
+        <value>The systolic pressure must be higher than the diastolic pressure.</value>
+    </data>
+    <data name="IamRegistrationAuthorizationRequired" xml:space="preserve">
+        <value>You must confirm that you are authorized to register this patient.</value>
+    </data>
+    <data name="IamRegistrationProviderNotFound" xml:space="preserve">
+        <value>The selected doctor does not exist.</value>
+    </data>
+    <data name="IamRegistrationProviderInactive" xml:space="preserve">
+        <value>The selected doctor is not active.</value>
+    </data>
 </root>
