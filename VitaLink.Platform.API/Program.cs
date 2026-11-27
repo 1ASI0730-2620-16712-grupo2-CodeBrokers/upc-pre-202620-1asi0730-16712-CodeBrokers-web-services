@@ -56,6 +56,7 @@ using VitaLink.Platform.API.PreventiveMonitoring.Application.Internal.QueryServi
 using VitaLink.Platform.API.PreventiveMonitoring.Application.QueryServices;
 using VitaLink.Platform.API.PreventiveMonitoring.Application.ACL;
 using VitaLink.Platform.API.PreventiveMonitoring.Interfaces.ACL;
+using VitaLink.Platform.API.Shared.Infrastructure.Interfaces.AspNetCore.OpenApi;
 
 
 
@@ -122,7 +123,11 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    options.AddSchemaTransformer<ExamplesSchemaTransformer>();
+});
 
 // IAM Bounded Context
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
@@ -212,11 +217,9 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseExceptionHandler();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+// OpenAPI / Scalar are available in every environment (also Azure) to verify the contracts
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 
