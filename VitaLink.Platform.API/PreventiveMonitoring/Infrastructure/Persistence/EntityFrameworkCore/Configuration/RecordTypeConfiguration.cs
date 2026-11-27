@@ -30,6 +30,8 @@ public class RecordTypeConfiguration : IEntityTypeConfiguration<RecordType>
             new { Code = "GLUCOSE", DisplayName = "Blood glucose", Unit = "mg/dL", MinValidValue = 20m, MaxValidValue = 600m, RequiresValue = true, IsActive = true },
             new { Code = "BODY_TEMPERATURE", DisplayName = "Body temperature", Unit = "°C", MinValidValue = 30m, MaxValidValue = 45m, RequiresValue = true, IsActive = true },
             new { Code = "WEIGHT", DisplayName = "Weight", Unit = "kg", MinValidValue = 1m, MaxValidValue = 300m, RequiresValue = true, IsActive = true },
+            new { Code = "OXYGEN_SATURATION", DisplayName = "Oxygen saturation", Unit = "%", MinValidValue = 50m, MaxValidValue = 100m, RequiresValue = true, IsActive = true },
+            new { Code = "BLOOD_PRESSURE_DIASTOLIC", DisplayName = "Blood pressure (diastolic)", Unit = "mmHg", MinValidValue = 20m, MaxValidValue = 200m, RequiresValue = true, IsActive = true },
             new { Code = "FALL_DETECTED", DisplayName = "Fall detected", Unit = (string?)null, MinValidValue = (decimal?)null, MaxValidValue = (decimal?)null, RequiresValue = false, IsActive = true },
             new { Code = "MEDICATION_INTAKE", DisplayName = "Medication intake", Unit = (string?)null, MinValidValue = (decimal?)null, MaxValidValue = (decimal?)null, RequiresValue = false, IsActive = true },
             new { Code = "GENERAL_NOTE", DisplayName = "General note", Unit = (string?)null, MinValidValue = (decimal?)null, MaxValidValue = (decimal?)null, RequiresValue = false, IsActive = true }
