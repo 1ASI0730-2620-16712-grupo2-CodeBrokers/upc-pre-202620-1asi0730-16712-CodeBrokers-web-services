@@ -24,4 +24,11 @@ public interface IHealthRecordRepository : IBaseRepository<HealthRecord, HealthR
         Guid olderAdultId,
         int take,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Returns the most recent record of each record type for an older adult, ordered by type code.
+    /// </summary>
+    Task<IReadOnlyList<HealthRecord>> FindLatestPerTypeAsync(
+        Guid olderAdultId,
+        CancellationToken cancellationToken = default);
 }

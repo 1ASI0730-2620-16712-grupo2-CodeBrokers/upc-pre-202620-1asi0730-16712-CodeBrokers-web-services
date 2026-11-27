@@ -209,7 +209,50 @@ namespace VitaLink.Platform.API.Migrations
                         .IsUnique()
                         .HasDatabaseName("i_x_clinics_name");
 
-                    b.ToTable("clinics", "elder_care");
+                     b.ToTable("clinics", "elder_care");
+                });
+                      
+            modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.FamilyCaregiverLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("last_name");
+
+                    b.Property<Guid>("OlderAdultId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("older_adult_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_family_caregiver_links");
+
+                    b.HasIndex("OlderAdultId")
+                        .HasDatabaseName("i_x_family_caregiver_links_older_adult_id");
+
+                    b.HasIndex("UserId", "OlderAdultId")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_family_caregiver_links_user_id_older_adult_id");
+
+                    b.ToTable("family_caregiver_links", "elder_care");
                 });
 
             modelBuilder.Entity("VitaLink.Platform.API.ElderCare.Domain.Model.Aggregates.OlderAdult", b =>
@@ -615,6 +658,26 @@ namespace VitaLink.Platform.API.Migrations
                             MinValidValue = 1m,
                             RequiresValue = true,
                             Unit = "kg"
+                        },
+                        new
+                        {
+                            Code = "OXYGEN_SATURATION",
+                            DisplayName = "Oxygen saturation",
+                            IsActive = true,
+                            MaxValidValue = 100m,
+                            MinValidValue = 50m,
+                            RequiresValue = true,
+                            Unit = "%"
+                        },
+                        new
+                        {
+                            Code = "BLOOD_PRESSURE_DIASTOLIC",
+                            DisplayName = "Blood pressure (diastolic)",
+                            IsActive = true,
+                            MaxValidValue = 200m,
+                            MinValidValue = 20m,
+                            RequiresValue = true,
+                            Unit = "mmHg"
                         },
                         new
                         {

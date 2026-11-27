@@ -36,4 +36,13 @@ public class HealthRecordQueryService(IHealthRecordRepository healthRecordReposi
 
         return new Result<IEnumerable<HealthRecord>, GetHealthRecordsError>.Success(records);
     }
+
+    public async Task<IReadOnlyList<HealthRecord>> Handle(
+        GetLatestHealthRecordsByOlderAdultQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        return await _healthRecordRepository.FindLatestPerTypeAsync(
+            query.OlderAdultId,
+            cancellationToken);
+    }
 }
