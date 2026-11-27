@@ -144,6 +144,7 @@ builder.Services.AddOptions<JwtOptions>()
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserQueryService, UserQueryService>();
+builder.Services.AddScoped<ISessionCommandService, SessionCommandService>();
 builder.Services.Configure<DemoUserOptions>(builder.Configuration.GetSection(DemoUserOptions.SectionName));
 builder.Services.AddScoped<DemoUserSeeder>();
 
